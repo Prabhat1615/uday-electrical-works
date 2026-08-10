@@ -125,17 +125,17 @@ const buildNavGroups = (pendingTechCount) => [
 ];
 
 const itemClasses = (active, collapsed) =>
-  `group relative flex items-center rounded-lg text-[13px] font-semibold transition-colors duration-150 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-orange-400 ${
+  `group relative flex items-center rounded-lg text-sm font-medium transition-colors duration-150 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-500 ${
     collapsed ? 'justify-center px-0 py-2.5' : 'gap-3 px-3 py-2'
   } ${
     active
-      ? 'bg-slate-800 text-white ring-1 ring-inset ring-slate-600/80'
-      : 'text-slate-400 hover:bg-slate-800/50 hover:text-slate-100'
+      ? 'bg-brand-50 text-brand-700 font-semibold'
+      : 'text-text-secondary hover:bg-surface-100 hover:text-text-primary'
   }`;
 
 const iconClasses = (active) =>
-  `w-[18px] h-[18px] shrink-0 ${
-    active ? 'text-orange-400' : 'text-slate-500 group-hover:text-slate-300'
+  `w-5 h-5 shrink-0 ${
+    active ? 'text-brand-600' : 'text-text-muted group-hover:text-text-primary'
   }`;
 
 export const DashboardLayout = () => {
@@ -272,12 +272,12 @@ export const DashboardLayout = () => {
         <Icon className={iconClasses(active)} />
         {!compact && <span className="flex-1 truncate">{item.name}</span>}
         {!compact && item.badge > 0 && (
-          <span className="shrink-0 rounded-full bg-amber-500 px-2 py-0.5 text-[10px] font-black text-slate-950">
+          <span className="shrink-0 rounded-full bg-brand-500 px-2 py-0.5 text-[10px] font-bold text-white">
             {item.badge}
           </span>
         )}
         {compact && item.badge > 0 && (
-          <span className="absolute -top-0.5 -right-0.5 w-2 h-2 rounded-full bg-amber-500" />
+          <span className="absolute -top-0.5 -right-0.5 w-2 h-2 rounded-full bg-brand-500" />
         )}
       </Link>
     );
@@ -296,7 +296,7 @@ export const DashboardLayout = () => {
               aria-label="Advanced options"
               aria-haspopup="true"
               aria-expanded={flyoutOpen}
-              className="flex items-center justify-center rounded-lg p-2.5 text-slate-400 hover:bg-slate-800/50 hover:text-slate-100 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-orange-400"
+              className="flex items-center justify-center rounded-lg p-2.5 text-text-muted hover:bg-surface-100 hover:text-text-primary focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-500"
             >
               <SlidersHorizontal className="w-[18px] h-[18px]" />
             </button>
@@ -306,7 +306,7 @@ export const DashboardLayout = () => {
       const Icon = SlidersHorizontal;
       return (
         <div key={group.label} className="mt-5">
-          <p className="px-3 pb-1.5 text-[10px] font-bold uppercase tracking-[0.14em] text-slate-500">
+          <p className="px-3 pb-1.5 text-[10px] font-bold uppercase tracking-wider text-text-muted">
             {group.label}
           </p>
           <div className="mt-1 space-y-1">
@@ -315,12 +315,12 @@ export const DashboardLayout = () => {
               onClick={toggleAdvanced}
               aria-expanded={advancedOpen}
               aria-controls="advanced-group"
-              className="flex w-full items-center gap-3 rounded-lg px-3 py-2 text-[13px] font-semibold text-slate-400 hover:bg-slate-800/50 hover:text-slate-100 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-orange-400"
+              className="flex w-full items-center gap-3 rounded-lg px-3 py-2 text-sm font-medium text-text-secondary hover:bg-surface-100 hover:text-text-primary focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-500"
             >
-              <Icon className="w-[18px] h-[18px] shrink-0 text-slate-500" />
+              <Icon className="w-5 h-5 shrink-0 text-text-muted" />
               <span className="flex-1 truncate text-left">Advanced</span>
               <ChevronDown
-                className={`w-4 h-4 shrink-0 text-slate-500 transition-transform duration-200 ${
+                className={`w-4 h-4 shrink-0 text-text-muted transition-transform duration-200 ${
                   advancedOpen ? 'rotate-180' : ''
                 }`}
               />
@@ -340,7 +340,7 @@ export const DashboardLayout = () => {
         {compact ? (
           <div className="mx-3 h-px bg-slate-800" aria-hidden="true" />
         ) : (
-          <p className="px-3 pb-1.5 text-[10px] font-bold uppercase tracking-[0.14em] text-slate-500">
+          <p className="px-3 pb-1.5 text-[10px] font-bold uppercase tracking-wider text-text-muted">
             {group.label}
           </p>
         )}
@@ -352,11 +352,11 @@ export const DashboardLayout = () => {
   };
 
   return (
-    <div className="min-h-screen bg-slate-950 md:flex">
+    <div className="min-h-screen bg-surface-50 md:flex">
       {/* Mobile drawer backdrop */}
       {mobileOpen && (
         <div
-          className="fixed inset-0 z-40 bg-slate-950/70 md:hidden"
+          className="fixed inset-0 z-40 bg-surface-900/50 md:hidden"
           aria-hidden="true"
           onClick={() => setMobileOpen(false)}
         />
@@ -364,13 +364,13 @@ export const DashboardLayout = () => {
 
       {/* Sidebar */}
       <aside
-        className={`fixed inset-y-0 left-0 z-50 flex flex-col border-r border-slate-800 bg-slate-900/95 backdrop-blur-xl transition-[width,transform] duration-300 ease-in-out md:static md:translate-x-0 ${
+        className={`fixed inset-y-0 left-0 z-50 flex flex-col border-r border-surface-200 bg-white transition-[width,transform] duration-300 ease-in-out md:static md:translate-x-0 ${
           compact ? 'md:w-[76px]' : 'md:w-64'
         } w-64 ${mobileOpen ? 'translate-x-0' : '-translate-x-full md:translate-x-0'}`}
       >
         {/* Logo */}
         <div
-          className={`flex items-center border-b border-slate-800 px-4 py-5 ${
+          className={`flex items-center border-b border-surface-200 px-4 py-5 ${
             compact ? 'justify-between md:justify-center' : 'justify-between'
           }`}
         >
@@ -379,14 +379,14 @@ export const DashboardLayout = () => {
             className="flex items-center gap-3"
             title={compact ? 'Uday Electrical Works' : undefined}
           >
-            <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-gradient-to-tr from-orange-500 to-orange-400 text-slate-950 shadow-lg shadow-orange-500/20">
+            <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-brand-500 text-white shadow-sm">
               <Zap className="h-5 w-5 fill-current" />
             </div>
             <div className={`leading-tight ${compact ? 'hidden md:block' : ''}`}>
-              <h1 className="text-base font-extrabold tracking-tight text-white">
-                UDAY <span className="text-orange-400">Electrical</span>
+              <h1 className="text-base font-bold tracking-tight text-text-primary">
+                UDAY <span className="text-brand-600">Electrical</span>
               </h1>
-              <span className="block text-[10px] font-semibold uppercase tracking-wider text-slate-400">
+              <span className="block text-[10px] font-semibold uppercase tracking-wider text-text-muted">
                 Management Portal
               </span>
             </div>
@@ -394,7 +394,7 @@ export const DashboardLayout = () => {
           <button
             type="button"
             onClick={() => setMobileOpen(false)}
-            className="text-slate-400 hover:text-white md:hidden"
+            className="text-text-muted hover:text-text-primary md:hidden"
             aria-label="Close navigation"
           >
             <X className="h-5 w-5" />
@@ -407,15 +407,15 @@ export const DashboardLayout = () => {
         </nav>
 
         {/* Footer */}
-        <div className="border-t border-slate-800 p-4">
+        <div className="border-t border-surface-200 p-4">
           <Link
             to="/"
             title={compact ? 'Back to Storefront' : undefined}
-            className={`flex items-center rounded-lg text-slate-400 hover:bg-slate-800/50 hover:text-orange-400 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-orange-400 ${
+            className={`flex items-center rounded-lg text-text-secondary hover:bg-surface-100 hover:text-brand-600 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-500 ${
               compact ? 'justify-center p-2.5' : 'justify-center py-1'
             }`}
           >
-            <ArrowLeft className="h-[18px] w-[18px]" />
+            <ArrowLeft className="h-5 w-5" />
             <span className={`ml-1.5 text-xs font-semibold ${compact ? 'hidden md:inline' : ''}`}>
               Back to Storefront
             </span>
@@ -427,10 +427,10 @@ export const DashboardLayout = () => {
       {flyoutOpen && (
         <div
           ref={flyoutRef}
-          className="fixed z-[60] w-56 rounded-xl border border-slate-700 bg-slate-900 p-1.5 shadow-2xl shadow-slate-950/60 animate-fade-in"
+          className="fixed z-[60] w-56 rounded-xl border border-surface-200 bg-white p-1.5 shadow-lg"
           style={{ top: flyoutPos.top, left: flyoutPos.left }}
         >
-          <p className="px-3 pb-1 pt-1.5 text-[10px] font-bold uppercase tracking-[0.14em] text-slate-500">
+          <p className="px-3 pb-1 pt-1.5 text-[10px] font-bold uppercase tracking-wider text-text-muted">
             Advanced
           </p>
           {advancedGroup.items.map((item) => {
@@ -441,13 +441,13 @@ export const DashboardLayout = () => {
                 key={item.path}
                 to={item.path}
                 aria-current={active ? 'page' : undefined}
-                className={`flex items-center gap-3 rounded-lg px-3 py-2 text-[13px] font-semibold focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-orange-400 ${
+                className={`flex items-center gap-3 rounded-lg px-3 py-2 text-sm font-medium focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-500 ${
                   active
-                    ? 'bg-slate-800 text-white ring-1 ring-inset ring-slate-600/80'
-                    : 'text-slate-400 hover:bg-slate-800/50 hover:text-slate-100'
+                    ? 'bg-brand-50 text-brand-700 font-semibold'
+                    : 'text-text-secondary hover:bg-surface-100 hover:text-text-primary'
                 }`}
               >
-                <Icon className={`w-[18px] h-[18px] ${active ? 'text-orange-400' : 'text-slate-500'}`} />
+                <Icon className={`w-5 h-5 ${active ? 'text-brand-600' : 'text-text-muted'}`} />
                 <span className="flex-1 truncate">{item.name}</span>
               </Link>
             );
@@ -458,13 +458,13 @@ export const DashboardLayout = () => {
       {/* Main column: top bar + content */}
       <div className="flex min-w-0 flex-1 flex-col">
         {/* Top bar */}
-        <header className="sticky top-0 z-30 flex h-16 items-center justify-between gap-3 border-b border-slate-800 bg-slate-950/85 px-4 backdrop-blur-xl sm:px-6">
+        <header className="sticky top-0 z-30 flex h-16 items-center justify-between gap-3 border-b border-surface-200 bg-white/95 px-4 backdrop-blur-sm sm:px-6">
           <div className="flex min-w-0 items-center gap-3">
             {/* Mobile: open drawer */}
             <button
               type="button"
               onClick={() => setMobileOpen(true)}
-              className="rounded-lg p-2 text-slate-300 hover:bg-slate-800 hover:text-white focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-orange-400 md:hidden"
+              className="rounded-lg p-2 text-text-secondary hover:bg-surface-100 hover:text-text-primary focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-500 md:hidden"
               aria-label="Open navigation"
             >
               <Menu className="h-5 w-5" />
@@ -473,18 +473,18 @@ export const DashboardLayout = () => {
             <button
               type="button"
               onClick={toggleCollapsed}
-              className="hidden rounded-lg p-2 text-slate-300 hover:bg-slate-800 hover:text-white focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-orange-400 md:inline-flex"
+              className="hidden rounded-lg p-2 text-text-secondary hover:bg-surface-100 hover:text-text-primary focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-500 md:inline-flex"
               aria-label={collapsed ? 'Expand sidebar' : 'Collapse sidebar'}
             >
               <Menu className="h-5 w-5" />
             </button>
 
             <div className="min-w-0">
-              <p className="truncate text-[11px] font-medium text-slate-500">
-                Management <span className="mx-0.5 text-slate-600">→</span>{' '}
-                <span className="text-slate-400">{activeName}</span>
+              <p className="truncate text-xs font-medium text-text-muted">
+                Management <span className="mx-0.5 text-text-tertiary">→</span>{' '}
+                <span className="text-text-secondary">{activeName}</span>
               </p>
-              <h1 className="truncate text-base font-bold text-white">{activeName}</h1>
+              <h1 className="truncate text-base font-bold text-text-primary">{activeName}</h1>
             </div>
           </div>
 
@@ -493,20 +493,20 @@ export const DashboardLayout = () => {
             <button
               type="button"
               onClick={() => navigate('/dashboard/profile')}
-              className="flex items-center gap-2 rounded-lg py-1.5 pl-1.5 pr-2 text-slate-300 hover:bg-slate-800/70 hover:text-white focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-orange-400"
+              className="flex items-center gap-2 rounded-lg py-1.5 pl-1.5 pr-2 text-text-secondary hover:bg-surface-100 hover:text-text-primary focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-500"
             >
-              <span className="flex h-8 w-8 items-center justify-center rounded-lg bg-orange-500/20 text-sm font-bold text-orange-400 ring-1 ring-inset ring-orange-500/30">
+              <span className="flex h-8 w-8 items-center justify-center rounded-lg bg-brand-100 text-sm font-bold text-brand-600">
                 {user?.name ? user.name.charAt(0).toUpperCase() : 'U'}
               </span>
               <span className="hidden max-w-[140px] truncate text-left lg:block">
-                <span className="block truncate text-xs font-bold text-white">{user?.name}</span>
-                <span className="block truncate text-[10px] text-slate-500">{user?.role}</span>
+                <span className="block truncate text-xs font-bold text-text-primary">{user?.name}</span>
+                <span className="block truncate text-[10px] text-text-muted">{user?.role}</span>
               </span>
             </button>
             <button
               type="button"
               onClick={handleLogout}
-              className="flex items-center gap-1.5 rounded-lg px-2.5 py-2 text-xs font-bold text-rose-400 hover:bg-rose-500/10 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-rose-400"
+              className="flex items-center gap-1.5 rounded-lg px-2.5 py-2 text-xs font-medium text-text-secondary hover:bg-surface-100 hover:text-danger-600 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-danger-500"
             >
               <LogOut className="h-4 w-4" />
               <span className="hidden sm:inline">Sign Out</span>

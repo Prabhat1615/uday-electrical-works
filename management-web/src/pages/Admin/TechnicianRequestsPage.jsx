@@ -19,6 +19,11 @@ import { formatDate, formatDateTime } from '../../utils/formatters';
 import { LoadingSpinner } from '../../components/LoadingSpinner';
 import { Modal } from '../../components/Modal';
 import { StatusBadge } from '../../components/StatusBadge';
+import { Button } from '../../components/ui/Button';
+import { Card, CardHeader, CardBody } from '../../components/ui/Card';
+import { Input } from '../../components/ui/Input';
+import { Badge } from '../../components/ui/Badge';
+import { StaggerContainer, StaggerItem } from '../../components/motion/PageTransition';
 
 export const TechnicianRequestsPage = () => {
   const [statusFilter, setStatusFilter] = useState('Pending');
@@ -89,28 +94,28 @@ export const TechnicianRequestsPage = () => {
 
   const DetailRow = ({ label, value }) => (
     <div>
-      <p className="text-[10px] font-extrabold uppercase tracking-wider text-slate-500 mb-0.5">{label}</p>
-      <p className="text-sm text-slate-200 font-semibold break-words">{value || 'N/A'}</p>
+      <p className="text-xs font-semibold uppercase tracking-wider text-text-muted mb-0.5">{label}</p>
+      <p className="text-sm text-text-primary font-medium break-words">{value || 'N/A'}</p>
     </div>
   );
 
   return (
     <div className="space-y-6">
       {/* Header */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-slate-800 pb-4">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
-          <h1 className="text-2xl font-extrabold text-white flex items-center space-x-2">
+          <h1 className="text-2xl font-bold text-text-primary font-display flex items-center gap-2">
             <span>Technician Requests</span>
             {pendingCount > 0 && (
-              <span className="px-2.5 py-1 rounded-full bg-amber-500 text-slate-950 text-xs font-black">
+              <Badge variant="warning" status="pending">
                 {pendingCount}
-              </span>
+              </Badge>
             )}
           </h1>
-          <p className="text-xs text-slate-400">Review technician applications and approve or reject them</p>
+          <p className="text-sm text-text-secondary mt-1">Review technician applications and approve or reject them</p>
         </div>
 
-        <div className="flex items-center space-x-2 px-3.5 py-2 rounded-xl bg-slate-900 border border-slate-800 text-xs font-bold text-amber-400">
+        <div className="flex items-center gap-2 px-3 py-2 rounded-lg bg-brand-50 border border-brand-200 text-xs font-medium text-brand-700">
           <ShieldCheck className="w-4 h-4" />
           <span>Admin approval required</span>
         </div>
@@ -119,27 +124,26 @@ export const TechnicianRequestsPage = () => {
       {/* Search & Filters */}
       <div className="flex flex-col md:flex-row gap-4 justify-between items-center">
         <div className="relative w-full md:w-96">
-          <Search className="w-4 h-4 absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400" />
-          <input
-            type="text"
+          <Search className="w-4 h-4 absolute left-3 top-1/2 -translate-y-1/2 text-text-muted" />
+          <Input
             placeholder="Search by name or email..."
             value={search}
             onChange={(e) => setSearch(e.target.value)}
-            className="w-full pl-10 pr-4 py-2.5 bg-slate-900 border border-slate-800 rounded-xl text-slate-200 placeholder-slate-500 text-xs font-medium focus:outline-none focus:border-amber-500"
+            className="pl-10"
           />
         </div>
 
-        <div className="flex items-center space-x-2 overflow-x-auto">
+        <div className="flex items-center gap-2 overflow-x-auto">
           {['Pending', 'Approved', 'Rejected', 'All'].map((s) => {
             const isSelected = (statusFilter === '' && s === 'All') || statusFilter === s;
             return (
               <button
                 key={s}
                 onClick={() => setStatusFilter(s === 'All' ? '' : s)}
-                className={`px-3 py-1.5 rounded-xl text-xs font-semibold whitespace-nowrap transition-all ${
+                className={`px-3 py-1.5 rounded-lg text-sm font-medium whitespace-nowrap transition-all ${
                   isSelected
-                    ? 'bg-amber-500 text-slate-950 font-bold'
-                    : 'bg-slate-900 text-slate-400 hover:text-white border border-slate-800'
+                    ? 'bg-brand-500 text-white font-semibold'
+                    : 'bg-surface-100 text-text-secondary hover:text-text-primary'
                 }`}
               >
                 {s === 'Pending' && pendingCount > 0 && isSelected ? `${s} (${pendingCount})` : s}
@@ -149,87 +153,79 @@ export const TechnicianRequestsPage = () => {
         </div>
       </div>
 
-      {/* Applications Table */}
+      {/* Applications */}
       {isLoading ? (
         <LoadingSpinner message="Fetching technician applications..." />
+      ) : filtered.length === 0 ? (
+        <Card>
+          <CardBody className="py-12">
+            <div className="text-center">
+              <UserCheck className="w-12 h-12 text-text-muted mx-auto mb-4" />
+              <h3 className="text-lg font-medium text-text-primary mb-2">No technician applications found</h3>
+              <p className="text-sm text-text-secondary">Try adjusting your search or filter criteria</p>
+            </div>
+          </CardBody>
+        </Card>
       ) : (
-        <div className="bg-slate-900 border border-slate-800 rounded-2xl overflow-hidden shadow-xl">
-          <div className="overflow-x-auto">
-            <table className="w-full text-left text-xs text-slate-300">
-              <thead className="bg-slate-950 text-slate-400 uppercase text-[10px] font-bold tracking-wider border-b border-slate-800">
-                <tr>
-                  <th className="px-6 py-4">Applicant</th>
-                  <th className="px-6 py-4">Phone</th>
-                  <th className="px-6 py-4">Skills</th>
-                  <th className="px-6 py-4">Experience</th>
-                  <th className="px-6 py-4">Application Date</th>
-                  <th className="px-6 py-4">Status</th>
-                  <th className="px-6 py-4 text-right">Actions</th>
-                </tr>
-              </thead>
-              <tbody className="divide-y divide-slate-800/80">
-                {filtered.length === 0 ? (
-                  <tr>
-                    <td colSpan={7} className="px-6 py-12 text-center text-slate-500">
-                      No technician applications found
-                    </td>
-                  </tr>
-                ) : (
-                  filtered.map((a) => (
-                    <tr key={a._id} className="hover:bg-slate-800/40 transition-colors">
-                      <td className="px-6 py-4">
-                        <p className="font-bold text-white">{a.name}</p>
-                        <p className="text-[11px] text-slate-400 font-normal">{a.email}</p>
-                      </td>
-                      <td className="px-6 py-4 text-slate-300 font-semibold">
-                        {a.phone || 'N/A'}
-                      </td>
-                      <td className="px-6 py-4 text-slate-300 max-w-[180px] truncate">
-                        {a.skills || 'N/A'}
-                      </td>
-                      <td className="px-6 py-4 text-slate-300 max-w-[160px] truncate">
-                        {a.experience || 'N/A'}
-                      </td>
-                      <td className="px-6 py-4 text-slate-400">
-                        {formatDate(a.submittedAt || a.createdAt)}
-                      </td>
-                      <td className="px-6 py-4">
-                        <StatusBadge status={a.status} />
-                      </td>
-                      <td className="px-6 py-4 text-right space-x-2 whitespace-nowrap">
-                        <button
-                          onClick={() => setSelected(a)}
-                          className="inline-flex items-center space-x-1 px-3 py-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-200 font-semibold transition-colors"
+        <StaggerContainer className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+          {filtered.map((a) => (
+            <StaggerItem key={a._id}>
+              <Card hover>
+                <CardBody className="p-5">
+                  <div className="flex items-start justify-between mb-4">
+                    <div className="flex items-center gap-3">
+                      <div className="w-12 h-12 rounded-full bg-brand-100 flex items-center justify-center">
+                        <UserCheck className="w-6 h-6 text-brand-600" />
+                      </div>
+                      <div>
+                        <h3 className="font-semibold text-text-primary">{a.name}</h3>
+                        <p className="text-xs text-text-secondary">{a.email}</p>
+                      </div>
+                    </div>
+                    <StatusBadge status={a.status} />
+                  </div>
+                  
+                  <div className="space-y-2 mb-4">
+                    <DetailRow label="Phone" value={a.phone} />
+                    <DetailRow label="Skills" value={a.skills} />
+                    <DetailRow label="Experience" value={a.experience} />
+                    <DetailRow label="Applied" value={formatDate(a.submittedAt || a.createdAt)} />
+                  </div>
+
+                  <div className="flex gap-2 pt-2">
+                    <Button
+                      variant="secondary"
+                      size="sm"
+                      className="flex-1"
+                      icon={Eye}
+                      onClick={() => setSelected(a)}
+                    >
+                      View
+                    </Button>
+                    {a.status === 'Pending' && (
+                      <>
+                        <Button
+                          variant="success"
+                          size="sm"
+                          icon={CheckCircle2}
+                          onClick={() => handleApprove(a)}
                         >
-                          <Eye className="w-3.5 h-3.5" />
-                          <span>View Details</span>
-                        </button>
-                        {a.status === 'Pending' && (
-                          <>
-                            <button
-                              onClick={() => handleApprove(a)}
-                              className="inline-flex items-center space-x-1 px-3 py-1.5 rounded-lg bg-emerald-500/10 hover:bg-emerald-500/20 border border-emerald-500/30 text-emerald-400 font-bold transition-colors"
-                            >
-                              <CheckCircle2 className="w-3.5 h-3.5" />
-                              <span>Approve</span>
-                            </button>
-                            <button
-                              onClick={() => openReject(a)}
-                              className="inline-flex items-center space-x-1 px-3 py-1.5 rounded-lg bg-rose-500/10 hover:bg-rose-500/20 border border-rose-500/30 text-rose-400 font-bold transition-colors"
-                            >
-                              <XCircle className="w-3.5 h-3.5" />
-                              <span>Reject</span>
-                            </button>
-                          </>
-                        )}
-                      </td>
-                    </tr>
-                  ))
-                )}
-              </tbody>
-            </table>
-          </div>
-        </div>
+                          Approve
+                        </Button>
+                        <Button
+                          variant="danger"
+                          size="sm"
+                          icon={XCircle}
+                          onClick={() => openReject(a)}
+                        />
+                      </>
+                    )}
+                  </div>
+                </CardBody>
+              </Card>
+            </StaggerItem>
+          ))}
+        </StaggerContainer>
       )}
 
       {/* Details Modal */}
@@ -237,22 +233,23 @@ export const TechnicianRequestsPage = () => {
         isOpen={!!selected}
         onClose={() => setSelected(null)}
         title={`Technician Application: ${selected?.name}`}
+        size="lg"
       >
         {selected && (
-          <div className="space-y-5 text-xs">
+          <div className="space-y-5">
             {/* Status */}
-            <div className="flex items-center justify-between p-3 rounded-xl bg-slate-950 border border-slate-800">
-              <div className="flex items-center space-x-2">
-                <Clock className="w-4 h-4 text-amber-400" />
-                <span className="text-slate-300 font-bold">Current Status:</span>
+            <div className="flex items-center justify-between p-4 rounded-lg bg-surface-50 border border-surface-200">
+              <div className="flex items-center gap-2">
+                <Clock className="w-4 h-4 text-brand-600" />
+                <span className="text-text-primary font-medium">Current Status:</span>
               </div>
               <StatusBadge status={detail.status} />
             </div>
 
             {/* Contact Information */}
             <div className="space-y-3">
-              <h4 className="text-[11px] font-extrabold uppercase tracking-wider text-amber-400 flex items-center space-x-1.5">
-                <Mail className="w-3.5 h-3.5" />
+              <h4 className="text-sm font-semibold text-text-primary flex items-center gap-1.5">
+                <Mail className="w-4 h-4" />
                 <span>Contact Information</span>
               </h4>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -264,9 +261,9 @@ export const TechnicianRequestsPage = () => {
             </div>
 
             {/* Professional Information */}
-            <div className="space-y-3 pt-2 border-t border-slate-800">
-              <h4 className="text-[11px] font-extrabold uppercase tracking-wider text-amber-400 flex items-center space-x-1.5">
-                <Briefcase className="w-3.5 h-3.5" />
+            <div className="space-y-3 pt-4 border-t border-surface-200">
+              <h4 className="text-sm font-semibold text-text-primary flex items-center gap-1.5">
+                <Briefcase className="w-4 h-4" />
                 <span>Professional Information</span>
               </h4>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -278,9 +275,9 @@ export const TechnicianRequestsPage = () => {
             </div>
 
             {/* Application Info */}
-            <div className="space-y-3 pt-2 border-t border-slate-800">
-              <h4 className="text-[11px] font-extrabold uppercase tracking-wider text-amber-400 flex items-center space-x-1.5">
-                <Wrench className="w-3.5 h-3.5" />
+            <div className="space-y-3 pt-4 border-t border-surface-200">
+              <h4 className="text-sm font-semibold text-text-primary flex items-center gap-1.5">
+                <Wrench className="w-4 h-4" />
                 <span>Application Information</span>
               </h4>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -306,22 +303,22 @@ export const TechnicianRequestsPage = () => {
 
             {/* Application History (audit trail) */}
             {detail.applicationHistory?.length > 0 && (
-              <div className="space-y-3 pt-2 border-t border-slate-800">
-                <h4 className="text-[11px] font-extrabold uppercase tracking-wider text-amber-400 flex items-center space-x-1.5">
-                  <ShieldCheck className="w-3.5 h-3.5" />
+              <div className="space-y-3 pt-4 border-t border-surface-200">
+                <h4 className="text-sm font-semibold text-text-primary flex items-center gap-1.5">
+                  <ShieldCheck className="w-4 h-4" />
                   <span>Application History</span>
                 </h4>
                 <div className="space-y-2">
                   {detail.applicationHistory.map((h, i) => (
-                    <div key={i} className="flex items-start justify-between gap-3 p-2.5 rounded-xl bg-slate-950 border border-slate-800/80">
-                      <div className="flex items-center space-x-2">
+                    <div key={i} className="flex items-start justify-between gap-3 p-3 rounded-lg bg-surface-50 border border-surface-200">
+                      <div className="flex items-center gap-2">
                         <HistoryBadge event={h.event} />
-                        <span className="text-[11px] text-slate-400">
+                        <span className="text-xs text-text-secondary">
                           {h.by ? `by ${h.by.name || 'Admin'}` : 'self-submitted'}
                           {h.reason ? ` · ${h.reason}` : ''}
                         </span>
                       </div>
-                      <span className="text-[10px] text-slate-500 shrink-0">{formatDateTime(h.at)}</span>
+                      <span className="text-xs text-text-muted shrink-0">{formatDateTime(h.at)}</span>
                     </div>
                   ))}
                 </div>
@@ -330,19 +327,19 @@ export const TechnicianRequestsPage = () => {
 
             {/* Actions */}
             {detail.status === 'Pending' && (
-              <div className="pt-3 border-t border-slate-800 flex justify-end space-x-3">
-                <button
+              <div className="pt-4 border-t border-surface-200 flex justify-end gap-3">
+                <Button
+                  variant="danger"
                   onClick={() => { openReject(selected); setSelected(null); }}
-                  className="px-5 py-2.5 rounded-xl bg-rose-500/10 border border-rose-500/30 text-rose-400 font-extrabold text-xs hover:bg-rose-500/20 transition-all"
                 >
                   Reject Application
-                </button>
-                <button
+                </Button>
+                <Button
+                  variant="success"
                   onClick={() => handleApprove(selected)}
-                  className="px-5 py-2.5 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-extrabold text-xs shadow-md transition-all"
                 >
                   Approve Application
-                </button>
+                </Button>
               </div>
             )}
           </div>
@@ -356,22 +353,22 @@ export const TechnicianRequestsPage = () => {
         title={`Reject Application: ${rejectTarget?.name}`}
       >
         {rejectTarget && (
-          <form onSubmit={handleReject} className="space-y-4 text-xs">
-            <div className="p-3 rounded-xl bg-rose-500/5 border border-rose-500/20 flex items-start space-x-2.5">
-              <AlertTriangle className="w-4 h-4 text-rose-400 shrink-0 mt-0.5" />
-              <p className="text-rose-300 font-semibold leading-relaxed">
+          <form onSubmit={handleReject} className="space-y-4">
+            <div className="p-4 rounded-lg bg-danger-50 border border-danger-200 flex items-start gap-3">
+              <AlertTriangle className="w-5 h-5 text-danger-600 shrink-0 mt-0.5" />
+              <p className="text-danger-700 font-medium leading-relaxed">
                 Reject this technician application? The applicant will be notified and the
                 application record will be preserved for audit purposes.
               </p>
             </div>
 
-            <div className="p-3 rounded-xl bg-slate-950 border border-slate-800">
-              <p className="font-bold text-white">{rejectTarget.name}</p>
-              <p className="text-slate-400">{rejectTarget.email}</p>
+            <div className="p-4 rounded-lg bg-surface-50 border border-surface-200">
+              <p className="font-medium text-text-primary">{rejectTarget.name}</p>
+              <p className="text-sm text-text-secondary">{rejectTarget.email}</p>
             </div>
 
             <div>
-              <label className="block text-slate-300 font-bold uppercase mb-1.5">
+              <label className="block text-sm font-medium text-text-primary mb-1.5">
                 Rejection Reason *
               </label>
               <textarea
@@ -381,31 +378,31 @@ export const TechnicianRequestsPage = () => {
                 placeholder="Explain why this application is being rejected"
                 value={rejectionReason}
                 onChange={(e) => setRejectionReason(e.target.value)}
-                className="w-full px-3.5 py-2.5 bg-slate-950 border border-slate-800 rounded-xl text-slate-200 text-sm focus:outline-none focus:border-rose-500/50"
+                className="input"
               />
             </div>
 
             {rejectError && (
-              <div className="p-3 rounded-xl bg-rose-500/10 border border-rose-500/30 text-rose-400 text-xs font-semibold">
+              <div className="p-3 rounded-lg bg-danger-50 border border-danger-200 text-danger-700 text-sm font-medium">
                 {rejectError}
               </div>
             )}
 
-            <div className="pt-2 flex justify-end space-x-3">
-              <button
+            <div className="pt-2 flex justify-end gap-3">
+              <Button
                 type="button"
+                variant="secondary"
                 onClick={() => setRejectTarget(null)}
-                className="px-4 py-2 rounded-xl bg-slate-800 text-slate-300 font-semibold"
               >
                 Cancel
-              </button>
-              <button
+              </Button>
+              <Button
                 type="submit"
-                disabled={rejectMutation.isPending}
-                className="px-5 py-2 rounded-xl bg-rose-500 hover:bg-rose-400 text-slate-950 font-extrabold shadow-md"
+                variant="danger"
+                loading={rejectMutation.isPending}
               >
                 {rejectMutation.isPending ? 'Rejecting...' : 'Reject Application'}
-              </button>
+              </Button>
             </div>
           </form>
         )}
