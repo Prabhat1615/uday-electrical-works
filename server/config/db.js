@@ -1,4 +1,8 @@
 import mongoose from 'mongoose';
+import dns from 'dns';
+
+// Use reliable public DNS for SRV lookups (fixes local DNS issues with Atlas)
+dns.setServers(['8.8.8.8', '1.1.1.1']);
 
 // Never silently buffer queries while disconnected — requests must fail
 // fast with a clear error instead of hanging for 10s (buffering timeout).

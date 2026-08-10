@@ -235,7 +235,6 @@ export const UserManagementPage = () => {
                 <option value="Customer">Customer / Industrial Client</option>
                 <option value="Technician">Service Technician</option>
                 <option value="Staff">Sales & Operations Staff</option>
-                <option value="Admin">System Administrator</option>
               </select>
             </div>
 
@@ -319,7 +318,6 @@ export const UserManagementPage = () => {
                 <option value="Staff">Sales & Operations Staff</option>
                 <option value="Technician">Service Technician</option>
                 <option value="Customer">Customer / Industrial Client</option>
-                <option value="Admin">System Administrator</option>
               </select>
             </div>
           </div>
