@@ -27,6 +27,41 @@ export const getUsers = async (req, res, next) => {
   }
 };
 
+// @desc    Create a new user (Staff / Technician / Customer)
+// @route   POST /api/users
+// @access  Private/Admin
+export const createUser = async (req, res, next) => {
+  try {
+    const { name, email, password, role, phone, address } = req.body;
+
+    if (!name || !email || !password) {
+      return next(new ApiError(400, 'Please provide name, email and password'));
+    }
+
+    const userExists = await User.findOne({ email: email.toLowerCase() });
+    if (userExists) {
+      return next(new ApiError(400, 'User already exists with this email address'));
+    }
+
+    const assignedRole = ['Admin', 'Staff', 'Technician', 'Customer'].includes(role)
+      ? role
+      : 'Staff';
+
+    const user = await User.create({
+      name,
+      email: email.toLowerCase(),
+      password,
+      role: assignedRole,
+      phone: phone || '',
+      address: address || ''
+    });
+
+    res.status(201).json(new ApiResponse(201, user, 'User created successfully'));
+  } catch (error) {
+    next(error);
+  }
+};
+
 // @desc    Update user role & details
 // @route   PUT /api/users/:id
 // @access  Private/Admin

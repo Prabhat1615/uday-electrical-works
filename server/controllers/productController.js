@@ -47,19 +47,60 @@ export const getProductById = async (req, res, next) => {
 // @access  Private/Admin/Staff
 export const createProduct = async (req, res, next) => {
   try {
-    const { name, category, description, price, stock, specifications, imageUrl } = req.body;
+    const { name, brand, category, description, mrp, price, stock, sku, specifications, imageUrl } = req.body;
 
     const product = await Product.create({
       name,
-      category,
+      brand: brand || 'Havells',
+      category: category || 'Ceiling Fans',
       description,
+      mrp: mrp || price,
       price,
       stock,
+      sku: sku || `SKU-${Date.now().toString().slice(-6)}`,
       specifications: specifications || {},
       imageUrl: imageUrl || undefined
     });
 
     res.status(201).json(new ApiResponse(201, product, 'Product created successfully'));
+  } catch (error) {
+    next(error);
+  }
+};
+
+// @desc    Bulk Import Products (CSV / Excel JSON Array)
+// @route   POST /api/products/bulk-import
+// @access  Private/Admin/Staff
+export const bulkImportProducts = async (req, res, next) => {
+  try {
+    const { products } = req.body;
+    if (!Array.isArray(products) || products.length === 0) {
+      return next(new ApiError(400, 'Please provide an array of products to import'));
+    }
+
+    let successCount = 0;
+    for (const item of products) {
+      const sku = item.sku || `SKU-${Math.floor(100000 + Math.random() * 900000)}`;
+      await Product.findOneAndUpdate(
+        { sku },
+        {
+          name: item.name,
+          brand: item.brand || 'Havells',
+          category: item.category || 'Electrical Accessories',
+          description: item.description || `${item.brand || 'Brand'} ${item.name}`,
+          mrp: Number(item.mrp || item.price || 0),
+          price: Number(item.price || 0),
+          stock: Number(item.stock || 0),
+          sku,
+          warranty: item.warranty || '1 Year Warranty',
+          status: 'Active'
+        },
+        { upsert: true, new: true, runValidators: true }
+      );
+      successCount++;
+    }
+
+    res.status(200).json(new ApiResponse(200, { imported: successCount }, `Successfully imported/updated ${successCount} products`));
   } catch (error) {
     next(error);
   }

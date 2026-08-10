@@ -15,19 +15,6 @@ const productSchema = new mongoose.Schema({
   category: {
     type: String,
     required: [true, 'Please specify product category'],
-    enum: [
-      'Ceiling Fans',
-      'Exhaust Fans',
-      'Wall & Pedestal Fans',
-      'LED Bulbs & Battens',
-      'Decorative Lighting',
-      'Modular Switches & Sockets',
-      'Wires & Cables',
-      'MCBs & DB Boxes',
-      'Water Heaters & Geysers',
-      'Voltage Stabilizers',
-      'Iron & Home Appliances'
-    ],
     default: 'Ceiling Fans'
   },
   description: {
@@ -55,6 +42,10 @@ const productSchema = new mongoose.Schema({
     required: true,
     unique: true
   },
+  warranty: {
+    type: String,
+    default: '1 Year Warranty'
+  },
   specifications: {
     type: Map,
     of: String,
@@ -72,6 +63,11 @@ const productSchema = new mongoose.Schema({
 }, {
   timestamps: true
 });
+
+// Database Indexing for High-Performance Queries
+productSchema.index({ sku: 1 });
+productSchema.index({ brand: 1, category: 1 });
+productSchema.index({ name: 'text', description: 'text' });
 
 productSchema.pre('save', function (next) {
   if (this.stock === 0) {

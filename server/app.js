@@ -31,6 +31,7 @@ import branchRoutes from './routes/branchRoutes.js';
 import aiRoutes from './routes/aiRoutes.js';
 import healthRoutes from './routes/healthRoutes.js';
 
+import { corsOptions } from './config/cors.js';
 import { errorHandler } from './middleware/errorMiddleware.js';
 
 dotenv.config();
@@ -50,10 +51,7 @@ const apiLimiter = rateLimit({
 });
 app.use('/api/', apiLimiter);
 
-app.use(cors({
-  origin: process.env.CLIENT_URL || 'http://localhost:5173',
-  credentials: true
-}));
+app.use(cors(corsOptions));
 app.use(express.json({ limit: '15mb' }));
 app.use(express.urlencoded({ extended: true, limit: '15mb' }));
 
