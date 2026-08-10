@@ -15,8 +15,9 @@ export function SocketProvider({ children }) {
   useEffect(() => {
     if (!user?._id) return undefined;
 
+    const stored = JSON.parse(localStorage.getItem('uew_user') || 'null');
     const socket = io(import.meta.env.VITE_SOCKET_URL || window.location.origin, {
-      auth: { token: localStorage.getItem('token') },
+      auth: { token: stored?.token || user?.token || null },
       transports: ['websocket', 'polling']
     });
     socketRef.current = socket;

@@ -87,14 +87,17 @@ export const CustomerPortalPage = () => {
                 </div>
                 <div className="text-right space-y-2">
                   <StatusBadge status={inv.paymentStatus} />
-                  {inv.paymentStatus !== 'Paid' && (
-                    <button
-                      onClick={() => handlePayInvoice(inv)}
-                      className="block px-4 py-2 rounded-xl bg-orange-500 hover:bg-orange-400 text-slate-950 font-extrabold shadow-md"
-                    >
-                      Pay Online (Razorpay)
-                    </button>
-                  )}
+                  {inv.paymentStatus !== 'Paid' &&
+                    (import.meta.env.DEV ? (
+                      <button
+                        onClick={() => handlePayInvoice(inv)}
+                        className="block px-4 py-2 rounded-xl bg-orange-500 hover:bg-orange-400 text-slate-950 font-extrabold shadow-md"
+                      >
+                        Pay Online (Razorpay)
+                      </button>
+                    ) : (
+                      <p className="text-[10px] text-slate-400">Pay at shop / Call 7903789402</p>
+                    ))}
                 </div>
               </div>
             ))}

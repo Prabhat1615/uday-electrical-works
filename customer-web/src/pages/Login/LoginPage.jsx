@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useNavigate, useSearchParams } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { Zap, Mail, Lock, ArrowRight, ShieldCheck, AlertCircle } from 'lucide-react';
 import { useAuth } from '../../hooks/useAuth';
@@ -8,6 +8,8 @@ import { AnimatedBackground } from '../../components/AnimatedBackground';
 export const LoginPage = () => {
   const { login, logout } = useAuth();
   const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
+  const redirectTo = searchParams.get('redirect') || '/dashboard';
 
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -27,18 +29,12 @@ export const LoginPage = () => {
         setLoading(false);
         return;
       }
-      navigate('/dashboard');
+      navigate(redirectTo.startsWith('/') ? redirectTo : '/dashboard');
     } catch (err) {
       setError(err.message || 'Invalid email or password credentials');
     } finally {
       setLoading(false);
     }
-  };
-
-  // Demo Login Helper
-  const handleQuickDemo = (demoEmail, demoPass) => {
-    setEmail(demoEmail);
-    setPassword(demoPass);
   };
 
   return (
@@ -114,19 +110,6 @@ export const LoginPage = () => {
             <ArrowRight className="w-4 h-4" />
           </button>
         </form>
-
-        {/* Demo Quick Login */}
-        <div className="pt-4 border-t border-slate-200 dark:border-slate-800 space-y-2">
-          <p className="text-[11px] font-bold uppercase text-slate-400 text-center">Quick Demo Login Shortcut</p>
-          <div className="grid grid-cols-2 gap-2 text-xs">
-            <button
-              onClick={() => handleQuickDemo('customer@srilakshmi.com', 'customerpassword123')}
-              className="px-2.5 py-1.5 rounded-lg bg-purple-500/10 hover:bg-purple-500 hover:text-white border border-purple-500/30 text-purple-600 font-semibold text-[11px] transition-all"
-            >
-              Customer Demo
-            </button>
-          </div>
-        </div>
 
         <div className="text-center pt-2">
           <p className="text-xs text-slate-500 dark:text-slate-400">

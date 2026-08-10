@@ -35,12 +35,6 @@ export const LoginPage = () => {
     }
   };
 
-  // Demo Login Helper
-  const handleQuickDemo = (demoEmail, demoPass) => {
-    setEmail(demoEmail);
-    setPassword(demoPass);
-  };
-
   return (
     <div className="relative min-h-screen flex items-center justify-center px-4 py-12 overflow-hidden bg-gradient-to-b from-slate-50 to-slate-100 dark:from-slate-950 dark:to-slate-950">
       {/* 3D Background System */}
@@ -114,19 +108,6 @@ export const LoginPage = () => {
             <ArrowRight className="w-4 h-4" />
           </button>
         </form>
-
-        {/* Demo Quick Login */}
-        <div className="pt-4 border-t border-slate-200 dark:border-slate-800 space-y-2">
-          <p className="text-[11px] font-bold uppercase text-slate-400 text-center">Quick Demo Login Shortcut</p>
-          <div className="grid grid-cols-2 gap-2 text-xs">
-            <button
-              onClick={() => handleQuickDemo('tech1@udayelectrical.com', 'techpassword123')}
-              className="px-2.5 py-1.5 rounded-lg bg-emerald-500/10 hover:bg-emerald-500 hover:text-white border border-emerald-500/30 text-emerald-600 font-semibold text-[11px] transition-all"
-            >
-              Technician Demo
-            </button>
-          </div>
-        </div>
 
         <div className="pt-3 border-t border-slate-200 dark:border-slate-800 flex items-center justify-center space-x-2 text-[11px] text-slate-400 font-semibold">
           <ShieldCheck className="w-4 h-4 text-emerald-500" />
