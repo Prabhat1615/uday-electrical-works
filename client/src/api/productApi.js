@@ -12,6 +12,10 @@ export const createProductApi = async (data) => {
   return await api.post('/products', data);
 };
 
+export const bulkImportProductsApi = async (products) => {
+  return await api.post('/products/bulk-import', { products });
+};
+
 export const updateProductApi = async (id, data) => {
   return await api.put(`/products/${id}`, data);
 };

@@ -282,15 +282,15 @@ export const DashboardLayout = () => {
                 onClick={() => setSidebarOpen(false)}
                 className={`flex items-center justify-between px-3.5 py-2 rounded-xl text-xs font-semibold transition-all duration-200 ${
                   active
-                    ? 'bg-orange-500 text-slate-950 font-bold shadow-md shadow-orange-500/10'
+                    ? 'bg-gradient-to-r from-blue-600 to-blue-500 text-white font-bold shadow-md shadow-blue-600/30'
                     : 'text-slate-300 hover:bg-slate-800/60 hover:text-white'
                 }`}
               >
                 <div className="flex items-center space-x-3">
-                  <Icon className={`w-4 h-4 ${active ? 'text-slate-950' : 'text-orange-400'}`} />
+                  <Icon className={`w-4 h-4 ${active ? 'text-white' : 'text-blue-400'}`} />
                   <span>{item.name}</span>
                 </div>
-                {active && <ChevronRight className="w-3.5 h-3.5 text-slate-950" />}
+                {active && <ChevronRight className="w-3.5 h-3.5 text-white" />}
               </Link>
             );
           })}

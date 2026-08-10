@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
-import { Phone, Mail, MapPin, Send, CheckCircle2, MessageCircle, ExternalLink } from 'lucide-react';
+import { Phone, Mail, MapPin, Send, CheckCircle2, MessageCircle, ExternalLink, Zap } from 'lucide-react';
+import { AnimatedSection } from '../../components/AnimatedSection';
 
 export const ContactPage = () => {
   const [name, setName] = useState('');
@@ -34,19 +35,25 @@ export const ContactPage = () => {
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 space-y-12 bg-slate-50 dark:bg-slate-950 text-slate-900 dark:text-slate-100 transition-colors">
       
       {/* Header */}
-      <div className="text-center space-y-2 max-w-3xl mx-auto">
-        <span className="text-xs font-extrabold text-orange-500 uppercase tracking-widest">Store Contact & Doorstep Visits</span>
-        <h1 className="text-3xl sm:text-5xl font-black text-slate-900 dark:text-white">Contact Uday Electrical Works</h1>
+      <AnimatedSection direction="up" className="text-center space-y-2 max-w-3xl mx-auto">
+        <span className="inline-flex items-center space-x-1.5 px-3.5 py-1.5 rounded-full bg-orange-500/10 border border-orange-500/30 text-orange-500 text-xs font-extrabold uppercase tracking-widest">
+          <Zap className="w-3.5 h-3.5" />
+          <span>Store Contact & Doorstep Visits</span>
+        </span>
+        <h1 className="text-3xl sm:text-5xl font-black text-slate-900 dark:text-white font-display">Contact Uday Electrical Works</h1>
         <p className="text-slate-600 dark:text-slate-400 text-sm">
           Chhota Govindpur, Jamshedpur, Jharkhand • Doorstep electrician service across all 13 Jamshedpur localities.
         </p>
-      </div>
+      </AnimatedSection>
 
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
         
         {/* Contact Form */}
-        <div className="lg:col-span-7 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-3xl p-6 sm:p-8 shadow-xl space-y-6">
-          <h3 className="text-lg font-bold text-slate-900 dark:text-white">Request an Electrician Visit in Jamshedpur</h3>
+        <AnimatedSection direction="right" className="lg:col-span-7 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-3xl p-6 sm:p-8 shadow-card space-y-6 hover:shadow-card-hover transition-shadow">
+          <div className="flex items-center justify-between">
+            <h3 className="text-lg font-bold text-slate-900 dark:text-white font-display">Request an Electrician Visit in Jamshedpur</h3>
+            <span className="w-1.5 h-1.5 rounded-full bg-success animate-pulse"></span>
+          </div>
 
           {submitted ? (
             <div className="p-6 rounded-2xl bg-emerald-500/10 border border-emerald-500/30 text-emerald-600 dark:text-emerald-400 text-xs font-bold text-center space-y-2">
@@ -126,18 +133,18 @@ export const ContactPage = () => {
 
               <button
                 type="submit"
-                className="w-full py-3.5 rounded-xl bg-orange-500 hover:bg-orange-400 text-slate-950 font-black text-sm transition-all shadow-md flex items-center justify-center space-x-2"
+                className="btn-cta w-full py-3.5 text-sm"
               >
                 <Send className="w-4 h-4" />
                 <span>Request Electrician Visit</span>
               </button>
             </form>
           )}
-        </div>
+        </AnimatedSection>
 
         {/* Store Info & Maps */}
-        <div className="lg:col-span-5 space-y-6">
-          <div className="p-6 rounded-3xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-xl space-y-4">
+        <AnimatedSection direction="left" delay={0.1} className="lg:col-span-5 space-y-6">
+          <div className="card-premium p-6 space-y-4">
             <h3 className="text-base font-bold text-slate-900 dark:text-white border-b border-slate-200 dark:border-slate-800 pb-3">
               Store Contact Lines
             </h3>
@@ -178,17 +185,17 @@ export const ContactPage = () => {
 
             <div className="pt-2">
               <a
-                href="https://www.google.com/maps/place/Uday+Electrical+Shop/"
+                href="https://www.google.com/maps/search/?api=1&query=Uday+Electrical+Shop+Chhota+Govindpur+Jamshedpur"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="w-full py-3 rounded-xl bg-blue-600 hover:bg-blue-500 text-white font-bold text-xs flex items-center justify-center space-x-2 shadow"
+                className="w-full py-3 rounded-xl bg-blue-600 hover:bg-blue-700 text-white font-bold text-xs flex items-center justify-center space-x-2 shadow-md shadow-blue-600/20 transition-all hover:scale-[1.02] hover:shadow-glow-blue"
               >
                 <span>Open Google Maps Location</span>
                 <ExternalLink className="w-4 h-4" />
               </a>
             </div>
           </div>
-        </div>
+        </AnimatedSection>
 
       </div>
 
