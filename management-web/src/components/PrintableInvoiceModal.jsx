@@ -1,0 +1,1 @@
+export * from '../../../shared/src/components/PrintableInvoiceModal.jsx';
