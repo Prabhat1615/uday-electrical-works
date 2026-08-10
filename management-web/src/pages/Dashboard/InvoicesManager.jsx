@@ -7,6 +7,12 @@ import { formatCurrency, formatDate } from '../../utils/formatters';
 import { LoadingSpinner } from '../../components/LoadingSpinner';
 import { Modal } from '../../components/Modal';
 import { PrintableInvoiceModal } from '../../components/PrintableInvoiceModal';
+import { Button } from '../../components/ui/Button';
+import { Card, CardHeader, CardBody } from '../../components/ui/Card';
+import { Input } from '../../components/ui/Input';
+import { Select } from '../../components/ui/Select';
+import { Badge } from '../../components/ui/Badge';
+import { StaggerContainer, StaggerItem } from '../../components/motion/PageTransition';
 
 export const InvoicesManager = () => {
   const { user } = useAuth();

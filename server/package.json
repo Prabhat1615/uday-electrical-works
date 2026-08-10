@@ -11,6 +11,7 @@
     "start": "node server.js",
     "dev": "nodemon server.js",
     "seed:dev": "node scripts/seed-dev.js",
+    "seed:catalog": "node scripts/seed-product-catalog.js",
     "create-admin": "node scripts/create-admin.js"
   },
   "dependencies": {

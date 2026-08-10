@@ -1,11 +1,17 @@
 import React, { useState } from 'react';
-import { Package, Plus, Search, Edit2, Trash2, Tag, Upload, FileSpreadsheet, CheckCircle2 } from 'lucide-react';
+import { Package, Plus, Search, Edit2, Trash2, Tag, Upload, FileSpreadsheet } from 'lucide-react';
 import { useProducts, useCreateProduct, useUpdateProduct, useDeleteProduct } from '../../hooks/useErpQueries';
 import { bulkImportProductsApi } from '../../api/productApi';
 import { StatusBadge } from '../../components/StatusBadge';
 import { formatCurrency } from '../../utils/formatters';
 import { LoadingSpinner } from '../../components/LoadingSpinner';
 import { Modal } from '../../components/Modal';
+import { Button } from '../../components/ui/Button';
+import { Card, CardHeader, CardBody } from '../../components/ui/Card';
+import { Input } from '../../components/ui/Input';
+import { Select } from '../../components/ui/Select';
+import { EmptyProducts } from '../../components/ui/EmptyState';
+import { StaggerContainer, StaggerItem } from '../../components/motion/PageTransition';
 
 export const ProductsManager = () => {
   const [search, setSearch] = useState('');
@@ -38,12 +44,14 @@ export const ProductsManager = () => {
   const categories = [
     'Ceiling Fans',
     'Exhaust Fans',
-    'Table Fans',
-    'Pedestal Fans',
     'LED Bulbs',
-    'Tube Lights',
+    'LED Battens',
     'Switches',
     'Sockets',
+    'Modular Accessories',
+    'Table Fans',
+    'Pedestal Fans',
+    'Tube Lights',
     'Wires',
     'MCBs',
     'Extension Boards',
@@ -186,260 +194,263 @@ export const ProductsManager = () => {
     <div className="space-y-6">
       
       {/* Header */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-slate-800 pb-4">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
-          <h1 className="text-2xl font-extrabold text-white">Household Electrical Product Master</h1>
-          <p className="text-xs text-slate-400">Manage real brand SKU inventory, selling prices, MRP, stock levels & CSV bulk imports</p>
+          <h1 className="text-2xl font-bold text-text-primary font-display">Products</h1>
+          <p className="text-sm text-text-secondary mt-1">Manage your electrical product inventory and pricing</p>
         </div>
 
-        <div className="flex items-center space-x-3">
-          <button
+        <div className="flex items-center gap-3">
+          <Button
+            variant="secondary"
+            icon={FileSpreadsheet}
             onClick={() => setActiveModal('bulk')}
-            className="flex items-center space-x-2 px-4 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs font-bold border border-slate-700"
           >
-            <FileSpreadsheet className="w-4 h-4 text-emerald-400" />
-            <span>CSV / Bulk Import</span>
-          </button>
-
-          <button
+            Bulk Import
+          </Button>
+          <Button
+            variant="primary"
+            icon={Plus}
             onClick={handleOpenCreate}
-            className="flex items-center space-x-2 px-4 py-2 rounded-xl bg-orange-500 hover:bg-orange-400 text-slate-950 text-xs font-extrabold shadow-md"
           >
-            <Plus className="w-4 h-4" />
-            <span>Add New Product SKU</span>
-          </button>
+            Add Product
+          </Button>
         </div>
       </div>
 
-      {/* Table */}
-      {isLoading ? (
-        <LoadingSpinner message="Loading products inventory..." />
-      ) : (
-        <div className="bg-slate-900 border border-slate-800 rounded-2xl overflow-hidden shadow-xl">
-          <div className="overflow-x-auto">
-            <table className="w-full text-left text-xs text-slate-300">
-              <thead className="bg-slate-950 text-slate-400 uppercase text-[10px] font-bold tracking-wider border-b border-slate-800">
-                <tr>
-                  <th className="px-6 py-4">Brand / Product</th>
-                  <th className="px-6 py-4">Category</th>
-                  <th className="px-6 py-4">SKU</th>
-                  <th className="px-6 py-4">MRP</th>
-                  <th className="px-6 py-4">Selling Price</th>
-                  <th className="px-6 py-4">Stock</th>
-                  <th className="px-6 py-4">Status</th>
-                  <th className="px-6 py-4 text-right">Actions</th>
-                </tr>
-              </thead>
-              <tbody className="divide-y divide-slate-800/80">
-                {products.map((p) => (
-                  <tr key={p._id} className="hover:bg-slate-800/40 transition-colors">
-                    <td className="px-6 py-4 flex items-center space-x-3">
-                      <img src={p.imageUrl} alt={p.name} className="w-10 h-10 rounded-lg object-cover bg-slate-950 border border-slate-800 shrink-0" />
-                      <div>
-                        <span className="text-[10px] font-black text-orange-400 uppercase">{p.brand || 'Havells'}</span>
-                        <p className="font-bold text-white text-xs">{p.name}</p>
-                      </div>
-                    </td>
-                    <td className="px-6 py-4 font-semibold text-slate-300">{p.category}</td>
-                    <td className="px-6 py-4 font-mono text-sky-400">{p.sku}</td>
-                    <td className="px-6 py-4 text-slate-500 line-through">₹{p.mrp || p.price}</td>
-                    <td className="px-6 py-4 font-bold text-white text-sm">{formatCurrency(p.price)}</td>
-                    <td className="px-6 py-4 font-bold text-amber-400">{p.stock} Units</td>
-                    <td className="px-6 py-4">
-                      <StatusBadge status={p.status} />
-                    </td>
-                    <td className="px-6 py-4 text-right space-x-2">
-                      <button onClick={() => handleOpenEdit(p)} className="p-2 rounded-lg bg-slate-800 text-slate-300 hover:text-white">
-                        <Edit2 className="w-4 h-4" />
-                      </button>
-                      <button onClick={() => handleDelete(p._id)} className="p-2 rounded-lg bg-slate-800 text-rose-400 hover:bg-rose-500/10">
-                        <Trash2 className="w-4 h-4" />
-                      </button>
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
+      {/* Search */}
+      <div className="flex items-center gap-4">
+        <div className="relative flex-1 max-w-md">
+          <Search className="w-4 h-4 absolute left-3 top-1/2 -translate-y-1/2 text-text-muted" />
+          <Input
+            placeholder="Search products..."
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
+            className="pl-10"
+          />
         </div>
+      </div>
+
+      {/* Products */}
+      {isLoading ? (
+        <LoadingSpinner message="Loading products..." />
+      ) : products.length === 0 ? (
+        <Card>
+          <CardBody>
+            <EmptyProducts onAdd={handleOpenCreate} />
+          </CardBody>
+        </Card>
+      ) : (
+        <StaggerContainer className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
+          {products.map((p) => (
+            <StaggerItem key={p._id}>
+              <Card hover>
+                <CardBody className="p-4">
+                  <div className="aspect-square rounded-lg bg-surface-100 mb-4 overflow-hidden">
+                    <img
+                      src={p.imageUrl}
+                      alt={p.name}
+                      className="w-full h-full object-cover"
+                    />
+                  </div>
+                  <div className="space-y-2">
+                    <div>
+                      <span className="text-xs font-semibold text-brand-600 uppercase">{p.brand || 'Havells'}</span>
+                      <h3 className="font-medium text-text-primary text-sm line-clamp-2">{p.name}</h3>
+                    </div>
+                    <div className="flex items-center justify-between text-xs">
+                      <span className="text-text-muted">SKU: {p.sku}</span>
+                      <StatusBadge status={p.status} />
+                    </div>
+                    <div className="flex items-center justify-between">
+                      <div>
+                        <p className="text-xs text-text-muted line-through">₹{p.mrp || p.price}</p>
+                        <p className="text-lg font-bold text-text-primary">{formatCurrency(p.price)}</p>
+                      </div>
+                      <div className="text-right">
+                        <p className="text-xs text-text-muted">Stock</p>
+                        <p className="font-semibold text-text-primary">{p.stock}</p>
+                      </div>
+                    </div>
+                    <div className="flex gap-2 pt-2">
+                      <Button
+                        variant="secondary"
+                        size="sm"
+                        className="flex-1"
+                        icon={Edit2}
+                        onClick={() => handleOpenEdit(p)}
+                      >
+                        Edit
+                      </Button>
+                      <Button
+                        variant="ghost"
+                        size="sm"
+                        icon={Trash2}
+                        onClick={() => handleDelete(p._id)}
+                        className="text-danger-600 hover:text-danger-700 hover:bg-danger-50"
+                      />
+                    </div>
+                  </div>
+                </CardBody>
+              </Card>
+            </StaggerItem>
+          ))}
+        </StaggerContainer>
       )}
 
       {/* Bulk CSV Import Modal */}
-      <Modal isOpen={activeModal === 'bulk'} onClose={() => setActiveModal(null)} title="Bulk Import Products (CSV / Excel)">
-        <form onSubmit={handleBulkImport} className="space-y-4 text-xs">
-          <p className="text-slate-400 leading-relaxed">
-            Paste CSV formatted text or JSON array to bulk upload household products into inventory.
+      <Modal isOpen={activeModal === 'bulk'} onClose={() => setActiveModal(null)} title="Bulk Import Products" size="lg">
+        <form onSubmit={handleBulkImport} className="space-y-4">
+          <p className="text-sm text-text-secondary">
+            Paste CSV formatted text or JSON array to bulk upload products into inventory.
           </p>
 
-          <div className="p-3 rounded-xl bg-slate-950 border border-slate-800 font-mono text-[11px] text-slate-400 space-y-1">
-            <span className="text-orange-400 font-bold block">CSV Format Sample:</span>
+          <div className="p-4 rounded-lg bg-surface-100 border border-surface-200 font-mono text-xs text-text-secondary space-y-1">
+            <span className="text-brand-600 font-semibold block">CSV Format Sample:</span>
             <code>Name,Brand,Category,SKU,MRP,Price,Stock,Warranty</code><br/>
             <code>Havells Fan,Havells,Ceiling Fans,HAV-101,3500,2999,20,2 Years Warranty</code>
           </div>
 
           <div>
-            <label className="block text-slate-300 font-bold uppercase mb-1">CSV / JSON Text Content *</label>
+            <label className="block text-sm font-medium text-text-primary mb-1">CSV / JSON Text Content *</label>
             <textarea
               rows={6}
               required
               placeholder="Paste CSV rows or JSON array..."
               value={bulkCsvText}
               onChange={(e) => setBulkCsvText(e.target.value)}
-              className="w-full px-3.5 py-2.5 bg-slate-950 border border-slate-800 rounded-xl text-slate-200 font-mono text-xs focus:outline-none focus:border-orange-500/50"
+              className="input font-mono text-xs"
             />
           </div>
 
           {bulkResult && (
-            <div className="p-3 rounded-xl bg-slate-950 border border-slate-800 text-xs font-bold">
+            <div className="p-3 rounded-lg bg-surface-100 border border-surface-200 text-sm">
               {bulkResult}
             </div>
           )}
 
-          <div className="pt-2 flex justify-end space-x-3">
-            <button
+          <div className="pt-2 flex justify-end gap-3">
+            <Button
               type="button"
+              variant="secondary"
               onClick={() => setActiveModal(null)}
-              className="px-4 py-2 rounded-xl bg-slate-800 text-slate-300 font-semibold"
             >
               Close
-            </button>
-            <button
+            </Button>
+            <Button
               type="submit"
-              disabled={bulkLoading}
-              className="px-5 py-2 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-black shadow-md flex items-center space-x-2"
+              variant="primary"
+              loading={bulkLoading}
+              icon={Upload}
             >
-              <Upload className="w-4 h-4" />
-              <span>{bulkLoading ? 'Importing...' : 'Start Bulk Import'}</span>
-            </button>
+              {bulkLoading ? 'Importing...' : 'Start Bulk Import'}
+            </Button>
           </div>
         </form>
       </Modal>
 
       {/* Create / Edit Modal */}
-      <Modal isOpen={activeModal === 'create' || activeModal === 'edit'} onClose={() => setActiveModal(null)} title={activeModal === 'create' ? 'Create Product SKU' : 'Edit Product Details'}>
-        <form onSubmit={handleSubmit} className="space-y-4 text-xs">
-          <div>
-            <label className="block text-slate-300 font-bold uppercase mb-1">Product Full Name *</label>
-            <input
-              type="text"
+      <Modal isOpen={activeModal === 'create' || activeModal === 'edit'} onClose={() => setActiveModal(null)} title={activeModal === 'create' ? 'Create Product' : 'Edit Product'} size="lg">
+        <form onSubmit={handleSubmit} className="space-y-4">
+          <Input
+            label="Product Name"
+            required
+            value={name}
+            onChange={(e) => setName(e.target.value)}
+            placeholder="Enter product name"
+          />
+
+          <div className="grid grid-cols-2 gap-4">
+            <Select
+              label="Brand"
               required
-              value={name}
-              onChange={(e) => setName(e.target.value)}
-              className="w-full px-3.5 py-2.5 bg-slate-950 border border-slate-800 rounded-xl text-slate-200 text-sm focus:outline-none focus:border-orange-500/50"
+              value={brand}
+              onChange={(e) => setBrand(e.target.value)}
+              options={brands.map((b) => ({ value: b, label: b }))}
+            />
+            <Select
+              label="Category"
+              required
+              value={category}
+              onChange={(e) => setCategory(e.target.value)}
+              options={categories.map((c) => ({ value: c, label: c }))}
+            />
+          </div>
+
+          <div className="grid grid-cols-3 gap-4">
+            <Input
+              label="SKU Code"
+              required
+              value={sku}
+              onChange={(e) => setSku(e.target.value)}
+              placeholder="SKU-123456"
+              className="font-mono"
+            />
+            <Input
+              label="MRP (₹)"
+              type="number"
+              min="0"
+              required
+              value={mrp}
+              onChange={(e) => setMrp(e.target.value)}
+              placeholder="0"
+            />
+            <Input
+              label="Selling Price (₹)"
+              type="number"
+              min="0"
+              required
+              value={price}
+              onChange={(e) => setPrice(e.target.value)}
+              placeholder="0"
             />
           </div>
 
           <div className="grid grid-cols-2 gap-4">
-            <div>
-              <label className="block text-slate-300 font-bold uppercase mb-1">Brand *</label>
-              <select
-                value={brand}
-                onChange={(e) => setBrand(e.target.value)}
-                className="w-full px-3.5 py-2.5 bg-slate-950 border border-slate-800 rounded-xl text-slate-200 text-sm focus:outline-none focus:border-orange-500/50 font-bold text-orange-400"
-              >
-                {brands.map((b) => (
-                  <option key={b} value={b}>{b}</option>
-                ))}
-              </select>
-            </div>
-
-            <div>
-              <label className="block text-slate-300 font-bold uppercase mb-1">Category *</label>
-              <select
-                value={category}
-                onChange={(e) => setCategory(e.target.value)}
-                className="w-full px-3.5 py-2.5 bg-slate-950 border border-slate-800 rounded-xl text-slate-200 text-sm focus:outline-none focus:border-orange-500/50"
-              >
-                {categories.map((c) => (
-                  <option key={c} value={c}>{c}</option>
-                ))}
-              </select>
-            </div>
-          </div>
-
-          <div className="grid grid-cols-3 gap-4">
-            <div>
-              <label className="block text-slate-300 font-bold uppercase mb-1">SKU Code *</label>
-              <input
-                type="text"
-                required
-                value={sku}
-                onChange={(e) => setSku(e.target.value)}
-                className="w-full px-3.5 py-2.5 bg-slate-950 border border-slate-800 rounded-xl text-sky-400 font-mono text-sm focus:outline-none focus:border-orange-500/50"
-              />
-            </div>
-            <div>
-              <label className="block text-slate-300 font-bold uppercase mb-1">MRP (₹) *</label>
-              <input
-                type="number"
-                min="0"
-                required
-                value={mrp}
-                onChange={(e) => setMrp(e.target.value)}
-                className="w-full px-3.5 py-2.5 bg-slate-950 border border-slate-800 rounded-xl text-slate-200 text-sm focus:outline-none focus:border-orange-500/50"
-              />
-            </div>
-            <div>
-              <label className="block text-slate-300 font-bold uppercase mb-1">Selling Price (₹) *</label>
-              <input
-                type="number"
-                min="0"
-                required
-                value={price}
-                onChange={(e) => setPrice(e.target.value)}
-                className="w-full px-3.5 py-2.5 bg-slate-950 border border-slate-800 rounded-xl text-slate-200 text-sm focus:outline-none focus:border-orange-500/50"
-              />
-            </div>
-          </div>
-
-          <div className="grid grid-cols-2 gap-4">
-            <div>
-              <label className="block text-slate-300 font-bold uppercase mb-1">Stock Quantity *</label>
-              <input
-                type="number"
-                min="0"
-                required
-                value={stock}
-                onChange={(e) => setStock(e.target.value)}
-                className="w-full px-3.5 py-2.5 bg-slate-950 border border-slate-800 rounded-xl text-slate-200 text-sm focus:outline-none focus:border-orange-500/50"
-              />
-            </div>
-            <div>
-              <label className="block text-slate-300 font-bold uppercase mb-1">Product Image URL</label>
-              <input
-                type="url"
-                value={imageUrl}
-                onChange={(e) => setImageUrl(e.target.value)}
-                className="w-full px-3.5 py-2.5 bg-slate-950 border border-slate-800 rounded-xl text-slate-200 text-sm focus:outline-none focus:border-orange-500/50"
-              />
-            </div>
+            <Input
+              label="Stock Quantity"
+              type="number"
+              min="0"
+              required
+              value={stock}
+              onChange={(e) => setStock(e.target.value)}
+              placeholder="0"
+            />
+            <Input
+              label="Product Image URL"
+              type="url"
+              value={imageUrl}
+              onChange={(e) => setImageUrl(e.target.value)}
+              placeholder="https://..."
+            />
           </div>
 
           <div>
-            <label className="block text-slate-300 font-bold uppercase mb-1">Description *</label>
+            <label className="block text-sm font-medium text-text-primary mb-1">Description</label>
             <textarea
               rows={2}
               required
               value={description}
               onChange={(e) => setDescription(e.target.value)}
-              className="w-full px-3.5 py-2.5 bg-slate-950 border border-slate-800 rounded-xl text-slate-200 text-sm focus:outline-none focus:border-orange-500/50"
+              placeholder="Product description..."
+              className="input"
             />
           </div>
 
-          <div className="pt-2 flex justify-end space-x-3">
-            <button
+          <div className="pt-2 flex justify-end gap-3">
+            <Button
               type="button"
+              variant="secondary"
               onClick={() => setActiveModal(null)}
-              className="px-4 py-2 rounded-xl bg-slate-800 text-slate-300 font-semibold"
             >
               Cancel
-            </button>
-            <button
+            </Button>
+            <Button
               type="submit"
-              className="px-5 py-2 rounded-xl bg-orange-500 hover:bg-orange-400 text-slate-950 font-extrabold shadow-md"
+              variant="primary"
             >
-              Save Product SKU
-            </button>
+              Save Product
+            </Button>
           </div>
         </form>
       </Modal>
