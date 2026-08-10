@@ -1,241 +1,152 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { motion } from 'framer-motion';
-import { Star, Plus, ExternalLink, ShieldCheck, MapPin } from 'lucide-react';
-import { Modal } from '../../components/Modal';
+import { Star, ExternalLink, MessageCircle, Phone, MapPin } from 'lucide-react';
 import { AnimatedSection } from '../../components/AnimatedSection';
+import { Seo } from '../../components/Seo';
+
+const serviceAreas = [
+  'Chhota Govindpur', 'Govindpur Housing Colony', 'Telco', 'Baridih', 'Sidhgora',
+  'Agrico', 'Golmuri', 'Birsanagar', 'Parsudih', 'Jugsalai', 'Sakchi', 'Mango', 'Adityapur'
+];
 
 export const ReviewsPage = () => {
-  const [reviews, setReviews] = useState([
-    {
-      id: 1,
-      name: 'Ramesh Singh',
-      location: 'Govindpur Housing Colony, Jamshedpur',
-      rating: 5,
-      date: 'Yesterday',
-      service: 'Geyser Heating Element Replacement',
-      comment: 'Prabhat arrived within 25 minutes in Govindpur and fixed our storage geyser heating element cleanly. Original spare used with reasonable charges!'
-    },
-    {
-      id: 2,
-      name: 'Priya Sharma',
-      location: 'Telco Colony, Jamshedpur',
-      rating: 5,
-      date: '3 Days Ago',
-      service: 'Full House Wiring & DB Box MCB Fix',
-      comment: 'Chandan & Devnath completed our entire flat wiring using Polycab wires. Excellent work, very polite wiremen and 6-month warranty card issued.'
-    },
-    {
-      id: 3,
-      name: 'Amitabh Sen',
-      location: 'Baridih, Jamshedpur',
-      rating: 5,
-      date: '1 Week Ago',
-      service: 'Ceiling Fan Balancing & Regulator Fitting',
-      comment: 'Bought Havells Stealth Air ceiling fan from their Chhota Govindpur shop and got instant fitting. Very professional service!'
-    }
-  ]);
-
-  const [modalOpen, setModalOpen] = useState(false);
-  const [name, setName] = useState('');
-  const [location, setLocation] = useState('Chhota Govindpur');
-  const [rating, setRating] = useState(5);
-  const [service, setService] = useState('Geyser Repair');
-  const [comment, setComment] = useState('');
-
-  const handleAddReview = (e) => {
-    e.preventDefault();
-    const newRev = {
-      id: Date.now(),
-      name,
-      location,
-      rating: Number(rating),
-      date: 'Just Now',
-      service,
-      comment
-    };
-    setReviews([newRev, ...reviews]);
-    setModalOpen(false);
-    setName('');
-    setComment('');
-  };
+  const whatsappReview = `https://wa.me/917903789402?text=${encodeURIComponent(
+    'Hi Uday Electrical Works! I recently used your shop/service and would like to share my feedback.'
+  )}`;
 
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 space-y-10 bg-slate-50 dark:bg-slate-950 text-slate-900 dark:text-slate-100 transition-colors">
-      
+      <Seo
+        title="Customer Reviews | Uday Electrical Works, Jamshedpur"
+        description="Read reviews of Uday Electrical Works — electrical shop & doorstep service in Chhota Govindpur, Jamshedpur. Share your experience on Google."
+      />
+
       {/* Header */}
       <AnimatedSection direction="up" className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-slate-200 dark:border-slate-800 pb-6">
         <div>
-          <span className="text-xs font-extrabold text-orange-500 uppercase tracking-widest">Verified Customer Testimonials</span>
-          <h1 className="text-3xl sm:text-5xl font-black text-slate-900 dark:text-white font-display">Customer Reviews & Ratings</h1>
+          <span className="text-xs font-extrabold text-orange-500 uppercase tracking-widest">Customer Feedback</span>
+          <h1 className="text-3xl sm:text-5xl font-black text-slate-900 dark:text-white font-display">Reviews & Testimonials</h1>
+          <p className="text-sm text-slate-600 dark:text-slate-400 mt-2 max-w-2xl">
+            Bought from our shop or used our doorstep service? Your feedback helps other families in
+            Jamshedpur find a reliable electrician.
+          </p>
         </div>
 
-        <div className="flex items-center space-x-3">
+        <div className="flex flex-wrap items-center gap-3">
           <a
             href="https://www.google.com/maps/search/?api=1&query=Uday+Electrical+Shop+Chhota+Govindpur+Jamshedpur"
             target="_blank"
             rel="noopener noreferrer"
             className="flex items-center space-x-2 px-5 py-2.5 rounded-2xl bg-blue-600 hover:bg-blue-700 text-white font-black text-xs shadow-md shadow-blue-600/20 transition-all hover:scale-105 hover:shadow-glow-blue"
           >
-            <span>Write Google Review</span>
+            <Star className="w-4 h-4 fill-current" />
+            <span>Review Us on Google</span>
             <ExternalLink className="w-4 h-4" />
           </a>
-
-          <button
-            onClick={() => setModalOpen(true)}
-            className="btn-cta px-5 py-2.5 text-xs"
+          <a
+            href={whatsappReview}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="flex items-center space-x-2 px-5 py-2.5 rounded-2xl bg-emerald-500 hover:bg-emerald-600 text-white font-black text-xs shadow-md shadow-emerald-500/20 transition-all hover:scale-105 hover:shadow-glow-emerald"
           >
-            <Plus className="w-4 h-4" />
-            <span>Post Store Review</span>
-          </button>
+            <MessageCircle className="w-4 h-4 fill-current" />
+            <span>Share on WhatsApp</span>
+          </a>
         </div>
       </AnimatedSection>
 
-      {/* Average Score Banner */}
+      {/* Honest note about reviews */}
       <AnimatedSection direction="up" delay={0.05}>
         <div className="relative p-8 rounded-3xl bg-gradient-to-br from-[#0F172A] via-slate-900 to-slate-950 border border-slate-800 shadow-2xl flex flex-col md:flex-row md:items-center justify-between gap-6 overflow-hidden">
           <div className="absolute -top-16 -right-16 w-56 h-56 bg-[#FF6B00]/20 blur-[100px] rounded-full pointer-events-none"></div>
-          <div className="relative flex items-center space-x-4">
-            <span className="text-5xl font-black text-white font-display">4.9</span>
-            <div>
-              <div className="flex text-amber-400 space-x-1">
-                {[...Array(5)].map((_, i) => (
-                  <Star key={i} className="w-5 h-5 fill-current" />
-                ))}
-              </div>
-              <span className="text-xs text-slate-400 font-bold block mt-1">Based on 1,000+ Verified Local Ratings in Jamshedpur</span>
-            </div>
+          <div className="relative space-y-2 max-w-2xl">
+            <h2 className="text-xl font-black text-white font-display">We're Listening</h2>
+            <p className="text-xs text-slate-400 leading-relaxed">
+              Our reviews live on our Google Maps listing, where you can see real feedback from real
+              customers. We read every review and use it to improve our service. If you've used our
+              shop or services, please leave us a review — or send us feedback directly on WhatsApp.
+            </p>
           </div>
-
-          <div className="relative flex items-center space-x-6 text-xs text-slate-400 font-semibold border-t md:border-t-0 md:border-l border-slate-700 pt-4 md:pt-0 md:pl-6">
+          <div className="relative flex items-center space-x-6 text-xs text-slate-400 font-semibold border-t md:border-t-0 md:border-l border-slate-700 pt-4 md:pt-0 md:pl-6 shrink-0">
             <div>
-              <strong className="text-white text-base block font-extrabold">99.2%</strong>
-              <span>On-Time Arrival</span>
+              <strong className="text-white text-base block font-extrabold">7</strong>
+              <span>Wiremen on Team</span>
             </div>
             <div>
-              <strong className="text-white text-base block font-extrabold">100%</strong>
-              <span>Licensed Wiremen</span>
+              <strong className="text-white text-base block font-extrabold">13</strong>
+              <span>Areas Served</span>
             </div>
           </div>
         </div>
       </AnimatedSection>
 
-      {/* Reviews List */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-        {reviews.map((r, idx) => (
-          <motion.div
-            key={r.id}
-            initial={{ opacity: 0, y: 24 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true, margin: '-40px' }}
-            transition={{ duration: 0.45, delay: (idx % 3) * 0.1, ease: [0.22, 1, 0.36, 1] }}
-            className="card-premium p-6 space-y-4 flex flex-col justify-between group"
-          >
-            <div className="space-y-3">
-              <div className="flex justify-between items-start">
-                <div className="flex text-amber-400 space-x-1">
-                  {[...Array(r.rating)].map((_, i) => (
-                    <Star key={i} className="w-4 h-4 fill-current" />
-                  ))}
-                </div>
-                <span className="text-[10px] text-slate-400 font-semibold">{r.date}</span>
-              </div>
-
-              <p className="text-xs text-slate-700 dark:text-slate-300 leading-relaxed italic">"{r.comment}"</p>
-            </div>
-
-            <div className="pt-3 border-t border-slate-200 dark:border-slate-800 flex justify-between items-end">
-              <div>
-                <h4 className="font-bold text-slate-900 dark:text-white text-xs">{r.name}</h4>
-                <p className="text-[10px] text-slate-500">{r.location}</p>
-              </div>
-              <span className="text-[10px] font-bold uppercase text-orange-500 px-2 py-0.5 rounded bg-orange-500/10">
-                {r.service}
-              </span>
-            </div>
-          </motion.div>
-        ))}
-      </div>
-
-      {/* Add Review Modal */}
-      <Modal isOpen={modalOpen} onClose={() => setModalOpen(false)} title="Write Customer Review">
-        <form onSubmit={handleAddReview} className="space-y-4 text-xs">
-          <div className="grid grid-cols-2 gap-4">
-            <div>
-              <label className="block text-slate-700 dark:text-slate-300 font-bold uppercase mb-1">Your Name *</label>
-              <input
-                type="text"
-                required
-                value={name}
-                onChange={(e) => setName(e.target.value)}
-                className="w-full px-3.5 py-2.5 bg-slate-100 dark:bg-slate-950 border border-slate-300 dark:border-slate-800 rounded-xl text-slate-900 dark:text-white"
-              />
-            </div>
-            <div>
-              <label className="block text-slate-700 dark:text-slate-300 font-bold uppercase mb-1">Locality / Area *</label>
-              <input
-                type="text"
-                required
-                placeholder="e.g. Chhota Govindpur"
-                value={location}
-                onChange={(e) => setLocation(e.target.value)}
-                className="w-full px-3.5 py-2.5 bg-slate-100 dark:bg-slate-950 border border-slate-300 dark:border-slate-800 rounded-xl text-slate-900 dark:text-white"
-              />
-            </div>
-          </div>
-
-          <div className="grid grid-cols-2 gap-4">
-            <div>
-              <label className="block text-slate-700 dark:text-slate-300 font-bold uppercase mb-1">Rating (1-5 Stars)</label>
-              <select
-                value={rating}
-                onChange={(e) => setRating(e.target.value)}
-                className="w-full px-3.5 py-2.5 bg-slate-100 dark:bg-slate-950 border border-slate-300 dark:border-slate-800 rounded-xl text-slate-900 dark:text-white font-bold"
+      {/* How to review steps */}
+      <AnimatedSection direction="up" delay={0.1}>
+        <div className="text-center space-y-6">
+          <h2 className="text-2xl font-black text-slate-900 dark:text-white font-display">How to Share Your Experience</h2>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            {[
+              { step: '1', title: 'Visit our Google Listing', desc: 'Open the shop on Google Maps — search "Uday Electrical Shop, Chhota Govindpur".' },
+              { step: '2', title: 'Write Your Review', desc: 'Rate us out of 5 stars and tell others about the product or service you used.' },
+              { step: '3', title: 'Or WhatsApp Us Directly', desc: 'Prefer a quick message? Send us your feedback on 7903789402 and we\'ll pass it to the team.' }
+            ].map(({ step, title, desc }, idx) => (
+              <motion.div
+                key={idx}
+                initial={{ opacity: 0, y: 24 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true, margin: '-40px' }}
+                transition={{ duration: 0.45, delay: idx * 0.1 }}
+                className="card-premium p-6 space-y-3 text-center"
               >
-                <option value={5}>⭐⭐⭐⭐⭐ (5 Stars)</option>
-                <option value={4}>⭐⭐⭐⭐ (4 Stars)</option>
-              </select>
-            </div>
-            <div>
-              <label className="block text-slate-700 dark:text-slate-300 font-bold uppercase mb-1">Service Provided</label>
-              <input
-                type="text"
-                value={service}
-                onChange={(e) => setService(e.target.value)}
-                className="w-full px-3.5 py-2.5 bg-slate-100 dark:bg-slate-950 border border-slate-300 dark:border-slate-800 rounded-xl text-slate-900 dark:text-white"
-              />
-            </div>
+                <div className="w-10 h-10 mx-auto rounded-full bg-gradient-to-br from-[#FF6B00] to-amber-500 text-white font-black flex items-center justify-center shadow-md shadow-[#FF6B00]/30">
+                  {step}
+                </div>
+                <h3 className="text-sm font-bold text-slate-900 dark:text-white">{title}</h3>
+                <p className="text-xs text-slate-600 dark:text-slate-400 leading-relaxed">{desc}</p>
+              </motion.div>
+            ))}
           </div>
+        </div>
+      </AnimatedSection>
 
-          <div>
-            <label className="block text-slate-700 dark:text-slate-300 font-bold uppercase mb-1">Review Experience *</label>
-            <textarea
-              rows={3}
-              required
-              placeholder="Tell us about the electrician work..."
-              value={comment}
-              onChange={(e) => setComment(e.target.value)}
-              className="w-full px-3.5 py-2.5 bg-slate-100 dark:bg-slate-950 border border-slate-300 dark:border-slate-800 rounded-xl text-slate-900 dark:text-white"
-            />
+      {/* Contact strip */}
+      <AnimatedSection direction="up" delay={0.15}>
+        <div className="p-8 rounded-3xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-card flex flex-col sm:flex-row items-center justify-between gap-6 text-center sm:text-left">
+          <div className="space-y-1">
+            <h3 className="text-lg font-black text-slate-900 dark:text-white font-display">Prefer to talk?</h3>
+            <p className="text-xs text-slate-600 dark:text-slate-400">
+              Call the shop at 7903789402 / 9934187847 — Mon–Sat, 8:30 AM – 9:00 PM.
+            </p>
           </div>
-
-          <div className="pt-2 flex justify-end space-x-3">
-            <button
-              type="button"
-              onClick={() => setModalOpen(false)}
-              className="px-4 py-2 rounded-xl bg-slate-200 dark:bg-slate-800 text-slate-700 dark:text-slate-300 font-semibold"
+          <div className="flex flex-wrap justify-center gap-3">
+            <a href="tel:7903789402" className="flex items-center space-x-2 px-5 py-3 rounded-2xl bg-[#FF6B00] hover:bg-[#E55A00] text-white font-black text-xs transition-all shadow-md">
+              <Phone className="w-4 h-4" />
+              <span>Call the Shop</span>
+            </a>
+            <a
+              href="https://www.google.com/maps/place/Uday+Electrical+Shop/"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="flex items-center space-x-2 px-5 py-3 rounded-2xl bg-blue-600 hover:bg-blue-700 text-white font-black text-xs transition-all shadow-md"
             >
-              Cancel
-            </button>
-            <button
-              type="submit"
-              className="px-5 py-2 rounded-xl bg-orange-500 hover:bg-orange-400 text-slate-950 font-black shadow-md"
-            >
-              Post Review
-            </button>
+              <MapPin className="w-4 h-4" />
+              <span>Google Maps Listing</span>
+            </a>
           </div>
-        </form>
-      </Modal>
+        </div>
+      </AnimatedSection>
 
+      {/* Areas served */}
+      <AnimatedSection direction="up" className="text-center space-y-3">
+        <h3 className="text-sm font-black uppercase tracking-wider text-slate-500">Serving Families Across</h3>
+        <div className="flex flex-wrap justify-center gap-2">
+          {serviceAreas.map((area) => (
+            <span key={area} className="px-3 py-1.5 rounded-full bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 text-[11px] font-bold text-slate-600 dark:text-slate-300">
+              {area}
+            </span>
+          ))}
+        </div>
+      </AnimatedSection>
     </div>
   );
 };

@@ -1,14 +1,27 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import { ShieldCheck, Clock, Award, CheckCircle2, ChevronRight, ChevronLeft, Star, Phone, Sparkles, Wrench, Package, MapPin, MessageSquare, Send, Building2, ExternalLink, X, Play, Pause } from 'lucide-react';
+import { ShieldCheck, Clock, CheckCircle2, ChevronRight, ChevronLeft, Star, Phone, Wrench, Package, Send, Building2, ExternalLink, X, Play, Pause, Store, Receipt } from 'lucide-react';
 import { useProducts, useServices } from '../../hooks/useErpQueries';
 import { formatCurrency } from '../../utils/formatters';
 import { BrandMarquee } from '../../components/BrandMarquee';
 import { SkeletonLoader } from '../../components/SkeletonLoader';
 import { HeroSection } from '../../components/HeroSection';
 import { AnimatedSection } from '../../components/AnimatedSection';
-import { ReviewsSlider } from '../../components/ReviewsSlider';
+import { Seo } from '../../components/Seo';
+import { useAuth } from '../../hooks/useAuth';
+import { createLeadApi } from '../../api/leadApi';
+
+const productCategories = [
+  { title: 'Ceiling Fans', icon: '🌀' },
+  { title: 'Exhaust Fans', icon: '🌬️' },
+  { title: 'LED Bulbs & Battens', icon: '💡' },
+  { title: 'Modular Switches & Sockets', icon: '🔌' },
+  { title: 'Wires & Cables', icon: '⚡' },
+  { title: 'MCBs & DB Boxes', icon: '🛡️' },
+  { title: 'Water Heaters & Geysers', icon: '🚿' },
+  { title: 'Voltage Stabilizers', icon: '🔋' }
+];
 
 export const HomePage = () => {
   const serviceScrollRef = useRef(null);
@@ -18,6 +31,7 @@ export const HomePage = () => {
   const [selectedService, setSelectedService] = useState(null);
   const [autoPlay, setAutoPlay] = useState(true);
   const [isHovered, setIsHovered] = useState(false);
+  const { isAuthenticated } = useAuth();
   const { data: productsRes, isLoading: loadingProducts } = useProducts({ limit: 6 });
   const { data: servicesRes, isLoading: loadingServices } = useServices({ limit: 12 });
 
@@ -26,11 +40,10 @@ export const HomePage = () => {
 
   const autoScrollPaused = !autoPlay || isHovered || !!selectedService;
 
-  // Buttery-smooth infinite marquee (GPU transform, seamless loop like the brand strip)
   useEffect(() => {
     const track = serviceScrollRef.current;
     if (!track || !services.length) return;
-    const speed = 1.1; // px per ms (~66 px/s)
+    const speed = 1.1;
     let last = performance.now();
 
     const step = (now) => {
@@ -51,10 +64,8 @@ export const HomePage = () => {
     return () => cancelAnimationFrame(rafRef.current);
   }, [services, autoScrollPaused]);
 
-  // Cleanup resume timer on unmount
   useEffect(() => () => clearTimeout(resumeTimerRef.current), []);
 
-  // Manual arrow shift pauses autoplay briefly so the two don't fight
   const handleManualScroll = (dir) => {
     setAutoPlay(false);
     clearTimeout(resumeTimerRef.current);
@@ -62,63 +73,72 @@ export const HomePage = () => {
     const track = serviceScrollRef.current;
     if (!track) return;
     const first = track.firstElementChild;
-    const step = (first?.getBoundingClientRect().width || 300) + 24; // one card + gap
+    const step = (first?.getBoundingClientRect().width || 300) + 24;
     const half = track.scrollWidth / 2;
     progressRef.current = (progressRef.current + dir * step + half) % half;
     track.style.transform = `translate3d(-${progressRef.current}px, 0, 0)`;
   };
 
-  // Callback Form State
   const [cbName, setCbName] = useState('');
   const [cbPhone, setCbPhone] = useState('');
   const [cbSubmitted, setCbSubmitted] = useState(false);
+  const [cbError, setCbError] = useState('');
+  const [cbLoading, setCbLoading] = useState(false);
 
-  const handleCallbackSubmit = (e) => {
+  const handleCallbackSubmit = async (e) => {
     e.preventDefault();
-    setCbSubmitted(true);
+    setCbError('');
+    if (!isAuthenticated) {
+      setCbError('Please sign in first, or call us directly at 7903789402.');
+      return;
+    }
+    setCbLoading(true);
+    try {
+      await createLeadApi({
+        name: cbName,
+        phone: cbPhone,
+        serviceRequired: 'Callback Request'
+      });
+      setCbSubmitted(true);
+    } catch (err) {
+      setCbError(err.message || 'Could not submit. Please call 7903789402.');
+    } finally {
+      setCbLoading(false);
+    }
   };
-
-  const productCategories = [
-    { title: 'Ceiling & Exhaust Fans', desc: 'BLDC, High Speed & Anti-Dust', icon: '🌀', count: '15+ Models' },
-    { title: 'LED Bulbs & Tube Lights', desc: 'Philips, Syska & Wipro LED', icon: '💡', count: '20+ Models' },
-    { title: 'Modular Switches & Sockets', desc: 'Anchor Roma, Goldmedal, GM', icon: '🔌', count: '30+ Models' },
-    { title: 'House Wires & Cables', desc: '1.0mm to 6.0mm Polycab & Finolex', icon: '⚡', count: '10+ Coils' },
-    { title: 'MCB & Distribution Boards', desc: 'Havells Circuit Breakers', icon: '🛡️', count: '12+ Types' },
-    { title: 'Geysers & Water Pumps', desc: 'V-Guard, Crompton & Bajaj 3L-25L', icon: '🚿', count: '8+ Models' }
-  ];
 
   return (
     <div className="space-y-20 pb-20 bg-white dark:bg-slate-950 text-[#0F172A] dark:text-slate-100 transition-colors duration-300 overflow-hidden">
-      
-      {/* SECTION 1: Adomate-Inspired Hero Section */}
-      <HeroSection />
+      <Seo
+        title="Uday Electrical Works | Electrical Shop & Home Services in Jamshedpur"
+        description="Electrical shop & doorstep service centre in Chhota Govindpur, Jamshedpur. Genuine Havells, Crompton, Polycab products. Fan repair, geyser repair, house wiring. Call 7903789402."
+      />
 
-      {/* SECTION 2: Trusted Brands Marquee */}
+      <HeroSection />
       <BrandMarquee />
 
-      {/* SECTION 3: Product Categories Grid */}
+      {/* Product Categories Grid */}
       <AnimatedSection direction="up" className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-10">
         <div className="text-center space-y-2 max-w-3xl mx-auto">
           <span className="text-xs font-extrabold text-[#FF6B00] uppercase tracking-widest">Store Department</span>
-          <h2 className="text-3xl sm:text-4xl font-black text-[#0F172A] dark:text-white font-display">Household Electrical Categories</h2>
+          <h2 className="text-3xl sm:text-4xl font-black text-[#0F172A] dark:text-white font-display">What We Sell at Our Shop</h2>
         </div>
 
-        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
           {productCategories.map((cat, idx) => (
             <Link
-              key={idx}
-              to="/products"
+              key={cat.title}
+              to={`/shop?category=${encodeURIComponent(cat.title)}`}
               className="group p-5 rounded-3xl bg-white dark:bg-slate-900 border border-[#E2E8F0] dark:border-slate-800 shadow-card text-center space-y-2 hover:border-[#FF6B00] hover:shadow-glow-orange transition-all hover:-translate-y-1.5 block"
             >
               <span className="text-3xl block group-hover:scale-125 transition-transform duration-300">{cat.icon}</span>
               <h3 className="text-xs font-bold text-[#0F172A] dark:text-white leading-tight group-hover:text-[#FF6B00] transition-colors">{cat.title}</h3>
-              <span className="text-[10px] text-[#475569] block font-semibold">{cat.count}</span>
             </Link>
           ))}
         </div>
       </AnimatedSection>
 
-      {/* SECTION 4: Home Service Categories Grid with Scroll Controls */}
+      {/* Home Services Marquee */}
       <AnimatedSection direction="up" delay={0.05} className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-8">
         <div className="flex flex-col md:flex-row md:items-end justify-between border-b border-[#E2E8F0] dark:border-slate-800 pb-4 gap-4">
           <div>
@@ -127,7 +147,6 @@ export const HomePage = () => {
           </div>
 
           <div className="flex items-center space-x-3">
-            {/* Scroll Control Buttons */}
             <div className="flex items-center space-x-2">
               <button
                 onClick={() => handleManualScroll(-1)}
@@ -136,7 +155,6 @@ export const HomePage = () => {
               >
                 <ChevronLeft className="w-5 h-5 text-[#FF6B00]" />
               </button>
-
               <button
                 onClick={() => setAutoPlay((prev) => !prev)}
                 className="p-3 rounded-2xl bg-white dark:bg-slate-900 border border-[#E2E8F0] dark:border-slate-800 hover:border-[#FF6B00] text-[#0F172A] dark:text-white shadow-md hover:scale-105 transition-all"
@@ -144,7 +162,6 @@ export const HomePage = () => {
               >
                 {autoPlay ? <Pause className="w-5 h-5 text-[#FF6B00]" /> : <Play className="w-5 h-5 text-[#FF6B00]" />}
               </button>
-
               <button
                 onClick={() => handleManualScroll(1)}
                 className="p-3 rounded-2xl bg-white dark:bg-slate-900 border border-[#E2E8F0] dark:border-slate-800 hover:border-[#FF6B00] text-[#0F172A] dark:text-white shadow-md hover:scale-105 transition-all"
@@ -155,7 +172,7 @@ export const HomePage = () => {
             </div>
 
             <Link to="/services" className="text-xs font-extrabold px-4 py-2.5 rounded-2xl bg-[#FF6B00]/10 hover:bg-[#FF6B00] text-[#FF6B00] hover:text-white transition-all flex items-center space-x-1">
-              <span>View All 18+ Services</span>
+              <span>View All Services</span>
               <ChevronRight className="w-4 h-4" />
             </Link>
           </div>
@@ -194,46 +211,43 @@ export const HomePage = () => {
                   }}
                   className="w-[300px] sm:w-[360px] shrink-0 bg-white dark:bg-slate-900 border border-[#E2E8F0] dark:border-slate-800 rounded-3xl overflow-hidden shadow-xl flex flex-col justify-between group hover:border-[#FF6B00]/40 hover:shadow-glow-orange transition-all cursor-pointer"
                 >
-                <div className="h-48 overflow-hidden relative">
-                  <img src={item.imageUrl} alt={item.title} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
-                  <div className="absolute top-3 left-3">
-                    <span className="px-3 py-1 rounded-lg bg-slate-900/90 text-white font-bold text-[10px] uppercase shadow">
-                      {item.category}
-                    </span>
-                  </div>
-                  <div className="absolute top-3 right-3 px-2.5 py-1 rounded-lg bg-white/90 text-[#0F172A] text-[10px] font-black uppercase shadow opacity-0 group-hover:opacity-100 transition-opacity">
-                    View Details
-                  </div>
-                </div>
-
-                <div className="p-6 space-y-4 flex-1 flex flex-col justify-between">
-                  <div>
-                    <h3 className="text-base font-bold text-[#0F172A] dark:text-white group-hover:text-[#FF6B00] transition-colors">{item.title}</h3>
-                    <p className="text-xs text-[#475569] dark:text-slate-400 mt-2 line-clamp-2">{item.description}</p>
-                  </div>
-
-                  <div className="pt-4 border-t border-[#E2E8F0] dark:border-slate-800 flex items-center justify-between">
-                    <div>
-                      <span className="text-[10px] text-slate-400 uppercase block">Starting Fee</span>
-                      <span className="text-lg font-black text-[#0F172A] dark:text-white">{formatCurrency(item.estimatedPrice)}</span>
+                  <div className="h-48 overflow-hidden relative">
+                    <img src={item.imageUrl} alt={item.title} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
+                    <div className="absolute top-3 left-3">
+                      <span className="px-3 py-1 rounded-lg bg-slate-900/90 text-white font-bold text-[10px] uppercase shadow">
+                        {item.category}
+                      </span>
                     </div>
-                    <Link
-                      to="/services"
-                      onClick={(e) => e.stopPropagation()}
-                      className="px-4 py-2 rounded-xl bg-[#FF6B00]/10 hover:bg-[#FF6B00] text-[#FF6B00] hover:text-white font-black text-xs transition-all"
-                    >
-                      Book Visit
-                    </Link>
                   </div>
-                </div>
-              </motion.div>
-            ))}
+
+                  <div className="p-6 space-y-4 flex-1 flex flex-col justify-between">
+                    <div>
+                      <h3 className="text-base font-bold text-[#0F172A] dark:text-white group-hover:text-[#FF6B00] transition-colors">{item.title}</h3>
+                      <p className="text-xs text-[#475569] dark:text-slate-400 mt-2 line-clamp-2">{item.description}</p>
+                    </div>
+
+                    <div className="pt-4 border-t border-[#E2E8F0] dark:border-slate-800 flex items-center justify-between">
+                      <div>
+                        <span className="text-[10px] text-slate-400 uppercase block">Starting Fee</span>
+                        <span className="text-lg font-black text-[#0F172A] dark:text-white">{formatCurrency(item.estimatedPrice)}</span>
+                      </div>
+                      <Link
+                        to="/services"
+                        onClick={(e) => e.stopPropagation()}
+                        className="px-4 py-2 rounded-xl bg-[#FF6B00]/10 hover:bg-[#FF6B00] text-[#FF6B00] hover:text-white font-black text-xs transition-all"
+                      >
+                        Book Visit
+                      </Link>
+                    </div>
+                  </div>
+                </motion.div>
+              ))}
             </div>
           </div>
         )}
       </AnimatedSection>
 
-      {/* SERVICE DETAIL MODAL (opens when a card is clicked) */}
+      {/* Service Detail Modal */}
       {selectedService && (
         <div
           className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/70 backdrop-blur-md animate-fade-in"
@@ -280,10 +294,10 @@ export const HomePage = () => {
 
               <div className="space-y-2.5">
                 {[
-                  { icon: ShieldCheck, text: '6-Month Free Service Warranty' },
-                  { icon: CheckCircle2, text: 'Licensed Electrician Dispatch' },
-                  { icon: Wrench, text: 'Original Factory Spares Used' },
-                  { icon: Clock, text: 'Rapid Doorstep Arrival in Jamshedpur' }
+                  { icon: Receipt, text: 'Digital GST invoice after the job' },
+                  { icon: CheckCircle2, text: 'Booking status tracked online in your account' },
+                  { icon: ShieldCheck, text: 'Genuine brand spares available at the shop' },
+                  { icon: Wrench, text: 'Done by our own wiremen — Prabhat, Chandan, Devnath, Appu & team' }
                 ].map(({ icon: Icon, text }, idx) => (
                   <div key={idx} className="flex items-center space-x-2.5 text-xs text-[#475569] dark:text-slate-300">
                     <span className="p-1.5 rounded-lg bg-[#00C853]/10 text-[#00C853] shrink-0"><Icon className="w-3.5 h-3.5" /></span>
@@ -314,23 +328,23 @@ export const HomePage = () => {
         </div>
       )}
 
-      {/* SECTION 5: Why Choose Us (Trust Badges) */}
+      {/* Why Choose Us */}
       <section className="relative py-20 bg-gradient-to-b from-white via-[#F8FAFC] to-white dark:from-slate-950 dark:via-slate-900/60 dark:to-slate-950 section-pattern overflow-hidden">
         <div className="absolute -top-24 -right-24 w-96 h-96 bg-[#FF6B00]/10 blur-[120px] rounded-full pointer-events-none"></div>
         <div className="absolute -bottom-24 -left-24 w-96 h-96 bg-[#0066FF]/10 blur-[120px] rounded-full pointer-events-none"></div>
 
         <AnimatedSection direction="up" className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-10 relative">
           <div className="text-center space-y-2 max-w-3xl mx-auto">
-            <span className="text-xs font-extrabold text-[#FF6B00] uppercase tracking-widest">Why Local Families Trust Uday Electricals</span>
-            <h2 className="text-3xl font-black text-[#0F172A] dark:text-white font-display">Our Local Store Guarantee</h2>
+            <span className="text-xs font-extrabold text-[#FF6B00] uppercase tracking-widest">Why Local Families Choose Us</span>
+            <h2 className="text-3xl font-black text-[#0F172A] dark:text-white font-display">A Real Shop with Real Wiremen</h2>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-4 gap-6 text-center">
             {[
-              { icon: Award, color: 'text-[#FF6B00] bg-[#FF6B00]/10', title: 'Licensed Electricians', desc: 'Prabhat, Chandan, Devnath & team with full background verification.' },
-              { icon: Clock, color: 'text-[#0066FF] bg-[#0066FF]/10', title: 'Rapid Doorstep Arrival', desc: 'Fast arrival in Chhota Govindpur, Telco, Baridih & Golmuri.' },
-              { icon: ShieldCheck, color: 'text-[#00C853] bg-[#00C853]/10', title: '6-Month Service Warranty', desc: '100% free repair guarantee on all electrical work.' },
-              { icon: Package, color: 'text-purple-600 bg-purple-600/10', title: 'Genuine Factory Spares', desc: 'Original Havells, Crompton, Polycab & Anchor materials.' }
+              { icon: Store, color: 'text-[#FF6B00] bg-[#FF6B00]/10', title: 'Local Shop & Workshop', desc: 'Walk-in store on Chhota Govindpur Main Road, Jamshedpur — buy today, no delivery wait.' },
+              { icon: Wrench, color: 'text-[#0066FF] bg-[#0066FF]/10', title: 'Our Own Wiremen', desc: 'Prabhat, Chandan, Devnath, Appu and team do the doorstep work themselves.' },
+              { icon: Package, color: 'text-[#00C853] bg-[#00C853]/10', title: 'Genuine Brand Products', desc: 'Havells, Crompton, Polycab, Philips & Anchor — with a GST invoice on every sale.' },
+              { icon: Receipt, color: 'text-purple-600 bg-purple-600/10', title: 'Clear Starting Fees', desc: 'Every service lists its starting fee and duration — see them before booking.' }
             ].map(({ icon: Icon, color, title, desc }, idx) => (
               <motion.div
                 key={idx}
@@ -352,7 +366,7 @@ export const HomePage = () => {
         </AnimatedSection>
       </section>
 
-      {/* SECTION 6: Service Process (4 Steps) */}
+      {/* Service Process */}
       <AnimatedSection direction="up" className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-10">
         <div className="text-center space-y-2 max-w-3xl mx-auto">
           <span className="text-xs font-extrabold text-[#FF6B00] uppercase tracking-widest">Simple 4-Step Booking</span>
@@ -361,10 +375,10 @@ export const HomePage = () => {
 
         <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
           {[
-            { step: '1', title: 'Book Online or Call', desc: 'Choose service & preferred date or call 7903789402 directly.' },
-            { step: '2', title: 'Wireman Dispatched', desc: 'Licensed technician (Prabhat/Chandan) arrives at your home.' },
-            { step: '3', title: 'Job Repair Completed', desc: 'Inspection & repair done using original brand spares.' },
-            { step: '4', title: 'Warranty & Receipt', desc: 'Digital receipt issued with 6-month service warranty.' }
+            { step: '1', title: 'Book Online or Call', desc: 'Pick a service and preferred date, or call 7903789402.' },
+            { step: '2', title: 'Wireman Assigned', desc: 'One of our wiremen is assigned to your visit slot.' },
+            { step: '3', title: 'Job Completed at Home', desc: 'Repair or installation done at your doorstep.' },
+            { step: '4', title: 'Invoice Issued', desc: 'Digital GST invoice with your booking record.' }
           ].map(({ step, title, desc }, idx) => (
             <motion.div
               key={idx}
@@ -385,14 +399,14 @@ export const HomePage = () => {
         </div>
       </AnimatedSection>
 
-      {/* SECTION 7: Featured Household Products */}
+      {/* Featured Products */}
       <AnimatedSection direction="up" className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-10">
         <div className="flex flex-col md:flex-row md:items-end justify-between border-b border-[#E2E8F0] dark:border-slate-800 pb-4">
           <div>
             <span className="text-xs font-extrabold text-[#FF6B00] uppercase tracking-widest">In-Store Electrical Catalog</span>
             <h2 className="text-3xl sm:text-4xl font-black text-[#0F172A] dark:text-white mt-1 font-display">Featured Household Electricals</h2>
           </div>
-          <Link to="/products" className="group text-sm font-extrabold text-[#FF6B00] hover:underline flex items-center space-x-1 mt-2 md:mt-0">
+          <Link to="/shop" className="group text-sm font-extrabold text-[#FF6B00] hover:underline flex items-center space-x-1 mt-2 md:mt-0">
             <span>Browse Full Catalog</span>
             <ChevronRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
           </Link>
@@ -431,12 +445,12 @@ export const HomePage = () => {
                   <div className="pt-4 border-t border-[#E2E8F0] dark:border-slate-800 flex items-center justify-between">
                     <div>
                       {product.mrp > product.price && (
-                        <span className="text-[10px] text-slate-400 line-through block">MRP: ₹{product.mrp}</span>
+                        <span className="text-[10px] text-slate-400 line-through block">MRP: {formatCurrency(product.mrp)}</span>
                       )}
                       <span className="text-xl font-black text-[#0F172A] dark:text-white">{formatCurrency(product.price)}</span>
                     </div>
                     <Link
-                      to="/products"
+                      to="/shop"
                       className="px-4 py-2 rounded-xl bg-[#F8FAFC] dark:bg-slate-800 hover:bg-[#FF6B00] hover:text-white text-[#0F172A] dark:text-slate-200 text-xs font-bold transition-all"
                     >
                       View Specs
@@ -449,82 +463,115 @@ export const HomePage = () => {
         )}
       </AnimatedSection>
 
-      {/* SECTION 8: Customer Reviews */}
+      {/* Google Reviews CTA */}
       <AnimatedSection direction="up" className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="relative p-8 sm:p-12 rounded-3xl bg-gradient-to-br from-[#0F172A] via-slate-900 to-slate-950 dark:from-slate-900 dark:via-slate-900 dark:to-slate-950 border border-slate-800 shadow-2xl grid grid-cols-1 lg:grid-cols-12 gap-10 items-center overflow-hidden">
           <div className="absolute -top-16 -right-16 w-64 h-64 bg-[#FF6B00]/20 blur-[100px] rounded-full pointer-events-none"></div>
           <div className="absolute -bottom-16 -left-16 w-64 h-64 bg-[#0066FF]/20 blur-[100px] rounded-full pointer-events-none"></div>
 
           <div className="relative lg:col-span-5 space-y-4">
-            <span className="text-xs font-black text-[#FF8A3D] uppercase tracking-widest">Verified Local Reviews</span>
-            <h2 className="text-3xl font-black text-white font-display">4.9 Star Rating in Chhota Govindpur & Telco</h2>
+            <span className="text-xs font-black text-[#FF8A3D] uppercase tracking-widest">We Value Your Feedback</span>
+            <h2 className="text-3xl font-black text-white font-display">Bought from us or used our service?</h2>
             <p className="text-slate-400 text-xs max-w-xl leading-relaxed">
-              Read feedback from over 1,000 local Jamshedpur families who trust Uday Electrical Works.
+              Share your experience on our Google Maps listing, or read what local families say
+              about our shop and wiremen.
             </p>
-            <div className="flex items-center space-x-1 pt-1">
-              {[...Array(5)].map((_, i) => (
-                <Star key={i} className="w-5 h-5 text-amber-400 fill-current" />
-              ))}
+            <div className="flex flex-wrap gap-3 pt-1">
+              <a
+                href="https://www.google.com/maps/place/Uday+Electrical+Shop/"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="relative inline-flex px-7 py-3.5 rounded-2xl bg-gradient-to-r from-[#FF6B00] to-amber-500 hover:from-[#E55A00] hover:to-[#FF6B00] text-white font-black text-xs shadow-lg shadow-orange-500/30 hover:scale-105 hover:shadow-glow-orange-lg transition-all text-center"
+              >
+                <Star className="w-4 h-4 fill-current mr-2" />
+                Review Us on Google
+              </a>
+              <Link
+                to="/reviews"
+                className="relative inline-flex px-7 py-3.5 rounded-2xl bg-white/10 hover:bg-white/20 border border-white/20 text-white font-black text-xs transition-all"
+              >
+                Leave Feedback →
+              </Link>
             </div>
-            <Link
-              to="/reviews"
-              className="relative inline-flex px-7 py-3.5 rounded-2xl bg-gradient-to-r from-[#FF6B00] to-amber-500 hover:from-[#E55A00] hover:to-[#FF6B00] text-white font-black text-xs shadow-lg shadow-orange-500/30 hover:scale-105 hover:shadow-glow-orange-lg transition-all text-center"
-            >
-              Read Customer Reviews →
-            </Link>
           </div>
 
-          <div className="relative lg:col-span-7">
-            <ReviewsSlider />
+          <div className="relative lg:col-span-7 grid grid-cols-1 sm:grid-cols-3 gap-4">
+            {[
+              { title: 'Phone', value: '7903789402', sub: 'Also on WhatsApp' },
+              { title: 'Store Hours', value: 'Mon–Sat', sub: '8:30 AM – 9:00 PM' },
+              { title: 'Our Team', value: '7 Wiremen', sub: 'Prabhat, Chandan, Devnath, Appu & more' }
+            ].map((card, idx) => (
+              <div key={idx} className="p-5 rounded-2xl bg-white/5 border border-white/10 backdrop-blur-xl space-y-1.5 text-center">
+                <p className="text-[10px] font-black uppercase tracking-widest text-[#FF8A3D]">{card.title}</p>
+                <p className="text-lg font-black text-white">{card.value}</p>
+                <p className="text-[11px] text-slate-400">{card.sub}</p>
+              </div>
+            ))}
           </div>
         </div>
       </AnimatedSection>
 
-      {/* SECTION 9: Callback Request Form */}
+      {/* Callback Request Form */}
       <AnimatedSection direction="up" className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="relative p-8 rounded-3xl bg-gradient-to-br from-white to-[#FFF4EB] dark:from-slate-900 dark:to-slate-900 border border-[#E2E8F0] dark:border-slate-800 shadow-card space-y-6 overflow-hidden">
           <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-[#FF6B00] via-amber-400 to-[#0066FF]"></div>
           <div className="text-center space-y-2">
             <span className="text-xs font-extrabold text-[#FF6B00] uppercase tracking-widest">Instant Phone Assistance</span>
             <h3 className="text-2xl font-black text-[#0F172A] dark:text-white font-display">Request an Electrician Callback</h3>
+            <p className="text-xs text-[#475569] dark:text-slate-400">Our shop team will call you back during opening hours. For urgent help, call us directly.</p>
           </div>
 
           {cbSubmitted ? (
             <div className="p-6 rounded-2xl bg-[#00C853]/10 border border-[#00C853]/30 text-[#00C853] text-xs font-bold text-center space-y-1">
               <CheckCircle2 className="w-8 h-8 text-[#00C853] mx-auto" />
-              <p className="text-sm">Callback requested! Our wireman will call {cbPhone} within 15 minutes.</p>
+              <p className="text-sm">Callback requested! Our team will call {cbPhone} during shop hours (Mon–Sat, 8:30 AM – 9:00 PM).</p>
             </div>
           ) : (
-            <form onSubmit={handleCallbackSubmit} className="grid grid-cols-1 sm:grid-cols-3 gap-4 text-xs">
-              <input
-                type="text"
-                required
-                placeholder="Your Name"
-                value={cbName}
-                onChange={(e) => setCbName(e.target.value)}
-                className="px-4 py-3 bg-white dark:bg-slate-950 border border-[#E2E8F0] dark:border-slate-800 rounded-xl text-[#0F172A] dark:text-white placeholder-slate-400 focus:outline-none focus:border-[#FF6B00] focus:ring-2 focus:ring-[#FF6B00]/20 transition-all"
-              />
-              <input
-                type="tel"
-                required
-                placeholder="Mobile Number"
-                value={cbPhone}
-                onChange={(e) => setCbPhone(e.target.value)}
-                className="px-4 py-3 bg-white dark:bg-slate-950 border border-[#E2E8F0] dark:border-slate-800 rounded-xl text-[#0F172A] dark:text-white placeholder-slate-400 focus:outline-none focus:border-[#FF6B00] focus:ring-2 focus:ring-[#FF6B00]/20 transition-all"
-              />
-              <button
-                type="submit"
-                className="btn-cta py-3 px-6 text-xs"
-              >
-                <Send className="w-4 h-4" />
-                <span>Call Me Back</span>
-              </button>
-            </form>
+            <>
+              <form onSubmit={handleCallbackSubmit} className="grid grid-cols-1 sm:grid-cols-3 gap-4 text-xs">
+                <input
+                  type="text"
+                  required
+                  placeholder="Your Name"
+                  value={cbName}
+                  onChange={(e) => setCbName(e.target.value)}
+                  className="px-4 py-3 bg-white dark:bg-slate-950 border border-[#E2E8F0] dark:border-slate-800 rounded-xl text-[#0F172A] dark:text-white placeholder-slate-400 focus:outline-none focus:border-[#FF6B00] focus:ring-2 focus:ring-[#FF6B00]/20 transition-all"
+                />
+                <input
+                  type="tel"
+                  required
+                  placeholder="Mobile Number"
+                  value={cbPhone}
+                  onChange={(e) => setCbPhone(e.target.value)}
+                  className="px-4 py-3 bg-white dark:bg-slate-950 border border-[#E2E8F0] dark:border-slate-800 rounded-xl text-[#0F172A] dark:text-white placeholder-slate-400 focus:outline-none focus:border-[#FF6B00] focus:ring-2 focus:ring-[#FF6B00]/20 transition-all"
+                />
+                <button
+                  type="submit"
+                  disabled={cbLoading}
+                  className="btn-cta py-3 px-6 text-xs"
+                >
+                  <Send className="w-4 h-4" />
+                  <span>{cbLoading ? 'Submitting...' : 'Call Me Back'}</span>
+                </button>
+              </form>
+              {cbError && (
+                <div className="p-3 rounded-xl bg-rose-500/10 border border-rose-500/30 text-rose-600 dark:text-rose-400 text-xs font-semibold flex items-center space-x-2">
+                  <Phone className="w-4 h-4 shrink-0" />
+                  <span>{cbError}</span>
+                </div>
+              )}
+              {!isAuthenticated && (
+                <p className="text-[11px] text-slate-400 text-center">
+                  <Link to="/login" className="font-bold text-orange-500 hover:underline">Sign in</Link> to request a callback — or call us at{' '}
+                  <a href="tel:7903789402" className="font-bold text-orange-500">7903789402</a>.
+                </p>
+              )}
+            </>
           )}
         </div>
       </AnimatedSection>
 
-      {/* SECTION 10: Real Google Maps Location & Store Info */}
+      {/* Store Location */}
       <AnimatedSection direction="up" className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-6">
         <div className="text-center space-y-2">
           <span className="text-xs font-extrabold text-[#FF6B00] uppercase tracking-widest">Visit Our Retail Store</span>
@@ -543,7 +590,7 @@ export const HomePage = () => {
 
             <div className="space-y-2 pt-3 border-t border-[#E2E8F0] dark:border-slate-800 text-[#475569] dark:text-slate-400">
               <p><strong className="text-[#0F172A] dark:text-white">Store Hours:</strong> Monday - Saturday (8:30 AM - 9:00 PM)</p>
-              <p><strong className="text-[#0F172A] dark:text-white">Emergency Visits:</strong> Available 24 Hours / 7 Days</p>
+              <p><strong className="text-[#0F172A] dark:text-white">Service Visits:</strong> Booked across Jamshedpur — see our service areas</p>
               <p><strong className="text-[#0F172A] dark:text-white">Store Phone:</strong> 7903789402 / 9934187847</p>
             </div>
 
@@ -558,7 +605,6 @@ export const HomePage = () => {
             </a>
           </div>
 
-          {/* Interactive Real Embedded Google Map View */}
           <div className="md:col-span-7 h-72 rounded-2xl overflow-hidden border border-[#E2E8F0] dark:border-slate-700 shadow-inner bg-[#F8FAFC]">
             <iframe
               src="https://maps.google.com/maps?q=Uday%20Electrical%20Shop%2C%20Chhota%20Govindpur%2C%20Jamshedpur%2C%20Jharkhand&t=&z=16&ie=UTF8&iwloc=&output=embed"
@@ -568,7 +614,7 @@ export const HomePage = () => {
               allowFullScreen=""
               loading="lazy"
               referrerPolicy="no-referrer-when-downgrade"
-              title="Uday Electrical Shop Exact Google Maps Pin Location"
+              title="Uday Electrical Shop location on Google Maps"
             ></iframe>
           </div>
         </div>
