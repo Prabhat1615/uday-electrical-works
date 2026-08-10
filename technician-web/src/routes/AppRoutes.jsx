@@ -6,6 +6,7 @@ import { ProtectedRoute } from '../components/ProtectedRoute';
 import { LoadingSpinner } from '../components/LoadingSpinner';
 
 const LoginPage = lazy(() => import('../pages/Login/LoginPage').then((m) => ({ default: m.LoginPage })));
+const ApplyPage = lazy(() => import('../pages/Apply/ApplyPage').then((m) => ({ default: m.ApplyPage })));
 
 // Technician Pages
 const DashboardOverview = lazy(() => import('../pages/Dashboard/DashboardOverview').then((m) => ({ default: m.DashboardOverview })));
@@ -25,6 +26,9 @@ export const AppRoutes = () => {
     <Routes>
       {/* Technician Login */}
       <Route path="/login" element={withSuspense(<LoginPage />)} />
+
+      {/* Public Technician Application */}
+      <Route path="/apply" element={withSuspense(<ApplyPage />)} />
 
       {/* Technician Dashboard Layout */}
       <Route element={<ProtectedRoute allowedRoles={['Technician']} redirectTo="/login" />}>

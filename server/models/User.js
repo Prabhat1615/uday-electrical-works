@@ -33,7 +33,87 @@ const userSchema = new mongoose.Schema({
   address: {
     type: String,
     default: ''
-  }
+  },
+  // Technician onboarding status. Fail-closed role-aware default:
+  // any account created with role = Technician that does NOT explicitly
+  // set a status lands as 'Pending' (not authorized until an Admin
+  // approves). All other roles default to 'Approved' so existing
+  // Customer/Admin/Staff behavior is unchanged. Admin-created
+  // technicians are explicitly saved with status = 'Approved' because
+  // the Admin's creation IS the authorization.
+  status: {
+    type: String,
+    enum: ['Pending', 'Approved', 'Rejected'],
+    default: function () {
+      return this.role === 'Technician' ? 'Pending' : 'Approved';
+    }
+  },
+  // Technician application professional information
+  submittedAt: {
+    type: Date
+  },
+  skills: {
+    type: String,
+    default: ''
+  },
+  specialization: {
+    type: String,
+    default: ''
+  },
+  experience: {
+    type: String,
+    default: ''
+  },
+  additionalInfo: {
+    type: String,
+    default: ''
+  },
+  // Approval audit trail (server-side timestamps only)
+  approvedBy: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'User',
+    default: null
+  },
+  approvedAt: {
+    type: Date,
+    default: null
+  },
+  rejectedBy: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'User',
+    default: null
+  },
+  rejectedAt: {
+    type: Date,
+    default: null
+  },
+  rejectionReason: {
+    type: String,
+    default: ''
+  },
+  // Immutable application lifecycle events (Submitted / Approved / Rejected)
+  applicationHistory: [
+    {
+      event: {
+        type: String,
+        enum: ['Submitted', 'Approved', 'Rejected'],
+        required: true
+      },
+      by: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'User',
+        default: null
+      },
+      reason: {
+        type: String,
+        default: ''
+      },
+      at: {
+        type: Date,
+        default: Date.now
+      }
+    }
+  ]
 }, {
   timestamps: true
 });

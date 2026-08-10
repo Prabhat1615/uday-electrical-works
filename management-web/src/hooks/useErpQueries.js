@@ -25,6 +25,12 @@ import { getFieldReportsApi, submitFieldReportApi } from '../api/fieldServiceApi
 import { getBranchesApi, createBranchApi } from '../api/branchApi';
 import { askAiAssistantApi, getInventoryForecastApi } from '../api/aiApi';
 import { getSystemHealthMetricsApi } from '../api/healthApi';
+import {
+  getTechnicianRequestsApi,
+  getTechnicianRequestApi,
+  approveTechnicianRequestApi,
+  rejectTechnicianRequestApi
+} from '../api/technicianRequestApi';
 
 // Existing Hooks
 export const useProducts = (params) => useQuery({ queryKey: ['products', params], queryFn: () => getProductsApi(params) });
@@ -212,3 +218,40 @@ export const useCreateBranch = () => {
 export const useAskAiAssistant = () => useMutation({ mutationFn: askAiAssistantApi });
 export const useInventoryForecast = () => useQuery({ queryKey: ['inventoryForecast'], queryFn: getInventoryForecastApi });
 export const useSystemHealthMetrics = () => useQuery({ queryKey: ['systemHealthMetrics'], queryFn: getSystemHealthMetricsApi, refetchInterval: 30000 });
+
+// Technician Requests (Admin only — backend enforces authorization)
+export const useTechnicianRequests = (params, options = {}) => useQuery({
+  queryKey: ['technicianRequests', params],
+  queryFn: () => getTechnicianRequestsApi(params),
+  refetchInterval: 30000,
+  ...options
+});
+export const useTechnicianRequest = (id, enabled) => useQuery({
+  queryKey: ['technicianRequest', id],
+  queryFn: () => getTechnicianRequestApi(id),
+  enabled: !!enabled
+});
+export const useApproveTechnician = () => {
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: approveTechnicianRequestApi,
+    onSuccess: () => {
+      qc.invalidateQueries({ queryKey: ['technicianRequests'] });
+      qc.invalidateQueries({ queryKey: ['technicianRequest'] });
+      qc.invalidateQueries({ queryKey: ['users'] });
+      qc.invalidateQueries({ queryKey: ['notifications'] });
+    }
+  });
+};
+export const useRejectTechnician = () => {
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: ({ id, rejectionReason }) => rejectTechnicianRequestApi(id, rejectionReason),
+    onSuccess: () => {
+      qc.invalidateQueries({ queryKey: ['technicianRequests'] });
+      qc.invalidateQueries({ queryKey: ['technicianRequest'] });
+      qc.invalidateQueries({ queryKey: ['users'] });
+      qc.invalidateQueries({ queryKey: ['notifications'] });
+    }
+  });
+};

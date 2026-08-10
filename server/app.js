@@ -7,6 +7,8 @@ import rateLimit from 'express-rate-limit';
 import { fileURLToPath } from 'url';
 
 import authRoutes from './routes/authRoutes.js';
+import technicianRoutes from './routes/technicianRoutes.js';
+import adminTechnicianRoutes from './routes/adminTechnicianRoutes.js';
 import productRoutes from './routes/productRoutes.js';
 import serviceRoutes from './routes/serviceRoutes.js';
 import bookingRoutes from './routes/bookingRoutes.js';
@@ -59,6 +61,15 @@ const authLimiter = rateLimit({
 });
 app.use('/api/auth/', authLimiter);
 
+// Stricter limiter for the public technician application endpoint so it
+// cannot be flooded with automated submissions.
+const technicianLimiter = rateLimit({
+  windowMs: 15 * 60 * 1000,
+  max: 20,
+  message: { success: false, message: 'Too many technician application attempts, please try again later.' }
+});
+app.use('/api/technician/', technicianLimiter);
+
 app.use(cors(corsOptions));
 app.use(express.json({ limit: '15mb' }));
 app.use(express.urlencoded({ extended: true, limit: '15mb' }));
@@ -67,6 +78,8 @@ app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
 // API Routes
 app.use('/api/auth', authRoutes);
+app.use('/api/technician', technicianRoutes);
+app.use('/api/admin/technician-requests', adminTechnicianRoutes);
 app.use('/api/products', productRoutes);
 app.use('/api/services', serviceRoutes);
 app.use('/api/bookings', bookingRoutes);

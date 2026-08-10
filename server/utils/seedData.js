@@ -180,11 +180,15 @@ const seedData = async () => {
       },
 
       // REAL LOCAL TECHNICIANS (Jamshedpur Roster)
+      // status: 'Approved' — this is a dev-only seed run by the owner;
+      // seeding IS the explicit authorization. Public applications are
+      // never created here and always land as 'Pending'.
       {
         name: 'Prabhat (Senior Electrician)',
         email: 'prabhat@udayelectrical.com',
         password: 'techpassword123',
         role: 'Technician',
+        status: 'Approved',
         phone: '7470508176',
         address: 'Chhota Govindpur, Jamshedpur'
       },
@@ -193,6 +197,7 @@ const seedData = async () => {
         email: 'chandan@udayelectrical.com',
         password: 'techpassword123',
         role: 'Technician',
+        status: 'Approved',
         phone: '7209455250',
         address: 'Telco Colony, Jamshedpur'
       },
@@ -201,6 +206,7 @@ const seedData = async () => {
         email: 'devnath@udayelectrical.com',
         password: 'techpassword123',
         role: 'Technician',
+        status: 'Approved',
         phone: '9934187847',
         address: 'Baridih, Jamshedpur'
       },
@@ -209,6 +215,7 @@ const seedData = async () => {
         email: 'appu@udayelectrical.com',
         password: 'techpassword123',
         role: 'Technician',
+        status: 'Approved',
         phone: '7903789402',
         address: 'Govindpur Housing Colony, Jamshedpur'
       },
@@ -217,6 +224,7 @@ const seedData = async () => {
         email: 'dhruv@udayelectrical.com',
         password: 'techpassword123',
         role: 'Technician',
+        status: 'Approved',
         phone: '7903789403',
         address: 'Sidhgora, Jamshedpur'
       },
@@ -225,6 +233,7 @@ const seedData = async () => {
         email: 'amit@udayelectrical.com',
         password: 'techpassword123',
         role: 'Technician',
+        status: 'Approved',
         phone: '7903789404',
         address: 'Golmuri, Jamshedpur'
       },
@@ -233,6 +242,7 @@ const seedData = async () => {
         email: 'sadhu@udayelectrical.com',
         password: 'techpassword123',
         role: 'Technician',
+        status: 'Approved',
         phone: '7903789405',
         address: 'Birsanagar, Jamshedpur'
       },
