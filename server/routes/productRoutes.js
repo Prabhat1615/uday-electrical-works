@@ -3,6 +3,7 @@ import {
   getProducts,
   getProductById,
   createProduct,
+  bulkImportProducts,
   updateProduct,
   deleteProduct
 } from '../controllers/productController.js';
@@ -14,6 +15,8 @@ router
   .route('/')
   .get(getProducts)
   .post(protect, authorize('Admin', 'Staff'), createProduct);
+
+router.post('/bulk-import', protect, authorize('Admin', 'Staff'), bulkImportProducts);
 
 router
   .route('/:id')

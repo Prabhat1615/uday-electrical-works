@@ -1,11 +1,21 @@
 import { Server } from 'socket.io';
+import { getAllowedOrigins } from '../config/cors.js';
 
 let io;
 
 export const initSocket = (server) => {
   io = new Server(server, {
     cors: {
-      origin: process.env.CLIENT_URL || 'http://localhost:5173',
+      // Same strict origin policy as the Express CORS config. Disallowed
+      // origins are rejected at the handshake (HTTP 403) — never use "*"
+      // with authenticated/credentialed sockets.
+      origin: (origin, callback) => {
+        // Allow non-browser clients (mobile apps, servers) and same-origin calls
+        if (!origin || getAllowedOrigins().includes(origin)) {
+          return callback(null, true);
+        }
+        return callback(new Error('Origin not allowed by Socket.IO CORS policy'));
+      },
       credentials: true
     }
   });

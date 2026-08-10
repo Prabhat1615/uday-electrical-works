@@ -6,11 +6,32 @@ import ApiError from '../utils/apiError.js';
 import ApiResponse from '../utils/apiResponse.js';
 import { createNotification } from '../utils/notificationHelper.js';
 
-// Razorpay Instance
-const razorpay = new Razorpay({
-  key_id: process.env.RAZORPAY_KEY_ID || 'rzp_test_uday_electrical_key',
-  key_secret: process.env.RAZORPAY_KEY_SECRET || 'rzp_test_uday_electrical_secret'
-});
+const IS_PRODUCTION = process.env.NODE_ENV === 'production';
+const hasRealRazorpayConfig =
+  !!process.env.RAZORPAY_KEY_ID &&
+  !!process.env.RAZORPAY_KEY_SECRET &&
+  !process.env.RAZORPAY_KEY_ID.startsWith('rzp_test_uday') &&
+  !process.env.RAZORPAY_KEY_SECRET.includes('uday_electrical');
+
+// Real Razorpay client — only constructed when genuine keys are configured.
+const razorpay = hasRealRazorpayConfig
+  ? new Razorpay({
+      key_id: process.env.RAZORPAY_KEY_ID,
+      key_secret: process.env.RAZORPAY_KEY_SECRET
+    })
+  : null;
+
+// Online payments are never simulated in production.
+// If Razorpay is not configured, the API returns a clear 503 so no
+// fake order/payment record can be created.
+const assertRazorpayAvailable = (next) => {
+  if (!razorpay) {
+    return next(
+      new ApiError(503, 'Online payments are not configured. Please pay at the shop or contact the store.')
+    );
+  }
+  return null;
+};
 
 // @desc    Create Razorpay Payment Order
 // @route   POST /api/payments/create-order
@@ -19,6 +40,10 @@ export const createPaymentOrder = async (req, res, next) => {
   try {
     const { amount, invoiceId } = req.body;
 
+    if (!amount || Number(amount) <= 0) {
+      return next(new ApiError(400, 'Valid amount is required'));
+    }
+
     const options = {
       amount: Math.round(Number(amount) * 100), // in paise
       currency: 'INR',
@@ -26,10 +51,16 @@ export const createPaymentOrder = async (req, res, next) => {
     };
 
     let order;
-    try {
-      order = await razorpay.orders.create(options);
-    } catch (rzpErr) {
-      // Fallback simulated order for test environment
+    if (razorpay) {
+      try {
+        order = await razorpay.orders.create(options);
+      } catch (rzpErr) {
+        // Never fall back to a simulated order — surface the real failure.
+        return next(new ApiError(502, `Payment gateway error: ${rzpErr.error?.description || rzpErr.message}`));
+      }
+    } else {
+      // Development-only simulated order so the UI flow can be tested locally.
+      console.warn('⚠️  [DEV] No RAZORPAY_KEY_ID configured — creating SIMULATED payment order. Never happens in production.');
       order = {
         id: `order_simulated_${Date.now()}`,
         amount: options.amount,
@@ -39,7 +70,7 @@ export const createPaymentOrder = async (req, res, next) => {
     }
 
     const payment = await Payment.create({
-      paymentId: `pay_${Date.now()}_${Math.floor(1000 + Math.random() * 9000)}`,
+      paymentId: razorpay ? `pay_${Date.now()}` : `simulated_${Date.now()}`,
       orderId: order.id,
       customer: req.user._id,
       amount: Number(amount),
@@ -65,11 +96,35 @@ export const verifyPayment = async (req, res, next) => {
       return next(new ApiError(404, 'Associated payment record not found'));
     }
 
-    // Verify signature or auto approve simulated test payments
-    payment.status = 'Success';
-    payment.transactionId = razorpayPaymentId || `txn_${Date.now()}`;
-    payment.razorpaySignature = razorpaySignature || 'simulated_sig';
-    await payment.save();
+    if (IS_PRODUCTION) {
+      // Production: payment is only accepted with a genuine Razorpay signature.
+      const notConfigured = assertRazorpayAvailable(next);
+      if (notConfigured) return notConfigured;
+
+      if (!razorpayPaymentId || !razorpaySignature) {
+        return next(new ApiError(400, 'Payment verification details missing'));
+      }
+
+      const expectedSignature = crypto
+        .createHmac('sha256', process.env.RAZORPAY_KEY_SECRET)
+        .update(`${razorpayOrderId}|${razorpayPaymentId}`)
+        .digest('hex');
+
+      if (expectedSignature !== razorpaySignature) {
+        return next(new ApiError(400, 'Invalid payment signature. Payment could not be verified.'));
+      }
+
+      payment.status = 'Success';
+      payment.transactionId = razorpayPaymentId;
+      payment.razorpaySignature = razorpaySignature;
+      await payment.save();
+    } else {
+      // Development-only: simulated payments (from the local dev flow) are accepted.
+      payment.status = 'Success';
+      payment.transactionId = razorpayPaymentId || `txn_${Date.now()}`;
+      payment.razorpaySignature = razorpaySignature || 'simulated_sig';
+      await payment.save();
+    }
 
     if (invoiceId) {
       const invoice = await Invoice.findById(invoiceId);

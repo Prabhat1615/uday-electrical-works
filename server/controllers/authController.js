@@ -5,7 +5,8 @@ import { generateToken } from '../utils/generateToken.js';
 
 // @desc    Register a new user
 // @route   POST /api/auth/register
-// @access  Public
+// @access  Public (Customer role only — Admin/Staff/Technician accounts are
+//          created by an Admin via POST /api/users)
 export const registerUser = async (req, res, next) => {
   try {
     const { name, email, password, role, phone, address } = req.body;
@@ -15,16 +16,13 @@ export const registerUser = async (req, res, next) => {
       return next(new ApiError(400, 'User already exists with this email address'));
     }
 
-    // Restrict Admin self-registration if non-admin registration attempt
-    const assignedRole = (role === 'Admin' || role === 'Staff' || role === 'Technician') 
-      ? role 
-      : 'Customer';
-
+    // Public registration is always a Customer.
+    // Privileged roles are enforced server-side and cannot be self-assigned.
     const user = await User.create({
       name,
       email: email.toLowerCase(),
       password,
-      role: assignedRole,
+      role: 'Customer',
       phone: phone || '',
       address: address || ''
     });
