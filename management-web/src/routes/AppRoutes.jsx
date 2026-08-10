@@ -22,6 +22,7 @@ const PurchaseManagementPage = lazy(() => import('../pages/Dashboard/PurchaseMan
 const SalesManagementPage = lazy(() => import('../pages/Dashboard/SalesManagementPage').then((m) => ({ default: m.SalesManagementPage })));
 const ReportsPage = lazy(() => import('../pages/Dashboard/ReportsPage').then((m) => ({ default: m.ReportsPage })));
 const UserManagementPage = lazy(() => import('../pages/Admin/UserManagementPage').then((m) => ({ default: m.UserManagementPage })));
+const TechnicianRequestsPage = lazy(() => import('../pages/Admin/TechnicianRequestsPage').then((m) => ({ default: m.TechnicianRequestsPage })));
 
 // Phase 3 Pages
 const ScheduleCalendarPage = lazy(() => import('../pages/Dashboard/ScheduleCalendarPage').then((m) => ({ default: m.ScheduleCalendarPage })));
@@ -85,6 +86,7 @@ export const AppRoutes = () => {
             <Route path="insights" element={withSuspense(<ExecutiveInsightsPage />)} />
             <Route path="health" element={withSuspense(<SystemHealthPage />)} />
             <Route path="users" element={withSuspense(<UserManagementPage />)} />
+            <Route path="technician-requests" element={withSuspense(<TechnicianRequestsPage />)} />
             <Route path="settings" element={withSuspense(<CompanySettingsPage />)} />
             <Route path="backup" element={withSuspense(<BackupRestorePage />)} />
           </Route>

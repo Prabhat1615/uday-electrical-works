@@ -1,323 +1,524 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { Outlet, Link, useLocation, useNavigate } from 'react-router-dom';
-import { 
-  LayoutDashboard, 
-  CalendarCheck, 
-  Receipt, 
-  Package, 
-  Wrench, 
-  Users, 
-  User, 
-  Zap, 
-  LogOut, 
-  ChevronRight,
+import {
+  LayoutDashboard,
+  TrendingUp,
+  ShoppingCart,
+  UsersRound,
+  Headphones,
+  Package,
+  Boxes,
+  ShoppingBag,
+  Warehouse,
+  CalendarCheck,
+  CalendarDays,
+  Wrench,
+  FileCheck,
+  Layers,
+  Receipt,
+  UserCheck,
+  Users,
+  BarChart3,
+  History,
+  Settings,
+  UserCircle,
+  SlidersHorizontal,
+  Sparkles,
+  GitBranch,
+  Activity,
+  Database,
+  Zap,
+  LogOut,
   Menu,
   X,
-  Boxes,
-  UserCheck,
-  Truck,
-  ShoppingBag,
-  BarChart3,
-  Calendar,
-  LifeBuoy,
-  Settings,
-  Shield,
-  Database,
-  Building2,
-  FileCheck,
-  Sparkles,
-  Activity,
-  TrendingUp,
-  GitBranch
+  ChevronDown,
+  ArrowLeft
 } from 'lucide-react';
 import { useAuth } from '../hooks/useAuth';
 import { NotificationBell } from '../components/NotificationBell';
+import { useTechnicianRequests } from '../hooks/useErpQueries';
+
+// ---------------------------------------------------------------------------
+// Navigation model — grouped categories. Routes are UNCHANGED; only labels,
+// grouping and presentation change. Role arrays preserve the previous
+// per-item restrictions (backend remains the authoritative guard).
+// ---------------------------------------------------------------------------
+
+const buildNavGroups = (pendingTechCount) => [
+  {
+    label: 'MAIN',
+    items: [
+      { name: 'Overview', path: '/dashboard', icon: LayoutDashboard, roles: ['Admin', 'Staff', 'Technician', 'Customer'] },
+      { name: 'Insights', path: '/dashboard/insights', icon: TrendingUp, roles: ['Admin'] }
+    ]
+  },
+  {
+    label: 'SALES & CUSTOMERS',
+    items: [
+      { name: 'Orders', path: '/dashboard/sales', icon: ShoppingCart, roles: ['Admin', 'Staff', 'Customer'] },
+      { name: 'Leads', path: '/dashboard/leads', icon: UsersRound, roles: ['Admin', 'Staff'] },
+      { name: 'Support', path: '/dashboard/tickets', icon: Headphones, roles: ['Admin', 'Staff', 'Customer'] }
+    ]
+  },
+  {
+    label: 'PRODUCTS & INVENTORY',
+    items: [
+      { name: 'Products', path: '/dashboard/products', icon: Package, roles: ['Admin', 'Staff'] },
+      { name: 'Inventory', path: '/dashboard/inventory', icon: Boxes, roles: ['Admin', 'Staff'] },
+      { name: 'Purchases', path: '/dashboard/purchase', icon: ShoppingBag, roles: ['Admin', 'Staff'] },
+      { name: 'Warehouses', path: '/dashboard/warehouses', icon: Warehouse, roles: ['Admin', 'Staff'] }
+    ]
+  },
+  {
+    label: 'SERVICES',
+    items: [
+      { name: 'Service Bookings', path: '/dashboard/bookings', icon: CalendarCheck, roles: ['Admin', 'Staff', 'Technician', 'Customer'] },
+      { name: 'Service Schedule', path: '/dashboard/schedule', icon: CalendarDays, roles: ['Admin', 'Staff', 'Technician'] },
+      { name: 'Field Jobs', path: '/dashboard/field-service', icon: Wrench, roles: ['Admin', 'Staff', 'Technician'] },
+      { name: 'AMC Contracts', path: '/dashboard/amc', icon: FileCheck, roles: ['Admin', 'Staff', 'Customer'] },
+      { name: 'Services', path: '/dashboard/services', icon: Layers, roles: ['Admin', 'Staff'] }
+    ]
+  },
+  {
+    label: 'BILLING',
+    items: [
+      { name: 'Invoices', path: '/dashboard/invoices', icon: Receipt, roles: ['Admin', 'Staff', 'Customer'] }
+    ]
+  },
+  {
+    label: 'MANAGEMENT',
+    items: [
+      {
+        name: 'Technician Requests',
+        path: '/dashboard/technician-requests',
+        icon: UserCheck,
+        roles: ['Admin'],
+        badge: pendingTechCount
+      },
+      { name: 'Users', path: '/dashboard/users', icon: Users, roles: ['Admin'] }
+    ]
+  },
+  {
+    label: 'REPORTS',
+    items: [
+      { name: 'Reports', path: '/dashboard/reports', icon: BarChart3, roles: ['Admin', 'Staff'] },
+      { name: 'Activity Log', path: '/dashboard/activity', icon: History, roles: ['Admin', 'Staff'] }
+    ]
+  },
+  {
+    label: 'SYSTEM',
+    items: [
+      { name: 'Settings', path: '/dashboard/settings', icon: Settings, roles: ['Admin'] },
+      { name: 'My Profile', path: '/dashboard/profile', icon: UserCircle, roles: ['Admin', 'Staff', 'Technician', 'Customer'] }
+    ]
+  },
+  {
+    label: 'ADVANCED',
+    collapsible: true,
+    items: [
+      { name: 'AI Stock Forecast', path: '/dashboard/forecast', icon: Sparkles, roles: ['Admin', 'Staff'] },
+      { name: 'Multi-Branch Network', path: '/dashboard/branches', icon: GitBranch, roles: ['Admin', 'Staff'] },
+      { name: 'System Infrastructure', path: '/dashboard/health', icon: Activity, roles: ['Admin'] },
+      { name: 'Backup & Restore', path: '/dashboard/backup', icon: Database, roles: ['Admin'] }
+    ]
+  }
+];
+
+const itemClasses = (active, collapsed) =>
+  `group relative flex items-center rounded-lg text-[13px] font-semibold transition-colors duration-150 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-orange-400 ${
+    collapsed ? 'justify-center px-0 py-2.5' : 'gap-3 px-3 py-2'
+  } ${
+    active
+      ? 'bg-slate-800 text-white ring-1 ring-inset ring-slate-600/80'
+      : 'text-slate-400 hover:bg-slate-800/50 hover:text-slate-100'
+  }`;
+
+const iconClasses = (active) =>
+  `w-[18px] h-[18px] shrink-0 ${
+    active ? 'text-orange-400' : 'text-slate-500 group-hover:text-slate-300'
+  }`;
 
 export const DashboardLayout = () => {
   const { user, logout } = useAuth();
   const location = useLocation();
   const navigate = useNavigate();
-  const [sidebarOpen, setSidebarOpen] = useState(false);
+
+  const [mobileOpen, setMobileOpen] = useState(false);
+  const [collapsed, setCollapsed] = useState(
+    () => localStorage.getItem('uew_sidebar_collapsed') === '1'
+  );
+  const [advancedOpen, setAdvancedOpen] = useState(
+    () => localStorage.getItem('uew_advanced_open') === '1'
+  );
+  const [flyoutOpen, setFlyoutOpen] = useState(false);
+  const [flyoutPos, setFlyoutPos] = useState({ top: 0, left: 0 });
+  const flyoutRef = useRef(null);
+
+  // Track desktop breakpoint so the compact (icon-only) sidebar presentation
+  // never leaks into the mobile drawer.
+  const [isMd, setIsMd] = useState(
+    () => typeof window !== 'undefined' && window.innerWidth >= 768
+  );
+  useEffect(() => {
+    const onResize = () => setIsMd(window.innerWidth >= 768);
+    window.addEventListener('resize', onResize);
+    return () => window.removeEventListener('resize', onResize);
+  }, []);
 
   const role = user?.role || 'Customer';
 
-  const allNavItems = [
-    {
-      name: 'Overview',
-      path: '/dashboard',
-      icon: LayoutDashboard,
-      roles: ['Admin', 'Staff', 'Technician', 'Customer']
-    },
-    {
-      name: 'Executive Insights',
-      path: '/dashboard/insights',
-      icon: TrendingUp,
-      roles: ['Admin']
-    },
-    {
-      name: 'Customer Hub',
-      path: '/dashboard/portal',
-      icon: UserCheck,
-      roles: ['Customer']
-    },
-    {
-      name: 'Service Schedule',
-      path: '/dashboard/schedule',
-      icon: Calendar,
-      roles: ['Admin', 'Staff', 'Technician']
-    },
-    {
-      name: 'Field Job Reports',
-      path: '/dashboard/field-service',
-      icon: FileCheck,
-      roles: ['Admin', 'Staff', 'Technician']
-    },
-    {
-      name: 'AMC Contracts',
-      path: '/dashboard/amc',
-      icon: CalendarCheck,
-      roles: ['Admin', 'Staff', 'Customer']
-    },
-    {
-      name: 'Service Bookings',
-      path: '/dashboard/bookings',
-      icon: CalendarCheck,
-      roles: ['Admin', 'Staff', 'Technician', 'Customer']
-    },
-    {
-      name: 'Sales Orders',
-      path: '/dashboard/sales',
-      icon: ShoppingBag,
-      roles: ['Admin', 'Staff', 'Customer']
-    },
-    {
-      name: 'GST Invoices',
-      path: '/dashboard/invoices',
-      icon: Receipt,
-      roles: ['Admin', 'Staff', 'Customer']
-    },
-    {
-      name: 'Support Tickets',
-      path: '/dashboard/tickets',
-      icon: LifeBuoy,
-      roles: ['Admin', 'Staff', 'Customer']
-    },
-    {
-      name: 'Inventory Control',
-      path: '/dashboard/inventory',
-      icon: Boxes,
-      roles: ['Admin', 'Staff']
-    },
-    {
-      name: 'AI Stock Forecast',
-      path: '/dashboard/forecast',
-      icon: Sparkles,
-      roles: ['Admin', 'Staff']
-    },
-    {
-      name: 'Warehouse Locations',
-      path: '/dashboard/warehouses',
-      icon: Building2,
-      roles: ['Admin', 'Staff']
-    },
-    {
-      name: 'Multi-Branch Network',
-      path: '/dashboard/branches',
-      icon: GitBranch,
-      roles: ['Admin', 'Staff']
-    },
-    {
-      name: 'Customer Leads',
-      path: '/dashboard/leads',
-      icon: UserCheck,
-      roles: ['Admin', 'Staff']
-    },
-    {
-      name: 'Purchase Orders',
-      path: '/dashboard/purchase',
-      icon: Truck,
-      roles: ['Admin', 'Staff']
-    },
-    {
-      name: 'Products Catalog',
-      path: '/dashboard/products',
-      icon: Package,
-      roles: ['Admin', 'Staff']
-    },
-    {
-      name: 'Services Catalog',
-      path: '/dashboard/services',
-      icon: Wrench,
-      roles: ['Admin', 'Staff']
-    },
-    {
-      name: 'Reports & Exports',
-      path: '/dashboard/reports',
-      icon: BarChart3,
-      roles: ['Admin', 'Staff']
-    },
-    {
-      name: 'Activity Audit Trail',
-      path: '/dashboard/activity',
-      icon: Shield,
-      roles: ['Admin', 'Staff']
-    },
-    {
-      name: 'System Infrastructure',
-      path: '/dashboard/health',
-      icon: Activity,
-      roles: ['Admin']
-    },
-    {
-      name: 'Company Settings',
-      path: '/dashboard/settings',
-      icon: Settings,
-      roles: ['Admin']
-    },
-    {
-      name: 'Backup & Restore',
-      path: '/dashboard/backup',
-      icon: Database,
-      roles: ['Admin']
-    },
-    {
-      name: 'User Management',
-      path: '/dashboard/users',
-      icon: Users,
-      roles: ['Admin']
-    },
-    {
-      name: 'My Profile',
-      path: '/dashboard/profile',
-      icon: User,
-      roles: ['Admin', 'Staff', 'Technician', 'Customer']
-    }
-  ];
+  // Real pending technician application count for the nav badge (Admin only).
+  // Reuses the existing query — 30s refetch + Socket.IO 'technician_requests_updated'
+  // invalidation already wired in SocketContext. Never hardcoded.
+  const { data: techRequestsRes } = useTechnicianRequests(
+    { status: 'Pending' },
+    { enabled: role === 'Admin' }
+  );
+  const pendingTechCount = techRequestsRes?.data?.pendingCount || 0;
 
-  const allowedNav = allNavItems.filter((item) => item.roles.includes(role));
+  const navGroups = buildNavGroups(pendingTechCount);
+
+  // Filter by role (preserves previous per-item restrictions).
+  const visibleGroups = navGroups
+    .map((group) => ({ ...group, items: group.items.filter((i) => i.roles.includes(role)) }))
+    .filter((group) => group.items.length > 0);
+
+  const flatItems = visibleGroups.flatMap((g) => g.items);
+  const activeItem = flatItems.find((i) => location.pathname === i.path);
+  const activeName = activeItem?.name || 'Overview';
+
+  const advancedGroup = visibleGroups.find((g) => g.collapsible) || null;
+  const advancedActive = advancedGroup?.items.some((i) => location.pathname === i.path) || false;
+
+  // Compact (icon-only) presentation applies only on desktop AND when the
+  // user collapsed the sidebar; the mobile drawer always stays full.
+  const compact = collapsed && isMd;
+
+  // Close mobile drawer / flyout on navigation; auto-expand Advanced when a
+  // child route is active.
+  useEffect(() => {
+    setMobileOpen(false);
+    setFlyoutOpen(false);
+    if (advancedActive) setAdvancedOpen(true);
+  }, [location.pathname, advancedActive]);
+
+  // Lock background scroll while the mobile drawer is open.
+  useEffect(() => {
+    document.body.style.overflow = mobileOpen ? 'hidden' : '';
+    return () => { document.body.style.overflow = ''; };
+  }, [mobileOpen]);
+
+  // Close the collapsed-sidebar Advanced flyout on outside click / Escape,
+  // and the mobile drawer on Escape.
+  useEffect(() => {
+    if (!flyoutOpen && !mobileOpen) return undefined;
+    const onPointerDown = (e) => {
+      if (flyoutOpen && flyoutRef.current && !flyoutRef.current.contains(e.target)) {
+        setFlyoutOpen(false);
+      }
+    };
+    const onKeyDown = (e) => {
+      if (e.key === 'Escape') {
+        setFlyoutOpen(false);
+        setMobileOpen(false);
+      }
+    };
+    document.addEventListener('mousedown', onPointerDown);
+    document.addEventListener('keydown', onKeyDown);
+    return () => {
+      document.removeEventListener('mousedown', onPointerDown);
+      document.removeEventListener('keydown', onKeyDown);
+    };
+  }, [flyoutOpen, mobileOpen]);
+
+  const toggleCollapsed = () => {
+    setCollapsed((prev) => {
+      const next = !prev;
+      localStorage.setItem('uew_sidebar_collapsed', next ? '1' : '0');
+      return next;
+    });
+  };
+
+  const toggleAdvanced = () => {
+    setAdvancedOpen((prev) => {
+      const next = !prev;
+      localStorage.setItem('uew_advanced_open', next ? '1' : '0');
+      return next;
+    });
+  };
+
+  const openFlyout = (e) => {
+    const rect = e.currentTarget.getBoundingClientRect();
+    setFlyoutPos({ top: rect.top, left: rect.right + 10 });
+    setFlyoutOpen(true);
+  };
 
   const handleLogout = () => {
     logout();
     navigate('/login');
   };
 
-  return (
-    <div className="min-h-screen bg-slate-950 flex flex-col md:flex-row">
-      
-      {/* Mobile Header Bar */}
-      <div className="md:hidden flex items-center justify-between p-4 bg-slate-900 border-b border-slate-800">
-        <Link to="/" className="flex items-center space-x-2">
-          <div className="p-2 rounded-lg bg-orange-500 text-slate-950">
-            <Zap className="w-5 h-5 fill-current" />
+  const renderItem = (item, compact) => {
+    const active = location.pathname === item.path;
+    const Icon = item.icon;
+    return (
+      <Link
+        key={item.path}
+        to={item.path}
+        title={compact ? item.name : undefined}
+        aria-current={active ? 'page' : undefined}
+        className={itemClasses(active, compact)}
+      >
+        <Icon className={iconClasses(active)} />
+        {!compact && <span className="flex-1 truncate">{item.name}</span>}
+        {!compact && item.badge > 0 && (
+          <span className="shrink-0 rounded-full bg-amber-500 px-2 py-0.5 text-[10px] font-black text-slate-950">
+            {item.badge}
+          </span>
+        )}
+        {compact && item.badge > 0 && (
+          <span className="absolute -top-0.5 -right-0.5 w-2 h-2 rounded-full bg-amber-500" />
+        )}
+      </Link>
+    );
+  };
+
+  const renderGroup = (group, compact) => {
+    if (group.collapsible) {
+      if (compact) {
+        // Collapsed sidebar: single icon button opening a flyout menu.
+        return (
+          <div key={group.label} className="mt-3 flex justify-center">
+            <button
+              type="button"
+              onClick={openFlyout}
+              title="Advanced"
+              aria-label="Advanced options"
+              aria-haspopup="true"
+              aria-expanded={flyoutOpen}
+              className="flex items-center justify-center rounded-lg p-2.5 text-slate-400 hover:bg-slate-800/50 hover:text-slate-100 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-orange-400"
+            >
+              <SlidersHorizontal className="w-[18px] h-[18px]" />
+            </button>
           </div>
-          <span className="font-extrabold text-white">UEW ERP</span>
-        </Link>
-        <div className="flex items-center space-x-2">
-          <NotificationBell />
-          <button
-            onClick={() => setSidebarOpen(!sidebarOpen)}
-            className="p-2 rounded-lg bg-slate-800 text-slate-300"
-          >
-            {sidebarOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
-          </button>
+        );
+      }
+      const Icon = SlidersHorizontal;
+      return (
+        <div key={group.label} className="mt-5">
+          <p className="px-3 pb-1.5 text-[10px] font-bold uppercase tracking-[0.14em] text-slate-500">
+            {group.label}
+          </p>
+          <div className="mt-1 space-y-1">
+            <button
+              type="button"
+              onClick={toggleAdvanced}
+              aria-expanded={advancedOpen}
+              aria-controls="advanced-group"
+              className="flex w-full items-center gap-3 rounded-lg px-3 py-2 text-[13px] font-semibold text-slate-400 hover:bg-slate-800/50 hover:text-slate-100 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-orange-400"
+            >
+              <Icon className="w-[18px] h-[18px] shrink-0 text-slate-500" />
+              <span className="flex-1 truncate text-left">Advanced</span>
+              <ChevronDown
+                className={`w-4 h-4 shrink-0 text-slate-500 transition-transform duration-200 ${
+                  advancedOpen ? 'rotate-180' : ''
+                }`}
+              />
+            </button>
+            {advancedOpen && (
+              <div id="advanced-group" className="space-y-1">
+                {group.items.map((item) => renderItem(item, false))}
+              </div>
+            )}
+          </div>
+        </div>
+      );
+    }
+
+    return (
+      <div key={group.label} className={compact ? 'mt-3' : 'mt-5'}>
+        {compact ? (
+          <div className="mx-3 h-px bg-slate-800" aria-hidden="true" />
+        ) : (
+          <p className="px-3 pb-1.5 text-[10px] font-bold uppercase tracking-[0.14em] text-slate-500">
+            {group.label}
+          </p>
+        )}
+        <div className={compact ? 'mt-3 space-y-1' : 'mt-1 space-y-1'}>
+          {group.items.map((item) => renderItem(item, compact))}
         </div>
       </div>
+    );
+  };
 
-      {/* Dashboard Sidebar */}
+  return (
+    <div className="min-h-screen bg-slate-950 md:flex">
+      {/* Mobile drawer backdrop */}
+      {mobileOpen && (
+        <div
+          className="fixed inset-0 z-40 bg-slate-950/70 md:hidden"
+          aria-hidden="true"
+          onClick={() => setMobileOpen(false)}
+        />
+      )}
+
+      {/* Sidebar */}
       <aside
-        className={`fixed inset-y-0 left-0 z-50 w-64 bg-slate-900/95 backdrop-blur-2xl border-r border-slate-800 flex flex-col transition-transform duration-300 ease-in-out md:static md:translate-x-0 ${
-          sidebarOpen ? 'translate-x-0' : '-translate-x-full'
-        }`}
+        className={`fixed inset-y-0 left-0 z-50 flex flex-col border-r border-slate-800 bg-slate-900/95 backdrop-blur-xl transition-[width,transform] duration-300 ease-in-out md:static md:translate-x-0 ${
+          compact ? 'md:w-[76px]' : 'md:w-64'
+        } w-64 ${mobileOpen ? 'translate-x-0' : '-translate-x-full md:translate-x-0'}`}
       >
-        {/* Logo Branding */}
-        <div className="p-6 border-b border-slate-800 flex items-center justify-between">
-          <Link to="/" className="flex items-center space-x-3">
-            <div className="p-2.5 rounded-xl bg-gradient-to-tr from-orange-500 to-orange-400 text-slate-950 font-black shadow-lg shadow-orange-500/20">
-              <Zap className="w-5 h-5 fill-current" />
+        {/* Logo */}
+        <div
+          className={`flex items-center border-b border-slate-800 px-4 py-5 ${
+            compact ? 'justify-between md:justify-center' : 'justify-between'
+          }`}
+        >
+          <Link
+            to="/dashboard"
+            className="flex items-center gap-3"
+            title={compact ? 'Uday Electrical Works' : undefined}
+          >
+            <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-gradient-to-tr from-orange-500 to-orange-400 text-slate-950 shadow-lg shadow-orange-500/20">
+              <Zap className="h-5 w-5 fill-current" />
             </div>
-            <div>
-              <h1 className="font-extrabold text-white text-base tracking-tight leading-tight">
-                UDAY <span className="text-orange-400">ERP</span>
+            <div className={`leading-tight ${compact ? 'hidden md:block' : ''}`}>
+              <h1 className="text-base font-extrabold tracking-tight text-white">
+                UDAY <span className="text-orange-400">Electrical</span>
               </h1>
-              <span className="text-[10px] text-slate-400 font-semibold tracking-wider uppercase block">
-                Enterprise Intelligence v5.0
+              <span className="block text-[10px] font-semibold uppercase tracking-wider text-slate-400">
+                Management Portal
               </span>
             </div>
           </Link>
-          <button onClick={() => setSidebarOpen(false)} className="md:hidden text-slate-400 hover:text-white">
-            <X className="w-5 h-5" />
+          <button
+            type="button"
+            onClick={() => setMobileOpen(false)}
+            className="text-slate-400 hover:text-white md:hidden"
+            aria-label="Close navigation"
+          >
+            <X className="h-5 w-5" />
           </button>
         </div>
 
-        {/* User Card & Notification Bell Header */}
-        <div className="p-4 mx-3 my-4 rounded-2xl bg-slate-950/80 border border-slate-800/80">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center space-x-3 overflow-hidden">
-              <div className="w-9 h-9 rounded-xl bg-orange-500/20 border border-orange-500/30 flex items-center justify-center font-bold text-orange-400 text-sm shrink-0">
-                {user?.name ? user.name.charAt(0).toUpperCase() : 'U'}
-              </div>
-              <div className="overflow-hidden">
-                <p className="text-sm font-bold text-white truncate">{user?.name}</p>
-                <p className="text-[11px] text-slate-400 truncate">{user?.email}</p>
-              </div>
-            </div>
-            <NotificationBell />
-          </div>
-          <div className="mt-3 pt-2 border-t border-slate-800/80 flex items-center justify-between">
-            <span className="text-[10px] font-extrabold uppercase px-2 py-0.5 rounded bg-orange-500/10 text-orange-400 border border-orange-500/20">
-              Role: {user?.role}
-            </span>
-          </div>
-        </div>
+        {/* Navigation */}
+        <nav aria-label="Primary" className="flex-1 overflow-y-auto px-3 py-4 scrollbar-none">
+          {visibleGroups.map((group) => renderGroup(group, compact))}
+        </nav>
 
-        {/* Navigation Items */}
-        <nav className="flex-1 px-3 space-y-1 overflow-y-auto">
-          {allowedNav.map((item) => {
+        {/* Footer */}
+        <div className="border-t border-slate-800 p-4">
+          <Link
+            to="/"
+            title={compact ? 'Back to Storefront' : undefined}
+            className={`flex items-center rounded-lg text-slate-400 hover:bg-slate-800/50 hover:text-orange-400 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-orange-400 ${
+              compact ? 'justify-center p-2.5' : 'justify-center py-1'
+            }`}
+          >
+            <ArrowLeft className="h-[18px] w-[18px]" />
+            <span className={`ml-1.5 text-xs font-semibold ${compact ? 'hidden md:inline' : ''}`}>
+              Back to Storefront
+            </span>
+          </Link>
+        </div>
+      </aside>
+
+      {/* Collapsed-sidebar Advanced flyout (fixed, avoids scroll-container clipping) */}
+      {flyoutOpen && (
+        <div
+          ref={flyoutRef}
+          className="fixed z-[60] w-56 rounded-xl border border-slate-700 bg-slate-900 p-1.5 shadow-2xl shadow-slate-950/60 animate-fade-in"
+          style={{ top: flyoutPos.top, left: flyoutPos.left }}
+        >
+          <p className="px-3 pb-1 pt-1.5 text-[10px] font-bold uppercase tracking-[0.14em] text-slate-500">
+            Advanced
+          </p>
+          {advancedGroup.items.map((item) => {
             const active = location.pathname === item.path;
             const Icon = item.icon;
             return (
               <Link
                 key={item.path}
                 to={item.path}
-                onClick={() => setSidebarOpen(false)}
-                className={`flex items-center justify-between px-3.5 py-2 rounded-xl text-xs font-semibold transition-all duration-200 ${
+                aria-current={active ? 'page' : undefined}
+                className={`flex items-center gap-3 rounded-lg px-3 py-2 text-[13px] font-semibold focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-orange-400 ${
                   active
-                    ? 'bg-gradient-to-r from-blue-600 to-blue-500 text-white font-bold shadow-md shadow-blue-600/30'
-                    : 'text-slate-300 hover:bg-slate-800/60 hover:text-white'
+                    ? 'bg-slate-800 text-white ring-1 ring-inset ring-slate-600/80'
+                    : 'text-slate-400 hover:bg-slate-800/50 hover:text-slate-100'
                 }`}
               >
-                <div className="flex items-center space-x-3">
-                  <Icon className={`w-4 h-4 ${active ? 'text-white' : 'text-blue-400'}`} />
-                  <span>{item.name}</span>
-                </div>
-                {active && <ChevronRight className="w-3.5 h-3.5 text-white" />}
+                <Icon className={`w-[18px] h-[18px] ${active ? 'text-orange-400' : 'text-slate-500'}`} />
+                <span className="flex-1 truncate">{item.name}</span>
               </Link>
             );
           })}
-        </nav>
-
-        {/* Sidebar Footer */}
-        <div className="p-4 border-t border-slate-800 space-y-2">
-          <Link
-            to="/"
-            className="block text-center text-xs font-semibold text-slate-400 hover:text-orange-400 py-1 transition-colors"
-          >
-            ← Back to Storefront
-          </Link>
-          <button
-            onClick={handleLogout}
-            className="w-full flex items-center justify-center space-x-2 py-2 px-4 rounded-xl bg-slate-950 hover:bg-rose-500/10 border border-slate-800 hover:border-rose-500/30 text-rose-400 text-xs font-bold transition-all"
-          >
-            <LogOut className="w-4 h-4" />
-            <span>Sign Out</span>
-          </button>
         </div>
-      </aside>
+      )}
 
-      {/* Main Content */}
-      <main className="flex-1 overflow-y-auto min-h-screen p-4 sm:p-6 lg:p-8">
-        <Outlet />
-      </main>
+      {/* Main column: top bar + content */}
+      <div className="flex min-w-0 flex-1 flex-col">
+        {/* Top bar */}
+        <header className="sticky top-0 z-30 flex h-16 items-center justify-between gap-3 border-b border-slate-800 bg-slate-950/85 px-4 backdrop-blur-xl sm:px-6">
+          <div className="flex min-w-0 items-center gap-3">
+            {/* Mobile: open drawer */}
+            <button
+              type="button"
+              onClick={() => setMobileOpen(true)}
+              className="rounded-lg p-2 text-slate-300 hover:bg-slate-800 hover:text-white focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-orange-400 md:hidden"
+              aria-label="Open navigation"
+            >
+              <Menu className="h-5 w-5" />
+            </button>
+            {/* Desktop: collapse sidebar */}
+            <button
+              type="button"
+              onClick={toggleCollapsed}
+              className="hidden rounded-lg p-2 text-slate-300 hover:bg-slate-800 hover:text-white focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-orange-400 md:inline-flex"
+              aria-label={collapsed ? 'Expand sidebar' : 'Collapse sidebar'}
+            >
+              <Menu className="h-5 w-5" />
+            </button>
+
+            <div className="min-w-0">
+              <p className="truncate text-[11px] font-medium text-slate-500">
+                Management <span className="mx-0.5 text-slate-600">→</span>{' '}
+                <span className="text-slate-400">{activeName}</span>
+              </p>
+              <h1 className="truncate text-base font-bold text-white">{activeName}</h1>
+            </div>
+          </div>
+
+          <div className="flex shrink-0 items-center gap-2">
+            <NotificationBell />
+            <button
+              type="button"
+              onClick={() => navigate('/dashboard/profile')}
+              className="flex items-center gap-2 rounded-lg py-1.5 pl-1.5 pr-2 text-slate-300 hover:bg-slate-800/70 hover:text-white focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-orange-400"
+            >
+              <span className="flex h-8 w-8 items-center justify-center rounded-lg bg-orange-500/20 text-sm font-bold text-orange-400 ring-1 ring-inset ring-orange-500/30">
+                {user?.name ? user.name.charAt(0).toUpperCase() : 'U'}
+              </span>
+              <span className="hidden max-w-[140px] truncate text-left lg:block">
+                <span className="block truncate text-xs font-bold text-white">{user?.name}</span>
+                <span className="block truncate text-[10px] text-slate-500">{user?.role}</span>
+              </span>
+            </button>
+            <button
+              type="button"
+              onClick={handleLogout}
+              className="flex items-center gap-1.5 rounded-lg px-2.5 py-2 text-xs font-bold text-rose-400 hover:bg-rose-500/10 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-rose-400"
+            >
+              <LogOut className="h-4 w-4" />
+              <span className="hidden sm:inline">Sign Out</span>
+            </button>
+          </div>
+        </header>
+
+        {/* Main Content */}
+        <main className="flex-1 overflow-y-auto p-4 sm:p-6 lg:p-8">
+          <Outlet />
+        </main>
+      </div>
     </div>
   );
 };

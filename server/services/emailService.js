@@ -110,3 +110,68 @@ export const sendPasswordResetEmail = async (userEmail, resetToken) => {
     console.error('Email send error:', err.message);
   }
 };
+
+// 5. Technician Application Received
+export const sendTechnicianApplicationReceivedEmail = async (userEmail, userName) => {
+  try {
+    await transporter.sendMail({
+      from: '"Uday Electrical Works Hiring" <hiring@udayelectrical.com>',
+      to: userEmail,
+      subject: 'Technician Application Received - Uday Electrical Works',
+      html: `
+        <div style="font-family: Arial, sans-serif; padding: 20px; background-color: #0f172a; color: #f8fafc;">
+          <h2 style="color: #38bdf8;">Application Received, ${userName}!</h2>
+          <p>Your technician application has been received and is awaiting Admin review.</p>
+          <p>You will be able to sign in to the Technician Portal once your application is approved.</p>
+          <br>
+          <p style="font-size: 12px; color: #94a3b8;">Uday Electrical Works | Chhota Govindpur, Jamshedpur</p>
+        </div>
+      `
+    });
+  } catch (err) {
+    console.error('Email send error:', err.message);
+  }
+};
+
+// 6. Technician Application Approved
+export const sendTechnicianApplicationApprovedEmail = async (userEmail, userName) => {
+  try {
+    await transporter.sendMail({
+      from: '"Uday Electrical Works Hiring" <hiring@udayelectrical.com>',
+      to: userEmail,
+      subject: 'Technician Application Approved - Uday Electrical Works',
+      html: `
+        <div style="font-family: Arial, sans-serif; padding: 20px; background-color: #0f172a; color: #f8fafc;">
+          <h2 style="color: #10b981;">Congratulations, ${userName}!</h2>
+          <p>Your technician application has been approved. You can now sign in to the Technician Portal.</p>
+          <br>
+          <p style="font-size: 12px; color: #94a3b8;">Uday Electrical Works | Chhota Govindpur, Jamshedpur</p>
+        </div>
+      `
+    });
+  } catch (err) {
+    console.error('Email send error:', err.message);
+  }
+};
+
+// 7. Technician Application Rejected
+export const sendTechnicianApplicationRejectedEmail = async (userEmail, userName, reason) => {
+  try {
+    await transporter.sendMail({
+      from: '"Uday Electrical Works Hiring" <hiring@udayelectrical.com>',
+      to: userEmail,
+      subject: 'Technician Application Status - Uday Electrical Works',
+      html: `
+        <div style="font-family: Arial, sans-serif; padding: 20px; background-color: #0f172a; color: #f8fafc;">
+          <h2 style="color: #ef4444;">Application Status, ${userName}</h2>
+          <p>Your technician application was not approved.</p>
+          ${reason ? `<p><strong>Reason:</strong> ${reason}</p>` : ''}
+          <br>
+          <p style="font-size: 12px; color: #94a3b8;">Uday Electrical Works | Chhota Govindpur, Jamshedpur</p>
+        </div>
+      `
+    });
+  } catch (err) {
+    console.error('Email send error:', err.message);
+  }
+};

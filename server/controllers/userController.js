@@ -52,6 +52,12 @@ export const createUser = async (req, res, next) => {
       email: email.toLowerCase(),
       password,
       role: assignedRole,
+      // A technician created through Admin User Management is explicitly
+      // approved — the Admin's creation IS the authorization. Every other
+      // role keeps the schema default (Approved). The public "Apply as
+      // Technician" flow forces status = 'Pending' and is never routed
+      // through this endpoint.
+      status: assignedRole === 'Technician' ? 'Approved' : undefined,
       phone: phone || '',
       address: address || ''
     });

@@ -6,11 +6,11 @@ import {
   updateBooking,
   deleteBooking
 } from '../controllers/bookingController.js';
-import { protect, authorize } from '../middleware/authMiddleware.js';
+import { protect, authorize, requireApproved } from '../middleware/authMiddleware.js';
 
 const router = express.Router();
 
-router.use(protect);
+router.use(protect, requireApproved);
 
 router
   .route('/')

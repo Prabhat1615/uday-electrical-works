@@ -2,6 +2,7 @@ import jwt from 'jsonwebtoken';
 import { jwtConfig } from '../config/jwt.js';
 import User from '../models/User.js';
 import ApiError from '../utils/apiError.js';
+import { isTechnicianAuthorized, getTechnicianAuthorizationMessage } from '../utils/technicianStatus.js';
 
 export const protect = async (req, res, next) => {
   let token;
@@ -50,4 +51,18 @@ export const authorize = (...roles) => {
     }
     next();
   };
+};
+
+// @desc    Require an approved technician account for technician field work
+// Fail-closed: a Technician is allowed only when explicitly Approved
+// (or a legacy Admin-created record without application markers — see
+// utils/technicianStatus.js). Pending, Rejected, missing-status and
+// unknown-status technicians are all denied 403.
+export const requireApproved = (req, res, next) => {
+  if (req.user && !isTechnicianAuthorized(req.user)) {
+    return next(
+      new ApiError(403, getTechnicianAuthorizationMessage(req.user))
+    );
+  }
+  next();
 };

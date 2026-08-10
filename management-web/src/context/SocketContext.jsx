@@ -30,6 +30,10 @@ export function SocketProvider({ children }) {
       queryClient.invalidateQueries({ queryKey: ['notifications'] });
     });
 
+    socket.on('technician_requests_updated', () => {
+      queryClient.invalidateQueries({ queryKey: ['technicianRequests'] });
+    });
+
     return () => {
       socket.disconnect();
       socketRef.current = null;

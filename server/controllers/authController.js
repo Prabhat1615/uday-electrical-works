@@ -2,6 +2,7 @@ import User from '../models/User.js';
 import ApiError from '../utils/apiError.js';
 import ApiResponse from '../utils/apiResponse.js';
 import { generateToken } from '../utils/generateToken.js';
+import { isTechnicianAuthorized, getTechnicianAuthorizationMessage } from '../utils/technicianStatus.js';
 
 // @desc    Register a new user
 // @route   POST /api/auth/register
@@ -37,6 +38,7 @@ export const registerUser = async (req, res, next) => {
           name: user.name,
           email: user.email,
           role: user.role,
+          status: user.status,
           phone: user.phone,
           address: user.address,
           token
@@ -66,6 +68,14 @@ export const loginUser = async (req, res, next) => {
       return next(new ApiError(401, 'Invalid email or password'));
     }
 
+    // Technician accounts can only access the portal after Admin approval.
+    // Fail-closed: only explicitly Approved technicians (or legacy
+    // Admin-created records — see utils/technicianStatus.js) may sign in.
+    // This is enforced by the backend — never by the frontend alone.
+    if (user.role === 'Technician' && !isTechnicianAuthorized(user)) {
+      return next(new ApiError(403, getTechnicianAuthorizationMessage(user)));
+    }
+
     const token = generateToken(user);
 
     res.status(200).json(
@@ -76,6 +86,7 @@ export const loginUser = async (req, res, next) => {
           name: user.name,
           email: user.email,
           role: user.role,
+          status: user.status,
           phone: user.phone,
           address: user.address,
           token
@@ -132,6 +143,7 @@ export const updateProfile = async (req, res, next) => {
           name: updatedUser.name,
           email: updatedUser.email,
           role: updatedUser.role,
+          status: updatedUser.status,
           phone: updatedUser.phone,
           address: updatedUser.address,
           token
