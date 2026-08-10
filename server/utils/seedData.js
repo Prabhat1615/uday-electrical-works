@@ -154,6 +154,10 @@ const jamshedpurHomeServices = [
 ];
 
 const seedData = async () => {
+  if (process.env.NODE_ENV === 'production') {
+    console.error('✋ seedData() refused: NODE_ENV=production. This utility is development-only.');
+    return;
+  }
   try {
     // Seed Users if empty
     await User.deleteMany();

@@ -65,7 +65,8 @@ const productSchema = new mongoose.Schema({
 });
 
 // Database Indexing for High-Performance Queries
-productSchema.index({ sku: 1 });
+// NOTE: sku is unique via the schema field definition above (unique: true).
+// No separate productSchema.index({ sku: 1 }) — that was a duplicate index.
 productSchema.index({ brand: 1, category: 1 });
 productSchema.index({ name: 'text', description: 'text' });
 

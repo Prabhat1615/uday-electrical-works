@@ -107,13 +107,20 @@ export const createSalesOrder = async (req, res, next) => {
       });
     }
 
+    // Customers can never self-mark an order as Paid. In production, orders
+    // become Paid only through a verified online payment (paymentController)
+    // or manual entry by Admin/Staff. In development the simulated flow may mark Paid.
+    const canMarkPaid =
+      ['Admin', 'Staff'].includes(req.user.role) || process.env.NODE_ENV !== 'production';
+    const effectivePaymentStatus = canMarkPaid && paymentStatus === 'Paid' ? 'Paid' : 'Pending';
+
     // 2. Create Sales Order
     const salesOrder = await SalesOrder.create({
       orderNumber: generateSalesOrderNumber(),
       customer: customer._id,
       items: processedItems,
       totalAmount: calculatedSubtotal,
-      paymentStatus: paymentStatus || 'Pending'
+      paymentStatus: effectivePaymentStatus
     });
 
     // 3. Auto-Calculate GST Rates & Amounts
@@ -144,9 +151,9 @@ export const createSalesOrder = async (req, res, next) => {
       igstAmount,
       taxAmount,
       totalAmount: grandTotal,
-      paymentStatus: paymentStatus === 'Paid' ? 'Paid' : 'Unpaid',
-      paymentMethod: paymentStatus === 'Paid' ? 'Bank Transfer' : 'Pending',
-      paidAt: paymentStatus === 'Paid' ? new Date() : null
+      paymentStatus: effectivePaymentStatus === 'Paid' ? 'Paid' : 'Unpaid',
+      paymentMethod: effectivePaymentStatus === 'Paid' ? 'Bank Transfer' : 'Pending',
+      paidAt: effectivePaymentStatus === 'Paid' ? new Date() : null
     });
 
     await createNotification({
