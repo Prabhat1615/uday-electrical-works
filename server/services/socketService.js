@@ -1,5 +1,5 @@
 import { Server } from 'socket.io';
-import { getAllowedOrigins } from '../config/cors.js';
+import { getAllowedOrigins, normalizeOrigin } from '../config/cors.js';
 
 let io;
 
@@ -11,7 +11,11 @@ export const initSocket = (server) => {
       // with authenticated/credentialed sockets.
       origin: (origin, callback) => {
         // Allow non-browser clients (mobile apps, servers) and same-origin calls
-        if (!origin || getAllowedOrigins().includes(origin)) {
+        if (!origin) {
+          return callback(null, true);
+        }
+        const normalizedOrigin = normalizeOrigin(origin);
+        if (getAllowedOrigins().includes(normalizedOrigin)) {
           return callback(null, true);
         }
         return callback(new Error('Origin not allowed by Socket.IO CORS policy'));
