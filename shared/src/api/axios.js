@@ -1,7 +1,44 @@
 import axios from 'axios';
 
+/**
+ * Resolves and normalizes the backend API base URL.
+ * Handles cases where VITE_API_URL is provided with or without trailing /api,
+ * trailing slashes, or omitted altogether.
+ */
+export const getApiBaseUrl = () => {
+  const rawUrl = import.meta.env.VITE_API_URL || '';
+  const cleanUrl = rawUrl.trim().replace(/\/+$/, '');
+
+  if (!cleanUrl) {
+    return '/api';
+  }
+  if (cleanUrl.endsWith('/api')) {
+    return cleanUrl;
+  }
+  return `${cleanUrl}/api`;
+};
+
+/**
+ * Resolves the Socket.IO server target URL.
+ * Prefers VITE_SOCKET_URL if set, otherwise derives from VITE_API_URL,
+ * or falls back to production backend / local dev.
+ */
+export const getSocketTargetUrl = () => {
+  if (import.meta.env.VITE_SOCKET_URL) {
+    return import.meta.env.VITE_SOCKET_URL.trim().replace(/\/+$/, '').replace(/\/api$/, '');
+  }
+  if (import.meta.env.VITE_API_URL) {
+    const cleanApi = import.meta.env.VITE_API_URL.trim().replace(/\/+$/, '');
+    return cleanApi.replace(/\/api$/, '');
+  }
+  if (typeof window !== 'undefined' && window.location.hostname === 'localhost') {
+    return 'http://localhost:5000';
+  }
+  return 'https://uday-electrical-works.onrender.com';
+};
+
 const api = axios.create({
-  baseURL: import.meta.env.VITE_API_URL || '/api',
+  baseURL: getApiBaseUrl(),
   headers: {
     'Content-Type': 'application/json'
   }

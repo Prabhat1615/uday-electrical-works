@@ -19,7 +19,10 @@ import { createBookingApi } from '../api/bookingApi';
 import { useAuth } from '../hooks/useAuth';
 import { useNavigate } from 'react-router-dom';
 
-const availableServices = [
+import { getServicesApi } from '../api/serviceApi';
+import { useQuery } from '@tanstack/react-query';
+
+const availableServicesFallback = [
   { id: 'house-wiring', name: 'House Wiring & Load Distribution', price: '₹499 base inspection', time: '1-3 Hours' },
   { id: 'electrical-repair', name: 'Short Circuit & Fault Repair', price: '₹249 inspection', time: '30-60 Mins' },
   { id: 'fan-service', name: 'Ceiling / Exhaust Fan Fitting & Repair', price: '₹199 / fan', time: '30 Mins' },
@@ -35,8 +38,16 @@ const timeSlots = [
 ];
 
 export const InteractiveBookingFlowModal = ({ isOpen, onClose, initialService = null }) => {
+  const { data: dbServicesRes } = useQuery({
+    queryKey: ['services', { status: 'Active' }],
+    queryFn: () => getServicesApi({ status: 'Active' }),
+    enabled: isOpen
+  });
+
+  const dbServices = dbServicesRes?.data || [];
+
   const [step, setStep] = useState(1);
-  const [service, setService] = useState(initialService || availableServices[0]);
+  const [service, setService] = useState(() => initialService || dbServices[0] || availableServicesFallback[0]);
   const [selectedDate, setSelectedDate] = useState(new Date().toISOString().split('T')[0]);
   const [selectedTimeSlot, setSelectedTimeSlot] = useState(timeSlots[0]);
   const [address, setAddress] = useState('');
@@ -50,6 +61,8 @@ export const InteractiveBookingFlowModal = ({ isOpen, onClose, initialService = 
 
   const { isAuthenticated } = useAuth();
   const navigate = useNavigate();
+
+  const servicesList = dbServices.length > 0 ? dbServices : availableServicesFallback;
 
   if (!isOpen) return null;
 
@@ -89,13 +102,27 @@ export const InteractiveBookingFlowModal = ({ isOpen, onClose, initialService = 
         return;
       }
 
+      // Match target service document in DB if selected from fallback list
+      const matchedDbService = dbServices.find(
+        (s) => s._id === service._id || s.title?.toLowerCase() === (service.name || service.title)?.toLowerCase()
+      ) || dbServices[0];
+
+      const targetServiceId = matchedDbService?._id || service._id;
+
+      if (!targetServiceId) {
+        setError('Please select a valid shop service from our catalog.');
+        setLoading(false);
+        return;
+      }
+
       const payload = {
-        serviceType: service.name,
+        serviceId: targetServiceId,
         preferredDate: selectedDate,
-        timeSlot: selectedTimeSlot,
-        address: `${address}, ${locality}, Jamshedpur`,
-        customerName,
-        phone: customerPhone,
+        preferredTime: selectedTimeSlot,
+        address: `${address}, ${locality}`,
+        city: 'Jamshedpur',
+        contactName: customerName,
+        contactPhone: customerPhone,
         notes
       };
 
@@ -172,26 +199,30 @@ export const InteractiveBookingFlowModal = ({ isOpen, onClose, initialService = 
               <div className="space-y-4">
                 <h4 className="text-base font-bold text-[#111827] font-display">1. Select Electrical Service Needed</h4>
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                  {availableServices.map((svc) => (
-                    <button
-                      key={svc.id}
-                      onClick={() => setService(svc)}
-                      className={`p-4 rounded-2xl border text-left transition-all flex flex-col justify-between space-y-2 ${
-                        service?.id === svc.id
-                          ? 'bg-[#FFF7ED] border-[#F97316] shadow-xs'
-                          : 'bg-white border-[#E5E7EB] hover:border-slate-300'
-                      }`}
-                    >
-                      <div className="flex items-start justify-between">
-                        <span className="text-xs font-bold text-[#111827] font-display">{svc.name}</span>
-                        {service?.id === svc.id && <CheckCircle2 className="w-4 h-4 text-[#F97316] shrink-0" />}
-                      </div>
-                      <div className="flex items-center justify-between text-[11px] text-[#64748B]">
-                        <span className="font-semibold text-[#F97316]">{svc.price}</span>
-                        <span>{svc.time}</span>
-                      </div>
-                    </button>
-                  ))}
+                  {servicesList.map((svc) => {
+                    const svcId = svc._id || svc.id;
+                    const isSelected = (service?._id || service?.id) === svcId;
+                    return (
+                      <button
+                        key={svcId}
+                        onClick={() => setService(svc)}
+                        className={`p-4 rounded-2xl border text-left transition-all flex flex-col justify-between space-y-2 ${
+                          isSelected
+                            ? 'bg-[#FFF7ED] border-[#F97316] shadow-xs'
+                            : 'bg-white border-[#E5E7EB] hover:border-slate-300'
+                        }`}
+                      >
+                        <div className="flex items-start justify-between">
+                          <span className="text-xs font-bold text-[#111827] font-display">{svc.title || svc.name}</span>
+                          {isSelected && <CheckCircle2 className="w-4 h-4 text-[#F97316] shrink-0" />}
+                        </div>
+                        <div className="flex items-center justify-between text-[11px] text-[#64748B]">
+                          <span className="font-semibold text-[#F97316]">{svc.estimatedPrice ? `₹${svc.estimatedPrice}` : (svc.price || '₹249 inspection')}</span>
+                          <span>{svc.estimatedDuration || svc.time || '30-60 Mins'}</span>
+                        </div>
+                      </button>
+                    );
+                  })}
                 </div>
               </div>
             )}

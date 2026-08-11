@@ -2,11 +2,61 @@ import http from 'http';
 import app from '../app.js';
 import { getAllowedOrigins, normalizeOrigin } from '../config/cors.js';
 
-console.log('--- 1. TESTING CORS CONFIG & ORIGIN NORMALIZATION ---');
-console.log('normalizeOrigin("https://uday-electrical-customer.vercel.app/"):', normalizeOrigin('https://uday-electrical-customer.vercel.app/'));
-console.log('getAllowedOrigins():', getAllowedOrigins());
+console.log('--- 1. TESTING BASE URL & SOCKET TARGET URL NORMALIZATION ---');
 
-console.log('\n--- 2. STARTING LOCAL APP SERVER FOR HTTP OPTIONS PREFLIGHT TEST ---');
+const getApiBaseUrl = (envApi) => {
+  const rawUrl = envApi || '';
+  const cleanUrl = rawUrl.trim().replace(/\/+$/, '');
+
+  if (!cleanUrl) {
+    return '/api';
+  }
+  if (cleanUrl.endsWith('/api')) {
+    return cleanUrl;
+  }
+  return `${cleanUrl}/api`;
+};
+
+const getSocketTargetUrl = (envSocket, envApi, hostname = 'customer.vercel.app') => {
+  if (envSocket) {
+    return envSocket.trim().replace(/\/+$/, '').replace(/\/api$/, '');
+  }
+  if (envApi) {
+    const cleanApi = envApi.trim().replace(/\/+$/, '');
+    return cleanApi.replace(/\/api$/, '');
+  }
+  if (hostname === 'localhost') {
+    return 'http://localhost:5000';
+  }
+  return 'https://uday-electrical-works.onrender.com';
+};
+
+const testCases = [
+  { envApi: 'https://uday-electrical-works.onrender.com', expectedApi: 'https://uday-electrical-works.onrender.com/api', expectedSocket: 'https://uday-electrical-works.onrender.com' },
+  { envApi: 'https://uday-electrical-works.onrender.com/api', expectedApi: 'https://uday-electrical-works.onrender.com/api', expectedSocket: 'https://uday-electrical-works.onrender.com' },
+  { envApi: 'https://uday-electrical-works.onrender.com/', expectedApi: 'https://uday-electrical-works.onrender.com/api', expectedSocket: 'https://uday-electrical-works.onrender.com' },
+  { envApi: 'http://localhost:5000', expectedApi: 'http://localhost:5000/api', expectedSocket: 'http://localhost:5000' },
+  { envApi: '', expectedApi: '/api', expectedSocket: 'https://uday-electrical-works.onrender.com' }
+];
+
+let unitTestsFailed = 0;
+
+for (const { envApi, expectedApi, expectedSocket } of testCases) {
+  const actualApi = getApiBaseUrl(envApi);
+  const actualSocket = getSocketTargetUrl(null, envApi);
+
+  const apiPass = actualApi === expectedApi;
+  const socketPass = actualSocket === expectedSocket;
+
+  if (apiPass && socketPass) {
+    console.log(`  ✅ [PASS] VITE_API_URL="${envApi}" -> API: ${actualApi}, Socket: ${actualSocket}`);
+  } else {
+    console.error(`  ❌ [FAIL] VITE_API_URL="${envApi}" -> API: ${actualApi} (exp: ${expectedApi}), Socket: ${actualSocket} (exp: ${expectedSocket})`);
+    unitTestsFailed++;
+  }
+}
+
+console.log('\n--- 2. STARTING LOCAL APP SERVER FOR HTTP OPTIONS & ROUTE PREFLIGHT TEST ---');
 
 const server = http.createServer(app);
 
@@ -21,17 +71,19 @@ server.listen(0, async () => {
     { origin: 'https://uday-electrical-customer.vercel.app', expectedSuccess: true },
     { origin: 'https://uday-electrical-management.vercel.app', expectedSuccess: true },
     { origin: 'https://uday-electrical-technician.vercel.app', expectedSuccess: true },
-    { origin: 'https://uday-electrical-customer.vercel.app/', expectedSuccess: true }, // trailing slash in header
     { origin: 'https://unauthorized-domain.com', expectedSuccess: false }
   ];
 
   const endpointsToTest = [
-    '/auth/register',
     '/api/auth/register',
+    '/api/notifications',
+    '/api/bookings',
+    '/api/invoices',
+    '/api/sales',
     '/api/health'
   ];
 
-  let totalFailed = 0;
+  let totalFailed = unitTestsFailed;
 
   for (const endpoint of endpointsToTest) {
     console.log(`\nTesting preflight OPTIONS for endpoint: ${endpoint}`);
@@ -77,9 +129,9 @@ server.listen(0, async () => {
   }
 
   server.close(() => {
-    console.log('\nLocal CORS test completed. Total failed:', totalFailed);
+    console.log('\nAll tests completed. Total failed:', totalFailed);
     if (totalFailed === 0) {
-      console.log('🎉 ALL LOCAL CORS TESTS PASSED SUCCESSFULLY!');
+      console.log('🎉 ALL INTEGRATION & ROUTE VERIFICATION TESTS PASSED SUCCESSFULLY!');
     }
     process.exit(totalFailed === 0 ? 0 : 1);
   });

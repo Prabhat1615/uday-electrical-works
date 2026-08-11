@@ -14,7 +14,9 @@ const DEFAULT_ORIGINS = [
   'http://127.0.0.1:5176',
   'https://uday-electrical-customer.vercel.app',
   'https://uday-electrical-management.vercel.app',
-  'https://uday-electrical-technician.vercel.app'
+  'https://uday-electrical-works-management-we.vercel.app',
+  'https://uday-electrical-technician.vercel.app',
+  'https://uday-electrical-technician-web.vercel.app'
 ];
 
 /**

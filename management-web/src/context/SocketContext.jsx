@@ -2,6 +2,7 @@ import React, { createContext, useContext, useEffect, useRef } from 'react';
 import { io } from 'socket.io-client';
 import { useQueryClient } from '@tanstack/react-query';
 import { useAuth } from '../../../shared/src/hooks/useAuth';
+import { getSocketTargetUrl } from '../api/axios';
 
 const SocketContext = createContext(null);
 
@@ -16,9 +17,10 @@ export function SocketProvider({ children }) {
     if (!user?._id) return undefined;
 
     const stored = JSON.parse(localStorage.getItem('uew_user') || 'null');
-    const socket = io(import.meta.env.VITE_SOCKET_URL || window.location.origin, {
+    const socket = io(getSocketTargetUrl(), {
       auth: { token: stored?.token || user?.token || null },
-      transports: ['websocket', 'polling']
+      transports: ['websocket', 'polling'],
+      withCredentials: true
     });
     socketRef.current = socket;
 
