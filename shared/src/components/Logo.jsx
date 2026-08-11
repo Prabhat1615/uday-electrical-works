@@ -17,10 +17,10 @@ export const UEMark = ({ size = 'md', light = false, className = '' }) => {
       <svg width="100%" height="100%" viewBox="0 0 120 120" fill="none" xmlns="http://www.w3.org/2000/svg" className="w-full h-full drop-shadow-xs">
         {/* Outer U Contour */}
         <path d="M 28 24 V 72 C 28 89.673 42.327 104 60 104 C 77.673 104 92 89.673 92 72 V 24" stroke={strokeColor} strokeWidth="14" strokeLinecap="round" strokeLinejoin="round"/>
-        {/* Inner E Terminal in Primary Metallic Gold */}
-        <path d="M 46 38 H 82 M 46 60 H 76 M 46 82 H 82" stroke="#D6A84F" strokeWidth="12" strokeLinecap="round" strokeLinejoin="round"/>
+        {/* Inner E Terminal in Primary Uday Orange */}
+        <path d="M 46 38 H 82 M 46 60 H 76 M 46 82 H 82" stroke="#F97316" strokeWidth="12" strokeLinecap="round" strokeLinejoin="round"/>
         {/* Precision Energy Node */}
-        <circle cx="82" cy="38" r="7" fill="#D6A84F" />
+        <circle cx="82" cy="38" r="7" fill="#F97316" />
       </svg>
     </div>
   );
@@ -71,14 +71,14 @@ export const Logo = ({
   const getTitlePart = () => {
     if (portal === 'management' || portal === 'technician') {
       return (
-        <span className={light ? 'text-white' : 'text-[#171A1F]'}>
-          UDAY <span className="text-[#D6A84F]">ELECTRICAL</span>
+        <span className={light ? 'text-white' : 'text-[#111827]'}>
+          UDAY <span className="text-[#F97316]">ELECTRICAL</span>
         </span>
       );
     }
     return (
-      <span className={light ? 'text-white' : 'text-[#171A1F]'}>
-        UDAY <span className="text-[#D6A84F]">ELECTRICAL WORKS</span>
+      <span className={light ? 'text-white' : 'text-[#111827]'}>
+        UDAY <span className="text-[#F97316]">ELECTRICAL WORKS</span>
       </span>
     );
   };
@@ -96,7 +96,7 @@ export const Logo = ({
         <span className={`leading-none font-display ${titleSizes[size] || titleSizes.md}`}>
           {getTitlePart()}
         </span>
-        <span className={`uppercase block mt-1 leading-none font-display ${light ? 'text-[#E7C878]' : 'text-[#C99532]'} ${subtitleSizes[size] || subtitleSizes.md}`}>
+        <span className={`uppercase block mt-1 leading-none font-display ${light ? 'text-amber-400' : 'text-[#EA580C]'} ${subtitleSizes[size] || subtitleSizes.md}`}>
           {getSubTitle()}
         </span>
       </div>

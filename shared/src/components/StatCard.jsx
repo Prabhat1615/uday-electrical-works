@@ -11,13 +11,12 @@ export const StatCard = ({
   className = '' 
 }) => {
   const iconBgs = {
-    gold: 'bg-[#FAF6EC] text-[#C99532] border-[#E7C878]',
-    orange: 'bg-[#FAF6EC] text-[#C99532] border-[#E7C878]',
-    amber: 'bg-[#FFFBEB] text-[#D6A84F] border-[#FDE68A]',
-    blue: 'bg-[#F0F9FF] text-[#5D8FD9] border-[#BAE6FD]',
-    emerald: 'bg-[#F0FDF4] text-[#3FAE72] border-[#BBF7D0]',
-    rose: 'bg-[#FEF2F2] text-[#D95C5C] border-[#FECACA]',
-    purple: 'bg-[#2B3038] text-[#E7C878] border-slate-700'
+    orange: 'bg-[#FFF7ED] text-[#EA580C] border-[#FED7AA]',
+    amber: 'bg-[#FFFBEB] text-[#D97706] border-[#FDE68A]',
+    blue: 'bg-[#F0F9FF] text-[#0284C7] border-[#BAE6FD]',
+    emerald: 'bg-[#F0FDF4] text-[#16A34A] border-[#BBF7D0]',
+    rose: 'bg-[#FEF2F2] text-[#DC2626] border-[#FECACA]',
+    purple: 'bg-purple-50 text-purple-700 border-purple-200'
   };
 
   return (

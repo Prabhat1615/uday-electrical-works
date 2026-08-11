@@ -73,7 +73,7 @@ export const ProductQuickViewModal = ({ product, isOpen, onClose }) => {
                   alt={product.name}
                   className="max-h-56 max-w-full object-contain transition-transform duration-300 hover:scale-110"
                 />
-                <span className="absolute top-3 left-3 px-3 py-1 rounded-lg bg-[#D6A84F] text-[#111318] font-extrabold text-[11px] uppercase tracking-wider shadow-xs font-display">
+                <span className="absolute top-3 left-3 px-3 py-1 rounded-lg bg-[#F97316] text-white font-extrabold text-[11px] uppercase tracking-wider shadow-xs font-display">
                   {product.brand}
                 </span>
               </div>
@@ -82,17 +82,17 @@ export const ProductQuickViewModal = ({ product, isOpen, onClose }) => {
               <div className="md:col-span-7 flex flex-col justify-between space-y-4">
                 <div className="space-y-2">
                   <div className="flex items-center space-x-2">
-                    <span className="text-[11px] font-extrabold text-[#D6A84F] uppercase tracking-wider font-display">
+                    <span className="text-[11px] font-extrabold text-[#F97316] uppercase tracking-wider font-display">
                       {product.category}
                     </span>
                     <span className="text-slate-300">•</span>
-                    <span className="inline-flex items-center text-[11px] font-bold text-[#3FAE72] gap-1">
+                    <span className="inline-flex items-center text-[11px] font-bold text-[#16A34A] gap-1">
                       <CheckCircle2 className="w-3.5 h-3.5" />
                       In Stock at Chhota Govindpur
                     </span>
                   </div>
 
-                  <h3 className="text-xl sm:text-2xl font-black text-[#111318] tracking-tight font-display">
+                  <h3 className="text-xl sm:text-2xl font-black text-[#111827] tracking-tight font-display">
                     {product.name}
                   </h3>
 
@@ -102,11 +102,11 @@ export const ProductQuickViewModal = ({ product, isOpen, onClose }) => {
                 </div>
 
                 {/* Price Box */}
-                <div className="p-3.5 rounded-2xl bg-[#FAF6EC] border border-[#E7C878] flex items-baseline justify-between">
+                <div className="p-3.5 rounded-2xl bg-[#FAFAF8] border border-[#E5E7EB] flex items-baseline justify-between">
                   <div>
                     <span className="text-[10px] text-[#64748B] font-bold uppercase tracking-wider block font-display">Store Price</span>
                     <div className="flex items-baseline space-x-2">
-                      <span className="text-2xl font-black text-[#111318] font-mono">
+                      <span className="text-2xl font-black text-[#111827] font-mono">
                         {formatCurrency(product.price)}
                       </span>
                       {product.mrp > product.price && (
@@ -117,7 +117,7 @@ export const ProductQuickViewModal = ({ product, isOpen, onClose }) => {
                     </div>
                   </div>
                   {product.mrp > product.price && (
-                    <span className="px-2.5 py-1 rounded-md bg-[#F0FDF4] text-[#3FAE72] font-extrabold text-xs border border-[#BBF7D0]">
+                    <span className="px-2.5 py-1 rounded-md bg-[#F0FDF4] text-[#16A34A] font-extrabold text-xs border border-[#BBF7D0]">
                       Save {formatCurrency(product.mrp - product.price)}
                     </span>
                   )}
@@ -125,7 +125,7 @@ export const ProductQuickViewModal = ({ product, isOpen, onClose }) => {
 
                 {/* Quantity Controls */}
                 <div className="flex items-center space-x-4">
-                  <span className="text-xs font-bold text-[#111318] font-display">Quantity:</span>
+                  <span className="text-xs font-bold text-[#111827] font-display">Quantity:</span>
                   <div className="flex items-center border border-[#E5E7EB] rounded-xl bg-slate-50 p-1 space-x-2">
                     <button
                       onClick={() => setQuantity(Math.max(1, quantity - 1))}
@@ -134,7 +134,7 @@ export const ProductQuickViewModal = ({ product, isOpen, onClose }) => {
                     >
                       <Minus className="w-3.5 h-3.5" />
                     </button>
-                    <span className="text-xs font-bold font-mono px-2 text-[#111318]">
+                    <span className="text-xs font-bold font-mono px-2 text-[#111827]">
                       {quantity}
                     </span>
                     <button
@@ -153,8 +153,8 @@ export const ProductQuickViewModal = ({ product, isOpen, onClose }) => {
                     onClick={handleAddToCart}
                     className={`px-4 py-3 rounded-xl font-extrabold text-xs shadow-xs transition-all flex items-center justify-center space-x-2 font-display ${
                       added
-                        ? 'bg-[#3FAE72] text-white'
-                        : 'bg-[#D6A84F] hover:bg-[#C99532] text-[#111318]'
+                        ? 'bg-[#16A34A] text-white'
+                        : 'bg-[#F97316] hover:bg-[#EA580C] text-white'
                     }`}
                   >
                     {added ? (
@@ -172,10 +172,10 @@ export const ProductQuickViewModal = ({ product, isOpen, onClose }) => {
 
                   <button
                     onClick={handleBuyNow}
-                    className="px-4 py-3 rounded-xl bg-[#171A1F] hover:bg-[#22262D] text-white font-extrabold text-xs shadow-xs transition-all flex items-center justify-center space-x-2 font-display border border-slate-700"
+                    className="px-4 py-3 rounded-xl bg-[#111827] hover:bg-slate-800 text-white font-extrabold text-xs shadow-xs transition-all flex items-center justify-center space-x-2 font-display"
                   >
                     <span>Buy Now</span>
-                    <ArrowRight className="w-4 h-4 text-[#D6A84F]" />
+                    <ArrowRight className="w-4 h-4" />
                   </button>
                 </div>
 

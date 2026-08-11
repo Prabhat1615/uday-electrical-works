@@ -67,19 +67,16 @@ export const HeroSection = () => {
     <section 
       onMouseMove={handleMouseMove}
       onMouseLeave={handleMouseLeave}
-      className="relative min-h-[85vh] flex items-center pt-8 pb-14 bg-gradient-to-b from-[#111318] via-[#171A1F] to-[#111318] text-[#F5F5F2] overflow-hidden font-sans border-b border-slate-800"
+      className="relative min-h-[85vh] flex items-center pt-8 pb-14 bg-gradient-to-b from-white via-[#F8FAFC] to-white text-[#111827] overflow-hidden font-sans border-b border-[#E5E7EB]"
     >
       {/* Light Aurora Environmental Background */}
-      <AuroraBackground opacity={0.12} />
-
-      {/* Warm Gold Ambient Halo */}
-      <div className="absolute top-1/3 left-1/4 w-[500px] h-[500px] rounded-full bg-[#D6A84F]/15 blur-[120px] pointer-events-none" />
+      <AuroraBackground opacity={0.18} />
 
       {/* Motion Particle Overlay */}
       <div className="absolute inset-0 pointer-events-none overflow-hidden">
-        <div className="absolute top-1/4 left-1/3 w-2 h-2 rounded-full bg-[#D6A84F]/50 animate-particle opacity-70"></div>
-        <div className="absolute top-2/3 right-1/4 w-3 h-3 rounded-full bg-[#5D8FD9]/40 animate-particle opacity-60"></div>
-        <div className="absolute top-1/2 right-1/2 w-1.5 h-1.5 rounded-full bg-[#3FAE72]/50 animate-particle opacity-70"></div>
+        <div className="absolute top-1/4 left-1/3 w-2 h-2 rounded-full bg-[#F97316]/40 animate-particle opacity-60"></div>
+        <div className="absolute top-2/3 right-1/4 w-3 h-3 rounded-full bg-[#0284C7]/30 animate-particle opacity-50"></div>
+        <div className="absolute top-1/2 right-1/2 w-1.5 h-1.5 rounded-full bg-[#16A34A]/40 animate-particle opacity-70"></div>
       </div>
 
       <div className="max-w-[1536px] mx-auto px-4 sm:px-6 lg:px-12 xl:px-16 relative z-10 w-full">
@@ -87,62 +84,59 @@ export const HeroSection = () => {
 
           {/* LEFT HERO CONTENT (50% Desktop Width) */}
           <div className="lg:col-span-6 space-y-6 text-left">
+            
+            {/* Top Official Badges */}
+            <div className="flex flex-wrap items-center gap-2">
+              <motion.div
+                initial={{ opacity: 0, y: 12 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.3 }}
+                className="inline-flex items-center space-x-2 px-3.5 py-1.5 rounded-full bg-[#FFF7ED] border border-[#FED7AA] text-[#EA580C] text-[11px] font-extrabold tracking-widest uppercase font-display"
+              >
+                <Zap className="w-3.5 h-3.5 text-[#F97316] fill-[#F97316]" />
+                <span>UDAY ELECTRICAL WORKS</span>
+              </motion.div>
 
-            {/* Small Business Identity Badge */}
-            <motion.div 
-              initial={{ opacity: 0, y: 12 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.4 }}
-              className="inline-flex items-center space-x-2 px-3.5 py-1.5 rounded-full bg-[#22262D] border border-[#D6A84F]/30 shadow-xs"
-            >
-              <span className="w-2 h-2 rounded-full bg-[#3FAE72] animate-pulse"></span>
-              <span className="text-[11px] font-extrabold text-[#D6A84F] uppercase tracking-widest font-display">
-                UDAY ELECTRICAL WORKS · JAMSHEDPUR
-              </span>
-            </motion.div>
+              <motion.div
+                initial={{ opacity: 0, y: 12 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.3, delay: 0.05 }}
+                className="inline-flex items-center space-x-1.5 px-3 py-1.5 rounded-full bg-[#F0FDF4] border border-[#BBF7D0] text-[#16A34A] text-[11px] font-bold tracking-wide font-display"
+              >
+                <span className="w-2 h-2 rounded-full bg-[#16A34A] animate-pulse"></span>
+                <span>Open Mon-Sat: 8:30 AM - 9:00 PM</span>
+              </motion.div>
+            </div>
 
-            {/* Main Headline */}
-            <motion.div
-              initial={{ opacity: 0, y: 18 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.45, delay: 0.08 }}
-              className="space-y-2"
-            >
-              <h1 className="text-3xl sm:text-5xl xl:text-6xl font-black text-white tracking-tight leading-[1.12] font-display">
-                Electrical Store &amp; <br className="hidden sm:block" />
-                <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#D6A84F] via-[#E7C878] to-[#C99532]">
-                  Doorstep Services
-                </span>
-              </h1>
-              <p className="text-xs sm:text-sm font-bold text-[#E7C878] uppercase tracking-wider font-display pt-1">
-                Chhota Govindpur Main Road · Official Brand Retailer
-              </p>
-            </motion.div>
+            {/* Staggered Animated Headline */}
+            <div className="space-y-1">
+              <motion.h1
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.45, delay: 0.08 }}
+                className="text-3xl sm:text-5xl lg:text-6xl font-black tracking-tight leading-[1.1] text-[#111827] font-display"
+              >
+                Powering Your Home.
+              </motion.h1>
+              <motion.h1
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.45, delay: 0.16 }}
+                className="text-3xl sm:text-5xl lg:text-6xl font-black tracking-tight leading-[1.1] text-[#F97316] font-display"
+              >
+                Building Your Future.
+              </motion.h1>
+            </div>
 
-            {/* Description */}
+            {/* Supporting Text */}
             <motion.p
               initial={{ opacity: 0, y: 18 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.45, delay: 0.16 }}
-              className="text-xs sm:text-base text-[#AAB0B8] leading-relaxed max-w-xl font-sans"
-            >
-              Buy 100% genuine electrical products from Havells, Crompton, Polycab, Philips &amp; Anchor at our Chhota Govindpur shop with GST invoices, or book our in-house wiremen for doorstep repairs, fan fittings, and house wiring across Jamshedpur.
-            </motion.p>
-
-            {/* In-House Wiremen Pills */}
-            <motion.div 
-              initial={{ opacity: 0, y: 18 }}
-              animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.45, delay: 0.22 }}
-              className="flex flex-wrap items-center gap-2 pt-1"
+              className="text-[#64748B] text-sm sm:text-base leading-relaxed max-w-xl"
             >
-              <span className="text-[11px] font-bold text-slate-400 font-display mr-1">Doorstep Wiremen:</span>
-              {['Prabhat', 'Chandan', 'Devnath', 'Appu', 'Dhruv', 'Amit', 'Sadhu'].map((name) => (
-                <span key={name} className="px-2.5 py-1 rounded-lg bg-[#22262D] border border-slate-700 text-[11px] font-bold text-[#F5F5F2]">
-                  {name}
-                </span>
-              ))}
-            </motion.div>
+              Electrical products, house wiring, repair services and professional electrical solutions — all from your trusted local electrical store in Chhota Govindpur, Jamshedpur.
+            </motion.p>
 
             {/* Action Buttons */}
             <motion.div
@@ -154,7 +148,7 @@ export const HeroSection = () => {
               {/* Primary CTA */}
               <Link
                 to="/shop"
-                className="inline-flex items-center justify-center space-x-3 px-7 py-4 rounded-2xl bg-[#D6A84F] hover:bg-[#C99532] text-[#111318] font-extrabold text-sm sm:text-base shadow-md shadow-[#D6A84F]/25 hover:scale-102 transition-all font-display shrink-0 whitespace-nowrap"
+                className="inline-flex items-center justify-center space-x-3 px-7 py-4 rounded-2xl bg-[#F97316] hover:bg-[#EA580C] text-white font-extrabold text-sm sm:text-base shadow-md shadow-[#F97316]/25 hover:scale-102 transition-all font-display shrink-0 whitespace-nowrap"
               >
                 <Package className="w-5 h-5 shrink-0" />
                 <span>Explore Products</span>
@@ -164,9 +158,9 @@ export const HeroSection = () => {
               {/* Secondary CTA */}
               <button
                 onClick={() => setBookingOpen(true)}
-                className="inline-flex items-center justify-center space-x-3 px-7 py-4 rounded-2xl bg-[#22262D] border border-slate-700 hover:border-[#D6A84F] text-white font-extrabold text-sm sm:text-base shadow-xs hover:scale-102 transition-all font-display shrink-0 whitespace-nowrap"
+                className="inline-flex items-center justify-center space-x-3 px-7 py-4 rounded-2xl bg-white border border-[#E5E7EB] hover:border-[#F97316] text-[#111827] font-extrabold text-sm sm:text-base shadow-xs hover:scale-102 transition-all font-display shrink-0 whitespace-nowrap"
               >
-                <Wrench className="w-5 h-5 text-[#D6A84F] shrink-0" />
+                <Wrench className="w-5 h-5 text-[#F97316] shrink-0" />
                 <span>Book a Service</span>
               </button>
 
@@ -174,9 +168,9 @@ export const HeroSection = () => {
               <a
                 href="#store-location-map"
                 onClick={scrollToMap}
-                className="inline-flex items-center space-x-2 px-5 py-3.5 rounded-2xl text-xs sm:text-sm font-extrabold text-[#AAB0B8] hover:text-[#D6A84F] transition-colors font-display shrink-0 whitespace-nowrap"
+                className="inline-flex items-center space-x-2 px-5 py-3.5 rounded-2xl text-xs sm:text-sm font-extrabold text-[#64748B] hover:text-[#EA580C] transition-colors font-display shrink-0 whitespace-nowrap"
               >
-                <MapPin className="w-4 h-4 text-[#D6A84F] shrink-0" />
+                <MapPin className="w-4 h-4 text-[#F97316] shrink-0" />
                 <span>Visit Store</span>
               </a>
             </motion.div>
