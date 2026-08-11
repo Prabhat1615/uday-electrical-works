@@ -33,7 +33,7 @@ export const AboutPage = () => {
       {/* Hero */}
       <div className="relative overflow-hidden">
         <AnimatedBackground className="opacity-70" />
-        <AnimatedSection direction="up" className="relative z-10 pt-16 pb-12 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto text-center space-y-6">
+        <AnimatedSection direction="up" className="relative z-10 pt-16 pb-12 px-4 sm:px-6 lg:px-12 xl:px-16 max-w-[1536px] mx-auto text-center space-y-6">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
@@ -68,7 +68,7 @@ export const AboutPage = () => {
       <BrandMarquee />
 
       {/* What we do */}
-      <AnimatedSection direction="up" className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-10">
+      <AnimatedSection direction="up" className="max-w-[1536px] mx-auto px-4 sm:px-6 lg:px-12 xl:px-16 space-y-10">
         <div className="text-center space-y-2">
           <span className="text-xs font-extrabold text-orange-500 uppercase tracking-widest">What We Do</span>
           <h2 className="text-3xl font-extrabold text-slate-900 dark:text-white font-display">Shop & Doorstep Service, Under One Roof</h2>
@@ -100,7 +100,7 @@ export const AboutPage = () => {
       </AnimatedSection>
 
       {/* Our Team */}
-      <AnimatedSection direction="up" className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-10">
+      <AnimatedSection direction="up" className="max-w-[1536px] mx-auto px-4 sm:px-6 lg:px-12 xl:px-16 space-y-10">
         <div className="text-center space-y-2">
           <span className="text-xs font-extrabold text-orange-500 uppercase tracking-widest">Our Team</span>
           <h2 className="text-3xl font-extrabold text-slate-900 dark:text-white font-display">The Wiremen Who Do the Work</h2>
@@ -130,7 +130,7 @@ export const AboutPage = () => {
       </AnimatedSection>
 
       {/* Facts Band */}
-      <AnimatedSection direction="up" className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <AnimatedSection direction="up" className="max-w-[1536px] mx-auto px-4 sm:px-6 lg:px-12 xl:px-16">
         <div className="relative p-8 rounded-3xl bg-gradient-to-br from-[#0F172A] via-slate-900 to-slate-950 border border-slate-800 shadow-2xl overflow-hidden">
           <div className="absolute inset-0 bg-mesh-dark pointer-events-none"></div>
           <div className="relative grid grid-cols-2 md:grid-cols-4 gap-6 text-center">
@@ -158,7 +158,7 @@ export const AboutPage = () => {
       </AnimatedSection>
 
       {/* Service Areas */}
-      <AnimatedSection direction="up" className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-6 text-center">
+      <AnimatedSection direction="up" className="max-w-[1536px] mx-auto px-4 sm:px-6 lg:px-12 xl:px-16 space-y-6 text-center">
         <h2 className="text-2xl font-black text-slate-900 dark:text-white font-display">Areas We Serve</h2>
         <div className="flex flex-wrap justify-center gap-2">
           {serviceAreas.map((area) => (

@@ -1,4 +1,4 @@
-﻿import React from 'react';
+import React from 'react';
 import { motion } from 'framer-motion';
 import { Star, ExternalLink, MessageCircle, Phone, MapPin } from 'lucide-react';
 import { AnimatedSection } from '../../components/AnimatedSection';
@@ -15,7 +15,7 @@ export const ReviewsPage = () => {
   )}`;
 
   return (
-    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 space-y-10 bg-slate-50 dark:bg-slate-950 text-slate-900 dark:text-slate-100 transition-colors">
+    <div className="max-w-[1536px] mx-auto px-4 sm:px-6 lg:px-12 xl:px-16 py-12 space-y-10 bg-slate-50 dark:bg-slate-950 text-slate-900 dark:text-slate-100 transition-colors">
       <Seo
         title="Customer Reviews | Uday Electrical Works, Jamshedpur"
         description="Read reviews of Uday Electrical Works, electrical shop & doorstep service in Chhota Govindpur, Jamshedpur. Share your experience on Google."

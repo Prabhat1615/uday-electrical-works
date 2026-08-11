@@ -23,17 +23,17 @@ export const BrandMarquee = () => {
   const marqueeItems = [...brandLogos, ...brandLogos, ...brandLogos];
 
   return (
-    <section className="relative py-10 bg-[#111827] text-white overflow-hidden border-y border-slate-800">
+    <section className="relative py-10 bg-[#111318] text-white overflow-hidden border-y border-slate-800">
       
       {/* Visual Depth Background Halo */}
       <div className="absolute inset-0 pointer-events-none">
-        <div className="absolute top-1/2 left-1/4 -translate-y-1/2 w-96 h-96 bg-[#F97316]/10 rounded-full blur-3xl"></div>
-        <div className="absolute top-1/2 right-1/4 -translate-y-1/2 w-96 h-96 bg-[#0284C7]/10 rounded-full blur-3xl"></div>
+        <div className="absolute top-1/2 left-1/4 -translate-y-1/2 w-96 h-96 bg-[#D6A84F]/10 rounded-full blur-3xl"></div>
+        <div className="absolute top-1/2 right-1/4 -translate-y-1/2 w-96 h-96 bg-[#5D8FD9]/10 rounded-full blur-3xl"></div>
       </div>
 
       {/* Header Label */}
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mb-6 text-center">
-        <span className="text-[11px] font-extrabold text-[#F97316] uppercase tracking-widest font-display">
+      <div className="max-w-[1536px] mx-auto px-4 sm:px-6 lg:px-12 xl:px-16 mb-6 text-center">
+        <span className="text-[11px] font-extrabold text-[#D6A84F] uppercase tracking-widest font-display">
           AUTHORIZED DISTRIBUTOR &amp; RETAIL PARTNER
         </span>
       </div>
@@ -44,7 +44,7 @@ export const BrandMarquee = () => {
           {marqueeItems.map((brand, idx) => (
             <div
               key={`${brand.name}-${idx}`}
-              className="flex items-center justify-center h-16 sm:h-20 w-36 sm:w-44 px-4 bg-white/95 rounded-2xl border border-slate-700/60 shadow-sm transition-all duration-300 hover:scale-105 hover:border-[#F97316] group shrink-0"
+              className="flex items-center justify-center h-16 sm:h-20 w-36 sm:w-44 px-4 bg-white/95 rounded-2xl border border-slate-700/60 shadow-sm transition-all duration-300 hover:scale-105 hover:border-[#D6A84F] group shrink-0"
             >
               <img
                 src={brand.file}

@@ -1,4 +1,4 @@
-﻿import React, { useState } from 'react';
+import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { Minus, Plus, Trash2, ShoppingCart, Phone, CheckCircle2, CreditCard, Store, ArrowRight } from 'lucide-react';
@@ -49,7 +49,7 @@ export const CartPage = () => {
     <div className="min-h-screen bg-white dark:bg-slate-950 text-[#0F172A] dark:text-slate-100 transition-colors duration-300">
       <Seo title="Your Cart | Uday Electrical Works" />
 
-      <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
+      <div className="max-w-[1536px] mx-auto px-4 sm:px-6 lg:px-12 xl:px-16 py-10">
 
         {order ? (
           /* Order Confirmation */

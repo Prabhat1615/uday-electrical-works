@@ -1,3 +1,5 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Manrope:wght@600;700;800&display=swap');
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -8,21 +10,21 @@
   }
 
   body {
-    @apply bg-slate-50 text-slate-900 min-h-screen flex flex-col font-sans antialiased;
+    @apply bg-[#F4F2ED] text-[#1B1D21] min-h-screen flex flex-col font-sans antialiased;
     text-rendering: optimizeLegibility;
   }
 
   h1, h2, h3, h4, h5, h6, .font-display {
-    font-family: 'Inter', ui-sans-serif, system-ui, sans-serif;
+    font-family: 'Manrope', 'Inter', ui-sans-serif, system-ui, sans-serif;
   }
 
   ::selection {
-    @apply bg-orange-500 text-white;
+    @apply bg-[#D6A84F] text-[#111318];
   }
 
   /* Focus visibility for accessibility */
   *:focus-visible {
-    outline: 2px solid #F97316;
+    outline: 2px solid #D6A84F;
     outline-offset: 2px;
   }
 
@@ -34,7 +36,7 @@
 @layer components {
   /* Layout containers */
   .container-page {
-    max-width: 80rem;
+    max-width: 96rem;
     margin-left: auto;
     margin-right: auto;
     padding-left: 1rem;
@@ -44,7 +46,7 @@
     .container-page { padding-left: 1.5rem; padding-right: 1.5rem; }
   }
   @media (min-width: 1024px) {
-    .container-page { padding-left: 2rem; padding-right: 2rem; }
+    .container-page { padding-left: 3rem; padding-right: 3rem; }
   }
 
   .container-content {
@@ -55,7 +57,7 @@
     padding-right: 1rem;
   }
 
-  /* Buttons - compact, consistent 40px control height */
+  /* Buttons - consistent control height */
   .btn {
     display: inline-flex;
     align-items: center;
@@ -64,7 +66,7 @@
     height: 2.5rem;
     padding: 0 1rem;
     border-radius: 0.5rem;
-    font-weight: 600;
+    font-weight: 700;
     font-size: 0.875rem;
     line-height: 1;
     white-space: nowrap;
@@ -77,61 +79,61 @@
 
   .btn-primary {
     @apply btn;
-    background-color: #F97316;
-    color: #ffffff;
+    background-color: #D6A84F;
+    color: #111318;
     box-shadow: 0 1px 2px rgba(0, 0, 0, 0.06);
   }
   .btn-primary:hover:not(:disabled) {
-    background-color: #EA580C;
+    background-color: #C99532;
   }
 
   .btn-secondary {
     @apply btn;
-    background-color: #ffffff;
-    color: #334155;
-    border: 1px solid #E2E8F0;
+    background-color: #171A1F;
+    color: #ffffff;
+    border: 1px solid rgba(255,255,255,0.08);
   }
   .btn-secondary:hover:not(:disabled) {
-    background-color: #F8FAFC;
-    border-color: #CBD5E1;
+    background-color: #22262D;
+    border-color: rgba(255,255,255,0.15);
   }
 
   .btn-ghost {
     @apply btn;
     background-color: transparent;
-    color: #64748B;
+    color: #AAB0B8;
   }
   .btn-ghost:hover:not(:disabled) {
-    background-color: #F1F5F9;
-    color: #0F172A;
+    background-color: rgba(255,255,255,0.06);
+    color: #F5F5F2;
   }
 
   .btn-danger {
     @apply btn;
-    background-color: #EF4444;
+    background-color: #D95C5C;
     color: #ffffff;
   }
   .btn-danger:hover:not(:disabled) {
-    background-color: #DC2626;
+    background-color: #C24848;
   }
 
   .btn-success {
     @apply btn;
-    background-color: #10B981;
+    background-color: #3FAE72;
     color: #ffffff;
   }
   .btn-success:hover:not(:disabled) {
-    background-color: #059669;
+    background-color: #339860;
   }
 
   .btn-outline {
     @apply btn;
     background-color: transparent;
-    color: #F97316;
-    border: 1px solid #F97316;
+    color: #D6A84F;
+    border: 1px solid #D6A84F;
   }
   .btn-outline:hover:not(:disabled) {
-    background-color: #FFF7ED;
+    background-color: #FAF6EC;
   }
 
   .btn-sm {
@@ -146,7 +148,7 @@
     font-size: 0.9375rem;
   }
 
-  /* Brand CTA - solid orange, subtle shadow */
+  /* Brand CTA - Metallic Gold */
   .btn-cta {
     display: inline-flex;
     align-items: center;
@@ -155,16 +157,16 @@
     height: 2.5rem;
     padding: 0 1.25rem;
     border-radius: 0.5rem;
-    background-image: linear-gradient(135deg, #F97316 0%, #F97316 100%);
-    color: #ffffff;
-    font-weight: 700;
+    background-color: #D6A84F;
+    color: #111318;
+    font-weight: 800;
     font-size: 0.875rem;
-    box-shadow: 0 1px 3px rgba(249, 115, 22, 0.25);
+    box-shadow: 0 2px 6px rgba(214, 168, 79, 0.25);
     transition: background-color 0.15s, box-shadow 0.15s, transform 0.15s;
   }
   .btn-cta:hover {
-    background-color: #EA580C;
-    box-shadow: 0 4px 10px -2px rgba(249, 115, 22, 0.35);
+    background-color: #C99532;
+    box-shadow: 0 4px 12px rgba(201, 149, 50, 0.35);
     transform: translateY(-1px);
   }
   .btn-cta:active {

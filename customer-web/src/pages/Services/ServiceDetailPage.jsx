@@ -1,4 +1,4 @@
-﻿import React from 'react';
+import React from 'react';
 import { Link, useParams, useNavigate } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
 import { motion } from 'framer-motion';
@@ -47,7 +47,7 @@ export const ServiceDetailPage = () => {
         description={service.description?.slice(0, 160)}
       />
 
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+      <div className="max-w-[1536px] mx-auto px-4 sm:px-6 lg:px-12 xl:px-16 py-8">
         <button
           onClick={() => navigate(-1)}
           className="inline-flex items-center space-x-1.5 text-xs font-bold text-[#475569] dark:text-slate-400 hover:text-[#F97316] transition-colors mb-6"

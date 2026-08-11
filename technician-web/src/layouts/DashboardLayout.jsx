@@ -58,18 +58,18 @@ export const DashboardLayout = () => {
   };
 
   return (
-    <div className="min-h-screen bg-slate-50 flex flex-col md:flex-row font-sans text-slate-900">
+    <div className="min-h-screen bg-[#F4F2ED] flex flex-col md:flex-row font-sans text-[#1B1D21]">
       
       {/* Mobile Top Header */}
-      <div className="md:hidden flex items-center justify-between p-4 bg-white border-b border-slate-200">
+      <div className="md:hidden flex items-center justify-between p-4 bg-[#171A1F] text-white border-b border-slate-800">
         <Link to="/dashboard" className="flex items-center">
-          <Logo portal="technician" size="sm" />
+          <Logo portal="technician" size="sm" light={true} />
         </Link>
         <div className="flex items-center space-x-2">
           <NotificationBell />
           <button
             onClick={() => setSidebarOpen(!sidebarOpen)}
-            className="p-2 rounded-lg bg-slate-100 text-slate-700 hover:bg-slate-200 transition-colors"
+            className="p-2 rounded-lg bg-[#22262D] text-slate-300 hover:text-white transition-colors"
           >
             {sidebarOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
           </button>
@@ -78,36 +78,36 @@ export const DashboardLayout = () => {
 
       {/* Technician Sidebar */}
       <aside
-        className={`fixed inset-y-0 left-0 z-50 w-64 bg-white border-r border-slate-200 flex flex-col transition-transform duration-300 ease-in-out md:static md:translate-x-0 ${
+        className={`fixed inset-y-0 left-0 z-50 w-64 bg-[#171A1F] text-white border-r border-slate-800 flex flex-col transition-transform duration-300 ease-in-out md:static md:translate-x-0 ${
           sidebarOpen ? 'translate-x-0' : '-translate-x-full'
         }`}
       >
         {/* Branding Header */}
-        <div className="p-5 border-b border-slate-200 flex items-center justify-between">
+        <div className="p-5 border-b border-slate-800 flex items-center justify-between">
           <Link to="/dashboard" className="flex items-center">
-            <Logo portal="technician" size="md" />
+            <Logo portal="technician" size="md" light={true} />
           </Link>
-          <button onClick={() => setSidebarOpen(false)} className="md:hidden text-slate-400 hover:text-slate-900">
+          <button onClick={() => setSidebarOpen(false)} className="md:hidden text-slate-400 hover:text-white">
             <X className="w-5 h-5" />
           </button>
         </div>
 
         {/* Technician Profile Card */}
-        <div className="p-4 mx-3 my-4 rounded-xl bg-slate-50 border border-slate-200/80">
+        <div className="p-4 mx-3 my-4 rounded-xl bg-[#22262D] border border-slate-700">
           <div className="flex items-center justify-between">
             <div className="flex items-center space-x-3 overflow-hidden">
-              <div className="w-9 h-9 rounded-xl bg-amber-500/10 border border-amber-500/30 flex items-center justify-center font-bold text-amber-600 text-sm shrink-0">
+              <div className="w-9 h-9 rounded-xl bg-[#D6A84F]/15 border border-[#D6A84F]/40 flex items-center justify-center font-bold text-[#D6A84F] text-sm shrink-0">
                 {user?.name ? user.name.charAt(0).toUpperCase() : 'T'}
               </div>
               <div className="overflow-hidden">
-                <p className="text-sm font-bold text-slate-900 truncate font-display">{user?.name || 'Technician'}</p>
-                <p className="text-[11px] text-slate-500 truncate">{user?.phone || user?.email || 'Field Wireman'}</p>
+                <p className="text-sm font-bold text-white truncate font-display">{user?.name || 'Technician'}</p>
+                <p className="text-[11px] text-[#AAB0B8] truncate">{user?.phone || user?.email || 'Field Wireman'}</p>
               </div>
             </div>
             <NotificationBell />
           </div>
-          <div className="mt-3 pt-2 border-t border-slate-200/60 flex items-center justify-between">
-            <span className="text-[10px] font-extrabold uppercase px-2 py-0.5 rounded-md bg-amber-500/10 text-amber-700 border border-amber-500/20">
+          <div className="mt-3 pt-2 border-t border-slate-700 flex items-center justify-between">
+            <span className="text-[10px] font-extrabold uppercase px-2 py-0.5 rounded-md bg-[#D6A84F]/15 text-[#E7C878] border border-[#D6A84F]/30">
               Verified Technician
             </span>
           </div>
@@ -128,32 +128,32 @@ export const DashboardLayout = () => {
                 onClick={() => setSidebarOpen(false)}
                 className={`flex items-center justify-between px-3.5 py-2.5 rounded-xl text-xs font-bold transition-all duration-200 ${
                   active
-                    ? 'bg-[#FFF7ED] text-[#EA580C] font-extrabold shadow-xs border border-[#FED7AA]'
-                    : 'text-[#64748B] hover:bg-[#F8FAFC] hover:text-[#111827]'
+                    ? 'bg-[#22262D] text-[#D6A84F] font-extrabold shadow-xs border-l-4 border-l-[#D6A84F]'
+                    : 'text-[#AAB0B8] hover:bg-[#22262D]/60 hover:text-white'
                 }`}
               >
                 <div className="flex items-center space-x-3">
-                  <Icon className={`w-4 h-4 ${active ? 'text-[#EA580C]' : 'text-[#94A3B8]'}`} />
+                  <Icon className={`w-4 h-4 ${active ? 'text-[#D6A84F]' : 'text-[#AAB0B8]'}`} />
                   <span>{item.name}</span>
                 </div>
-                {active && <ChevronRight className="w-4 h-4 text-[#EA580C]" />}
+                {active && <ChevronRight className="w-4 h-4 text-[#D6A84F]" />}
               </Link>
             );
           })}
         </nav>
 
         {/* Footer */}
-        <div className="p-4 border-t border-slate-200 space-y-2">
+        <div className="p-4 border-t border-slate-800 space-y-2">
           <Link
             to="/"
-            className="flex items-center justify-center space-x-1.5 text-xs font-bold text-slate-500 hover:text-amber-600 py-1 transition-colors font-display"
+            className="flex items-center justify-center space-x-1.5 text-xs font-bold text-slate-300 hover:text-[#D6A84F] py-1 transition-colors font-display"
           >
-            <ArrowLeft className="w-4 h-4" />
+            <ArrowLeft className="w-4 h-4 text-[#D6A84F]" />
             <span>Storefront Catalog</span>
           </Link>
           <button
             onClick={handleLogout}
-            className="w-full flex items-center justify-center space-x-2 py-2.5 px-4 rounded-xl bg-slate-100 hover:bg-rose-50 border border-slate-200 hover:border-rose-300 text-rose-600 text-xs font-bold transition-all"
+            className="w-full flex items-center justify-center space-x-2 py-2.5 px-4 rounded-xl bg-[#22262D] hover:bg-rose-950/40 border border-slate-700 hover:border-rose-700 text-rose-400 text-xs font-bold transition-all"
           >
             <LogOut className="w-4 h-4" />
             <span>Sign Out</span>

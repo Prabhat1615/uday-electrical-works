@@ -132,13 +132,13 @@ const itemClasses = (active, collapsed) =>
     collapsed ? 'justify-center px-0 py-2.5' : 'gap-3 px-3.5 py-2.5'
   } ${
     active
-      ? 'bg-[#FFF7ED] text-[#EA580C] font-extrabold shadow-xs border border-[#FED7AA]'
-      : 'text-[#64748B] hover:bg-[#F8FAFC] hover:text-[#111827]'
+      ? 'bg-[#22262D] text-[#D6A84F] font-extrabold shadow-xs border-l-4 border-l-[#D6A84F]'
+      : 'text-[#AAB0B8] hover:bg-[#22262D]/60 hover:text-white'
   }`;
 
 const iconClasses = (active) =>
   `w-4 h-4 shrink-0 ${
-    active ? 'text-[#EA580C]' : 'text-[#94A3B8] group-hover:text-[#111827]'
+    active ? 'text-[#D6A84F]' : 'text-[#AAB0B8] group-hover:text-white'
   }`;
 
 export const DashboardLayout = () => {
@@ -367,13 +367,13 @@ export const DashboardLayout = () => {
 
       {/* Sidebar */}
       <aside
-        className={`fixed inset-y-0 left-0 z-50 flex flex-col border-r border-surface-200 bg-white transition-[width,transform] duration-300 ease-in-out md:static md:translate-x-0 ${
+        className={`fixed inset-y-0 left-0 z-50 flex flex-col border-r border-slate-800 bg-[#171A1F] text-white transition-[width,transform] duration-300 ease-in-out md:static md:translate-x-0 ${
           compact ? 'md:w-[76px]' : 'md:w-64'
         } w-64 ${mobileOpen ? 'translate-x-0' : '-translate-x-full md:translate-x-0'}`}
       >
         {/* Logo */}
         <div
-          className={`flex items-center border-b border-surface-200 px-4 py-5 ${
+          className={`flex items-center border-b border-slate-800 px-4 py-5 ${
             compact ? 'justify-between md:justify-center' : 'justify-between'
           }`}
         >
@@ -382,12 +382,12 @@ export const DashboardLayout = () => {
             className="flex items-center"
             title={compact ? 'Uday Electrical Works' : undefined}
           >
-            <Logo portal="management" variant={compact ? 'icon' : 'full'} size="md" />
+            <Logo portal="management" variant={compact ? 'icon' : 'full'} size="md" light={true} />
           </Link>
           <button
             type="button"
             onClick={() => setMobileOpen(false)}
-            className="text-text-muted hover:text-text-primary md:hidden"
+            className="text-slate-400 hover:text-white md:hidden"
             aria-label="Close navigation"
           >
             <X className="h-5 w-5" />
@@ -400,15 +400,15 @@ export const DashboardLayout = () => {
         </nav>
 
         {/* Footer */}
-        <div className="border-t border-surface-200 p-4">
+        <div className="border-t border-slate-800 p-4">
           <Link
             to="/"
             title={compact ? 'Back to Storefront' : undefined}
-            className={`flex items-center rounded-lg text-text-secondary hover:bg-surface-100 hover:text-brand-600 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-500 ${
+            className={`flex items-center rounded-lg text-slate-300 hover:bg-[#22262D] hover:text-[#D6A84F] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#D6A84F] ${
               compact ? 'justify-center p-2.5' : 'justify-center py-1'
             }`}
           >
-            <ArrowLeft className="h-5 w-5" />
+            <ArrowLeft className="h-5 w-5 text-[#D6A84F]" />
             <span className={`ml-1.5 text-xs font-semibold ${compact ? 'hidden md:inline' : ''}`}>
               Back to Storefront
             </span>

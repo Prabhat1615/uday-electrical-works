@@ -59,11 +59,11 @@ export const MainLayout = () => {
   ];
 
   return (
-    <div className="min-h-screen bg-white text-slate-900 flex flex-col font-sans relative">
+    <div className="min-h-screen bg-[#F4F2ED] text-[#1B1D21] flex flex-col font-sans relative">
 
       {/* Top Viewport Scroll Progress Hairline */}
       <motion.div
-        className="fixed top-0 left-0 right-0 h-1 bg-[#F97316] z-50 origin-left"
+        className="fixed top-0 left-0 right-0 h-1 bg-[#D6A84F] z-50 origin-left"
         style={{ scaleX: scrollYProgress }}
       />
 
@@ -71,26 +71,26 @@ export const MainLayout = () => {
       <CustomCursor />
 
       {/* Top Contact Bar */}
-      <div className="relative bg-[#111827] text-slate-300 border-b border-slate-800 text-[11px] py-2 px-4 sm:px-8 flex flex-col sm:flex-row justify-between items-center gap-2 z-50">
+      <div className="relative bg-[#111318] text-[#AAB0B8] border-b border-slate-800 text-[11px] py-2 px-4 sm:px-8 flex flex-col sm:flex-row justify-between items-center gap-2 z-50">
         <div className="relative flex items-center space-x-4">
-          <a href="tel:7903789402" className="flex items-center space-x-1.5 hover:text-[#F97316] transition-colors">
-            <span className="w-1.5 h-1.5 rounded-full bg-[#16A34A] animate-pulse"></span>
-            <Phone className="w-3.5 h-3.5 text-[#F97316]" />
+          <a href="tel:7903789402" className="flex items-center space-x-1.5 hover:text-[#D6A84F] transition-colors">
+            <span className="w-1.5 h-1.5 rounded-full bg-[#3FAE72] animate-pulse"></span>
+            <Phone className="w-3.5 h-3.5 text-[#D6A84F]" />
             <span className="font-bold text-white">7903789402 / 9934187847</span>
           </a>
           <span className="hidden md:flex items-center space-x-1.5 text-slate-400">
-            <Clock className="w-3.5 h-3.5 text-[#F97316]" />
+            <Clock className="w-3.5 h-3.5 text-[#D6A84F]" />
             <span>Open Mon-Sat, 8:30 AM - 9:00 PM</span>
           </span>
           <span className="hidden lg:flex items-center space-x-1.5 text-slate-400">
-            <MapPin className="w-3.5 h-3.5 text-[#F97316]" />
+            <MapPin className="w-3.5 h-3.5 text-[#D6A84F]" />
             <span>Chhota Govindpur Main Road, Jamshedpur</span>
           </span>
         </div>
         <div className="relative flex items-center space-x-3 font-semibold text-[11px]">
-          <span className="text-[#F97316] font-bold">Uday Electrical Works</span>
+          <span className="text-[#D6A84F] font-bold">Uday Electrical Works</span>
           <span className="text-slate-700">|</span>
-          <span className="text-[#16A34A] font-bold">Doorstep Service across Jamshedpur</span>
+          <span className="text-[#3FAE72] font-bold">Doorstep Service across Jamshedpur</span>
         </div>
       </div>
 
@@ -98,14 +98,14 @@ export const MainLayout = () => {
       <header
         className={`sticky top-0 z-40 transition-all duration-300 ${
           scrolled
-            ? 'bg-white/95 backdrop-blur-md border-b border-[#E5E7EB] shadow-xs text-[#111827]'
-            : 'bg-white border-b border-[#E5E7EB] text-[#111827]'
+            ? 'bg-[#171A1F]/95 backdrop-blur-md border-b border-slate-800 shadow-md text-white'
+            : 'bg-[#171A1F] border-b border-slate-800/80 text-white'
         }`}
       >
         <div className="max-w-[1536px] mx-auto px-4 sm:px-6 lg:px-12 xl:px-16 h-16 flex items-center justify-between">
 
           <Link to="/" className="group flex items-center">
-            <Logo portal="customer" size="md" />
+            <Logo portal="customer" size="md" light={true} />
           </Link>
 
           {/* Navigation Links */}
@@ -118,15 +118,15 @@ export const MainLayout = () => {
                   to={link.path}
                   className={`relative py-1.5 transition-colors whitespace-nowrap ${
                     active
-                      ? 'text-[#F97316] font-black'
-                      : 'text-[#111827] hover:text-[#F97316]'
+                      ? 'text-[#D6A84F] font-black'
+                      : 'text-slate-300 hover:text-[#D6A84F]'
                   }`}
                 >
                   {link.name}
                   {active && (
                     <motion.span
                       layoutId="nav-underline"
-                      className="absolute left-0 right-0 -bottom-0.5 h-0.5 rounded-full bg-[#F97316]"
+                      className="absolute left-0 right-0 -bottom-0.5 h-0.5 rounded-full bg-[#D6A84F]"
                     />
                   )}
                 </Link>
@@ -139,12 +139,12 @@ export const MainLayout = () => {
             {/* Cart Button */}
             <Link
               to="/cart"
-              className="relative px-3.5 py-2.5 rounded-xl border bg-slate-50 border-[#E5E7EB] text-[#111827] hover:text-[#F97316] hover:border-[#F97316]/40 transition-all flex items-center justify-center shrink-0"
+              className="relative px-3.5 py-2.5 rounded-xl border bg-[#22262D] border-slate-700 text-white hover:text-[#D6A84F] hover:border-[#D6A84F]/40 transition-all flex items-center justify-center shrink-0"
               title="View Cart"
             >
               <ShoppingCart className="w-4 h-4" />
               {itemCount > 0 && (
-                <span className="absolute -top-1.5 -right-1.5 min-w-4 h-4 px-1 rounded-full bg-[#F97316] text-white text-[9px] font-black flex items-center justify-center">
+                <span className="absolute -top-1.5 -right-1.5 min-w-4 h-4 px-1 rounded-full bg-[#D6A84F] text-[#111318] text-[9px] font-black flex items-center justify-center">
                   {itemCount}
                 </span>
               )}
@@ -153,7 +153,7 @@ export const MainLayout = () => {
             {/* Right Action: Book a Service */}
             <button
               onClick={() => setBookingModalOpen(true)}
-              className="inline-flex items-center space-x-2 px-5 py-2.5 rounded-xl bg-[#F97316] hover:bg-[#EA580C] text-white font-extrabold text-xs sm:text-sm shadow-xs hover:scale-102 transition-all font-display shrink-0 whitespace-nowrap"
+              className="inline-flex items-center space-x-2 px-5 py-2.5 rounded-xl bg-[#D6A84F] hover:bg-[#C99532] text-[#111318] font-extrabold text-xs sm:text-sm shadow-xs hover:scale-102 transition-all font-display shrink-0 whitespace-nowrap"
             >
               <Zap className="w-4 h-4 fill-current shrink-0" />
               <span>Book a Service</span>

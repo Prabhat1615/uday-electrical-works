@@ -60,7 +60,7 @@ export const ProductDetailPage = () => {
         description={`${product.brand} ${product.name} available at Uday Electrical Works, Jamshedpur. ${product.description?.slice(0, 140)}`}
       />
 
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-6">
+      <div className="max-w-[1536px] mx-auto px-4 sm:px-6 lg:px-12 xl:px-16 py-8 space-y-6">
         <button
           onClick={() => navigate(-1)}
           className="inline-flex items-center gap-1.5 text-xs font-bold text-slate-500 dark:text-slate-400 hover:text-amber-500 transition-colors"

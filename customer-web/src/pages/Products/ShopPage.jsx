@@ -1,4 +1,4 @@
-﻿import React, { useMemo, useState } from 'react';
+import React, { useMemo, useState } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { Search, SlidersHorizontal, X, Package, Phone } from 'lucide-react';
@@ -59,7 +59,7 @@ export const ShopPage = () => {
 
       {/* Page Header */}
       <div className="relative bg-gradient-to-b from-[#F8FAFC] to-white dark:from-slate-900 dark:to-slate-950 border-b border-[#E2E8F0] dark:border-slate-800 section-pattern">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-5">
+        <div className="max-w-[1536px] mx-auto px-4 sm:px-6 lg:px-12 xl:px-16 py-8 space-y-5">
           <div className="text-center space-y-2">
             <span className="text-xs font-extrabold text-[#F97316] uppercase tracking-widest">In-Store Catalog</span>
             <h1 className="text-3xl sm:text-4xl font-black text-[#0F172A] dark:text-white font-display">
@@ -90,7 +90,7 @@ export const ShopPage = () => {
         </div>
       </div>
 
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
+      <div className="max-w-[1536px] mx-auto px-4 sm:px-6 lg:px-12 xl:px-16 py-10">
         {/* Category Chips */}
         <div className="flex flex-wrap gap-2 justify-center mb-5">
           <button

@@ -57,7 +57,7 @@ export const ContactPage = () => {
   };
 
   return (
-    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 space-y-12 bg-slate-50 dark:bg-slate-950 text-slate-900 dark:text-slate-100 transition-colors">
+    <div className="max-w-[1536px] mx-auto px-4 sm:px-6 lg:px-12 xl:px-16 py-12 space-y-12 bg-slate-50 dark:bg-slate-950 text-slate-900 dark:text-slate-100 transition-colors">
       <Seo
         title="Contact Us | Uday Electrical Works, Chhota Govindpur, Jamshedpur"
         description="Contact Uday Electrical Works, Chhota Govindpur, Jamshedpur. Call 7903789402 / 9934187847, WhatsApp, or request an electrician visit online. Open Mon-Sat 8:30 AM - 9:00 PM."

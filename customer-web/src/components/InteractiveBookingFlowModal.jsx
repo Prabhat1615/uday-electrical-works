@@ -130,9 +130,9 @@ export const InteractiveBookingFlowModal = ({ isOpen, onClose, initialService = 
           className="relative w-full max-w-2xl bg-white rounded-3xl border border-[#E5E7EB] shadow-2xl overflow-hidden z-10 my-6"
         >
           {/* Top Bar with Stepper Indicator */}
-          <div className="bg-[#111827] text-white p-5 flex items-center justify-between border-b border-slate-800">
+          <div className="bg-[#111318] text-white p-5 flex items-center justify-between border-b border-slate-800">
             <div className="flex items-center space-x-3">
-              <div className="p-2 rounded-xl bg-[#F97316] text-white">
+              <div className="p-2 rounded-xl bg-[#D6A84F] text-[#111318]">
                 <Wrench className="w-5 h-5" />
               </div>
               <div>
@@ -151,7 +151,7 @@ export const InteractiveBookingFlowModal = ({ isOpen, onClose, initialService = 
           {/* Stepper Progress Hairline */}
           <div className="w-full bg-slate-100 h-1.5 overflow-hidden">
             <motion.div
-              className="h-full bg-[#F97316]"
+              className="h-full bg-[#D6A84F]"
               initial={{ width: '20%' }}
               animate={{ width: `${(step / 5) * 100}%` }}
               transition={{ duration: 0.3 }}
@@ -161,7 +161,7 @@ export const InteractiveBookingFlowModal = ({ isOpen, onClose, initialService = 
           {/* Modal Body */}
           <div className="p-6 sm:p-8 space-y-6">
             {error && (
-              <div className="p-3.5 rounded-xl bg-[#FEF2F2] border border-[#FECACA] text-[#DC2626] text-xs font-bold flex items-center space-x-2">
+              <div className="p-3.5 rounded-xl bg-[#FEF2F2] border border-[#FECACA] text-[#D95C5C] text-xs font-bold flex items-center space-x-2">
                 <Zap className="w-4 h-4 shrink-0" />
                 <span>{error}</span>
               </div>
@@ -170,7 +170,7 @@ export const InteractiveBookingFlowModal = ({ isOpen, onClose, initialService = 
             {/* STEP 1: Select Service */}
             {step === 1 && (
               <div className="space-y-4">
-                <h4 className="text-base font-bold text-[#111827] font-display">1. Select Electrical Service Needed</h4>
+                <h4 className="text-base font-bold text-[#111318] font-display">1. Select Electrical Service Needed</h4>
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                   {availableServices.map((svc) => (
                     <button
@@ -178,16 +178,16 @@ export const InteractiveBookingFlowModal = ({ isOpen, onClose, initialService = 
                       onClick={() => setService(svc)}
                       className={`p-4 rounded-2xl border text-left transition-all flex flex-col justify-between space-y-2 ${
                         service?.id === svc.id
-                          ? 'bg-[#FFF7ED] border-[#F97316] shadow-xs'
+                          ? 'bg-[#FAF6EC] border-[#D6A84F] shadow-xs'
                           : 'bg-white border-[#E5E7EB] hover:border-slate-300'
                       }`}
                     >
                       <div className="flex items-start justify-between">
-                        <span className="text-xs font-bold text-[#111827] font-display">{svc.name}</span>
-                        {service?.id === svc.id && <CheckCircle2 className="w-4 h-4 text-[#F97316] shrink-0" />}
+                        <span className="text-xs font-bold text-[#111318] font-display">{svc.name}</span>
+                        {service?.id === svc.id && <CheckCircle2 className="w-4 h-4 text-[#D6A84F] shrink-0" />}
                       </div>
                       <div className="flex items-center justify-between text-[11px] text-[#64748B]">
-                        <span className="font-semibold text-[#F97316]">{svc.price}</span>
+                        <span className="font-semibold text-[#C99532]">{svc.price}</span>
                         <span>{svc.time}</span>
                       </div>
                     </button>
@@ -199,21 +199,21 @@ export const InteractiveBookingFlowModal = ({ isOpen, onClose, initialService = 
             {/* STEP 2: Preferred Date & Time */}
             {step === 2 && (
               <div className="space-y-4">
-                <h4 className="text-base font-bold text-[#111827] font-display">2. Select Preferred Visit Time</h4>
+                <h4 className="text-base font-bold text-[#111318] font-display">2. Select Preferred Visit Time</h4>
                 <div className="space-y-3">
                   <div>
-                    <label className="block text-xs font-bold text-[#111827] mb-1.5 font-display">Preferred Date</label>
+                    <label className="block text-xs font-bold text-[#111318] mb-1.5 font-display">Preferred Date</label>
                     <input
                       type="date"
                       value={selectedDate}
                       min={new Date().toISOString().split('T')[0]}
                       onChange={(e) => setSelectedDate(e.target.value)}
-                      className="w-full px-4 py-3 rounded-xl border border-[#E5E7EB] bg-white text-xs font-bold text-[#111827] focus:outline-none focus:border-[#F97316]"
+                      className="w-full px-4 py-3 rounded-xl border border-[#E5E7EB] bg-white text-xs font-bold text-[#111318] focus:outline-none focus:border-[#D6A84F]"
                     />
                   </div>
 
                   <div>
-                    <label className="block text-xs font-bold text-[#111827] mb-1.5 font-display">Preferred Time Window</label>
+                    <label className="block text-xs font-bold text-[#111318] mb-1.5 font-display">Preferred Time Window</label>
                     <div className="space-y-2">
                       {timeSlots.map((slot) => (
                         <button
@@ -221,15 +221,15 @@ export const InteractiveBookingFlowModal = ({ isOpen, onClose, initialService = 
                           onClick={() => setSelectedTimeSlot(slot)}
                           className={`w-full p-3 rounded-xl border text-left text-xs font-bold transition-all flex items-center justify-between ${
                             selectedTimeSlot === slot
-                              ? 'bg-[#FFF7ED] border-[#F97316] text-[#EA580C]'
-                              : 'bg-white border-[#E5E7EB] text-[#111827] hover:bg-slate-50'
+                              ? 'bg-[#FAF6EC] border-[#D6A84F] text-[#C99532]'
+                              : 'bg-white border-[#E5E7EB] text-[#111318] hover:bg-slate-50'
                           }`}
                         >
                           <span className="flex items-center gap-2">
-                            <Clock className="w-4 h-4 text-[#F97316]" />
+                            <Clock className="w-4 h-4 text-[#D6A84F]" />
                             {slot}
                           </span>
-                          {selectedTimeSlot === slot && <CheckCircle2 className="w-4 h-4 text-[#F97316]" />}
+                          {selectedTimeSlot === slot && <CheckCircle2 className="w-4 h-4 text-[#D6A84F]" />}
                         </button>
                       ))}
                     </div>

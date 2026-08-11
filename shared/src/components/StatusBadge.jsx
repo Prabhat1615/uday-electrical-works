@@ -8,8 +8,8 @@ export const StatusBadge = ({ status, className = '' }) => {
       case 'Low Stock':
       case 'In Review':
         return {
-          bg: 'bg-[#FFFBEB] text-[#D97706] border-[#FDE68A]',
-          dot: 'bg-[#D97706]'
+          bg: 'bg-[#FFFBEB] text-[#C99532] border-[#FDE68A]',
+          dot: 'bg-[#D6A84F]'
         };
       case 'Confirmed':
       case 'In Progress':
@@ -20,8 +20,8 @@ export const StatusBadge = ({ status, className = '' }) => {
       case 'Accepted':
       case 'On The Way':
         return {
-          bg: 'bg-[#F0F9FF] text-[#0284C7] border-[#BAE6FD]',
-          dot: 'bg-[#0284C7]'
+          bg: 'bg-[#F0F9FF] text-[#5D8FD9] border-[#BAE6FD]',
+          dot: 'bg-[#5D8FD9]'
         };
       case 'Completed':
       case 'Paid':
@@ -29,8 +29,8 @@ export const StatusBadge = ({ status, className = '' }) => {
       case 'Approved':
       case 'Active':
         return {
-          bg: 'bg-[#F0FDF4] text-[#16A34A] border-[#BBF7D0]',
-          dot: 'bg-[#16A34A]'
+          bg: 'bg-[#F0FDF4] text-[#3FAE72] border-[#BBF7D0]',
+          dot: 'bg-[#3FAE72]'
         };
       case 'Cancelled':
       case 'Rejected':
@@ -38,8 +38,8 @@ export const StatusBadge = ({ status, className = '' }) => {
       case 'Inactive':
       case 'Failed':
         return {
-          bg: 'bg-[#FEF2F2] text-[#DC2626] border-[#FECACA]',
-          dot: 'bg-[#DC2626]'
+          bg: 'bg-[#FEF2F2] text-[#D95C5C] border-[#FECACA]',
+          dot: 'bg-[#D95C5C]'
         };
       default:
         return {
