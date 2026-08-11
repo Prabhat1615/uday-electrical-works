@@ -23,12 +23,14 @@ import { getServicesApi } from '../api/serviceApi';
 import { useQuery } from '@tanstack/react-query';
 
 const availableServicesFallback = [
-  { id: 'house-wiring', name: 'House Wiring & Load Distribution', price: '₹499 base inspection', time: '1-3 Hours' },
-  { id: 'electrical-repair', name: 'Short Circuit & Fault Repair', price: '₹249 inspection', time: '30-60 Mins' },
-  { id: 'fan-service', name: 'Ceiling / Exhaust Fan Fitting & Repair', price: '₹199 / fan', time: '30 Mins' },
-  { id: 'switch-socket', name: 'Modular Switch & Socket Replacement', price: '₹149 / fitting', time: '20 Mins' },
-  { id: 'geyser-fitting', name: 'Geyser & Stabilizer Installation', price: '₹399 / unit', time: '45 Mins' },
-  { id: 'lighting-setup', name: 'LED Panel & Profile Light Fitting', price: '₹299 base', time: '45 Mins' }
+  { id: 'wiring-fault', name: 'Wiring / Electrical Fault', price: '₹500 base', time: '2-4 Hours' },
+  { id: 'fan-repair', name: 'Fan Repair', price: '₹250 base', time: '1-2 Hours' },
+  { id: 'fan-installation', name: 'Fan Installation', price: '₹400 base', time: '1-2 Hours' },
+  { id: 'switch-socket', name: 'Switch / Socket Repair', price: '₹200 base', time: '1 Hour' },
+  { id: 'light-installation', name: 'Light Installation', price: '₹350 base', time: '1-2 Hours' },
+  { id: 'mcb-service', name: 'MCB / Distribution Board Service', price: '₹400 base', time: '1-2 Hours' },
+  { id: 'appliance-repair', name: 'Appliance Electrical Repair', price: '₹300 base', time: '1-2 Hours' },
+  { id: 'general-service', name: 'General Electrical Service', price: '₹450 base', time: '2-3 Hours' }
 ];
 
 const timeSlots = [
@@ -61,6 +63,20 @@ export const InteractiveBookingFlowModal = ({ isOpen, onClose, initialService = 
 
   const { isAuthenticated } = useAuth();
   const navigate = useNavigate();
+
+  // Auto-sync service selection when dbServices finishes loading
+  React.useEffect(() => {
+    if (dbServices.length > 0) {
+      if (!service || !service._id) {
+        const currentName = (service?.name || service?.title || '').toLowerCase();
+        const match = dbServices.find((s) => {
+          const t = (s.title || '').toLowerCase();
+          return t === currentName || (currentName && (t.includes(currentName.slice(0, 5)) || currentName.includes(t.slice(0, 5))));
+        }) || dbServices[0];
+        setService(match);
+      }
+    }
+  }, [dbServices]);
 
   const servicesList = dbServices.length > 0 ? dbServices : availableServicesFallback;
 
@@ -102,15 +118,27 @@ export const InteractiveBookingFlowModal = ({ isOpen, onClose, initialService = 
         return;
       }
 
-      // Match target service document in DB if selected from fallback list
-      const matchedDbService = dbServices.find(
-        (s) => s._id === service._id || s.title?.toLowerCase() === (service.name || service.title)?.toLowerCase()
-      ) || dbServices[0];
+      let activeDbServices = dbServices;
+      if (!activeDbServices || activeDbServices.length === 0) {
+        try {
+          const res = await getServicesApi({ status: 'Active' });
+          activeDbServices = res?.data || [];
+        } catch (e) {
+          console.error('Dynamic service fetch failed:', e);
+        }
+      }
 
-      const targetServiceId = matchedDbService?._id || service._id;
+      const currentTitle = (service?.title || service?.name || '').toLowerCase();
+      const matchedDbService = activeDbServices.find((s) => {
+        if (service?._id && s._id === service._id) return true;
+        const t = (s.title || '').toLowerCase();
+        return t === currentTitle || (currentTitle && (t.includes(currentTitle.slice(0, 5)) || currentTitle.includes(t.slice(0, 5))));
+      }) || activeDbServices[0];
+
+      const targetServiceId = matchedDbService?._id || service?._id;
 
       if (!targetServiceId) {
-        setError('Please select a valid shop service from our catalog.');
+        setError('No active services available in the shop catalog right now. Please call 7903789402 directly.');
         setLoading(false);
         return;
       }

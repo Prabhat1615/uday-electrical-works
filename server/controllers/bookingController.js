@@ -197,6 +197,7 @@ export const createBooking = async (req, res, next) => {
   try {
     const {
       serviceId,
+      serviceType,
       address,
       city,
       pincode,
@@ -209,7 +210,21 @@ export const createBooking = async (req, res, next) => {
       contactEmail
     } = req.body;
 
-    if (!serviceId || !address || !preferredDate) {
+    let targetService = null;
+
+    if (serviceId) {
+      targetService = await Service.findById(serviceId).catch(() => null);
+    }
+
+    if (!targetService && serviceType) {
+      targetService = await Service.findOne({ title: { $regex: serviceType, $options: 'i' } });
+    }
+
+    if (!targetService) {
+      targetService = (await Service.findOne({ status: 'Active' })) || (await Service.findOne());
+    }
+
+    if (!targetService || !address || !preferredDate) {
       return next(new ApiError(400, 'Service, address and preferred date are required'));
     }
 
@@ -217,10 +232,7 @@ export const createBooking = async (req, res, next) => {
       return next(new ApiError(400, 'Preferred service date cannot be in the past'));
     }
 
-    const service = await Service.findById(serviceId);
-    if (!service) {
-      return next(new ApiError(404, 'Selected electrical service does not exist'));
-    }
+    const service = targetService;
 
     const booking = await Booking.create({
       bookingNumber: generateBookingNumber(),
