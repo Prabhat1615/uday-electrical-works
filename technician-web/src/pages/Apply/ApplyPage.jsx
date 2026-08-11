@@ -102,42 +102,42 @@ export const ApplyPage = () => {
 
   if (success) {
     return (
-      <div className="relative min-h-screen flex items-center justify-center px-4 py-12 overflow-hidden bg-gradient-to-b from-slate-50 to-slate-100 dark:from-slate-950 dark:to-slate-950">
+      <div className="relative min-h-screen flex items-center justify-center px-4 py-12 overflow-hidden bg-gradient-to-b from-slate-50 to-slate-100">
         <AnimatedBackground className="opacity-70" />
 
         <motion.div
           initial={{ opacity: 0, y: 32 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
-          className="relative w-full max-w-md glass-card p-8 rounded-3xl shadow-2xl text-center space-y-6"
+          className="relative w-full max-w-md glass-card p-8 rounded-xl shadow-card text-center space-y-6"
         >
-          <div className="absolute top-0 left-0 right-0 h-1.5 bg-gradient-to-r from-orange-500 via-amber-400 to-blue-600 rounded-t-3xl"></div>
+          <div className="absolute top-0 left-0 right-0 h-1.5 bg-gradient-to-r from-orange-500 via-amber-400 to-blue-600 rounded-t-xl"></div>
 
-          <div className="p-3 w-fit mx-auto rounded-2xl bg-emerald-500/10 border border-emerald-500/30 text-emerald-500 shadow-glow-emerald">
+          <div className="p-3 w-fit mx-auto rounded-xl bg-emerald-500/10 border border-emerald-500/30 text-emerald-600">
             <CheckCircle2 className="w-10 h-10" />
           </div>
 
           <div className="space-y-2">
-            <h2 className="text-2xl font-black text-slate-900 dark:text-white font-display">Application Submitted</h2>
-            <p className="text-sm text-slate-500 dark:text-slate-400 leading-relaxed">
+            <h2 className="text-2xl font-black text-slate-900">Application Submitted</h2>
+            <p className="text-sm text-slate-500 leading-relaxed">
               Application submitted successfully. Your application is awaiting Admin approval.
               <br />
-              <span className="text-xs text-slate-400">
+              <span className="text-xs text-slate-500">
                 You will be able to access the Technician Portal once your application is approved.
               </span>
             </p>
           </div>
 
-          <div className="pt-3 border-t border-slate-200 dark:border-slate-800 flex flex-col space-y-3">
+          <div className="pt-3 border-t border-slate-200 flex flex-col space-y-3">
             <Link
               to="/login"
-              className="w-full py-3 rounded-xl btn-cta text-sm flex items-center justify-center space-x-2"
+              className="w-full py-3 rounded-lg btn-cta text-sm flex items-center justify-center space-x-2"
             >
               <span>Back to Sign In</span>
             </Link>
             <button
               onClick={() => navigate('/')}
-              className="w-full text-xs font-semibold text-slate-500 dark:text-slate-400 hover:text-orange-500 transition-colors"
+              className="w-full text-xs font-semibold text-slate-500 hover:text-orange-600 transition-colors"
             >
               ← Back to storefront
             </button>
@@ -148,35 +148,35 @@ export const ApplyPage = () => {
   }
 
   const inputClass =
-    'w-full pl-10 pr-4 py-2.5 bg-white dark:bg-slate-950 border border-slate-300 dark:border-slate-800 rounded-xl text-slate-900 dark:text-slate-200 text-sm focus:outline-none focus:border-emerald-600 focus:ring-4 focus:ring-emerald-600/10 transition-all';
+    'w-full pl-10 pr-4 py-2.5 bg-white border border-slate-200 rounded-lg text-slate-900 text-sm focus:outline-none focus:border-emerald-600 focus:ring-4 focus:ring-emerald-600/10 transition-all';
   const labelClass =
-    'block text-xs font-bold uppercase text-slate-600 dark:text-slate-300 mb-1.5';
+    'block text-xs font-bold uppercase text-slate-600 mb-1.5';
 
   return (
-    <div className="relative min-h-screen flex items-center justify-center px-4 py-12 overflow-hidden bg-gradient-to-b from-slate-50 to-slate-100 dark:from-slate-950 dark:to-slate-950">
+    <div className="relative min-h-screen flex items-center justify-center px-4 py-12 overflow-hidden bg-gradient-to-b from-slate-50 to-slate-100">
       <AnimatedBackground className="opacity-70" />
 
       <motion.div
         initial={{ opacity: 0, y: 32 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
-        className="relative w-full max-w-2xl glass-card p-8 rounded-3xl shadow-2xl"
+        className="relative w-full max-w-2xl glass-card p-8 rounded-xl shadow-card"
       >
-        <div className="absolute top-0 left-0 right-0 h-1.5 bg-gradient-to-r from-orange-500 via-amber-400 to-blue-600 rounded-t-3xl"></div>
+        <div className="absolute top-0 left-0 right-0 h-1.5 bg-gradient-to-r from-orange-500 via-amber-400 to-blue-600 rounded-t-xl"></div>
 
         {/* Header */}
         <div className="text-center space-y-2 mb-7">
-          <div className="p-3 w-fit mx-auto rounded-2xl bg-emerald-500/10 border border-emerald-500/30 text-emerald-500 shadow-glow-emerald">
+          <div className="p-3 w-fit mx-auto rounded-xl bg-emerald-500/10 border border-emerald-500/30 text-emerald-600">
             <Wrench className="w-8 h-8" />
           </div>
-          <h2 className="text-2xl font-black text-slate-900 dark:text-white font-display">Apply as Technician</h2>
-          <p className="text-xs text-slate-500 dark:text-slate-400">
+          <h2 className="text-2xl font-black text-slate-900">Apply as Technician</h2>
+          <p className="text-xs text-slate-500">
             Submit your application for review. A technician account becomes active only after Admin approval.
           </p>
         </div>
 
         {error && (
-          <div className="p-3.5 rounded-xl bg-rose-500/10 border border-rose-500/30 text-rose-600 dark:text-rose-400 text-xs font-semibold flex items-center space-x-2 mb-5">
+          <div className="p-3.5 rounded-lg bg-rose-50 border border-rose-500/30 text-rose-700 text-xs font-semibold flex items-center space-x-2 mb-5">
             <AlertCircle className="w-4 h-4 shrink-0" />
             <span>{error}</span>
           </div>
@@ -185,7 +185,7 @@ export const ApplyPage = () => {
         <form onSubmit={handleSubmit} className="space-y-5">
           {/* Personal Information */}
           <div className="space-y-4">
-            <div className="flex items-center space-x-2 text-xs font-extrabold uppercase tracking-wider text-emerald-600 dark:text-emerald-400">
+            <div className="flex items-center space-x-2 text-xs font-extrabold uppercase tracking-wider text-emerald-600">
               <User className="w-4 h-4" />
               <span>Personal Information</span>
             </div>
@@ -254,7 +254,7 @@ export const ApplyPage = () => {
                     value={form.address}
                     onChange={handleChange}
                     maxLength={MAX_LENGTHS.address}
-                    className="w-full pl-10 pr-4 py-2.5 bg-white dark:bg-slate-950 border border-slate-300 dark:border-slate-800 rounded-xl text-slate-900 dark:text-slate-200 text-sm focus:outline-none focus:border-emerald-600 focus:ring-4 focus:ring-emerald-600/10 transition-all"
+                    className="w-full pl-10 pr-4 py-2.5 bg-white border border-slate-200 rounded-lg text-slate-900 text-sm focus:outline-none focus:border-emerald-600 focus:ring-4 focus:ring-emerald-600/10 transition-all"
                   />
                 </div>
               </div>
@@ -262,8 +262,8 @@ export const ApplyPage = () => {
           </div>
 
           {/* Professional Information */}
-          <div className="space-y-4 pt-2 border-t border-slate-200 dark:border-slate-800">
-            <div className="flex items-center space-x-2 text-xs font-extrabold uppercase tracking-wider text-emerald-600 dark:text-emerald-400">
+          <div className="space-y-4 pt-2 border-t border-slate-200">
+            <div className="flex items-center space-x-2 text-xs font-extrabold uppercase tracking-wider text-emerald-600">
               <Briefcase className="w-4 h-4" />
               <span>Professional Information</span>
             </div>
@@ -310,7 +310,7 @@ export const ApplyPage = () => {
                   value={form.experience}
                   onChange={handleChange}
                   maxLength={MAX_LENGTHS.experience}
-                  className="w-full px-4 py-2.5 bg-white dark:bg-slate-950 border border-slate-300 dark:border-slate-800 rounded-xl text-slate-900 dark:text-slate-200 text-sm focus:outline-none focus:border-emerald-600 focus:ring-4 focus:ring-emerald-600/10 transition-all"
+                  className="w-full px-4 py-2.5 bg-white border border-slate-200 rounded-lg text-slate-900 text-sm focus:outline-none focus:border-emerald-600 focus:ring-4 focus:ring-emerald-600/10 transition-all"
                 />
               </div>
 
@@ -323,15 +323,15 @@ export const ApplyPage = () => {
                   value={form.additionalInfo}
                   onChange={handleChange}
                   maxLength={MAX_LENGTHS.additionalInfo}
-                  className="w-full px-4 py-2.5 bg-white dark:bg-slate-950 border border-slate-300 dark:border-slate-800 rounded-xl text-slate-900 dark:text-slate-200 text-sm focus:outline-none focus:border-emerald-600 focus:ring-4 focus:ring-emerald-600/10 transition-all"
+                  className="w-full px-4 py-2.5 bg-white border border-slate-200 rounded-lg text-slate-900 text-sm focus:outline-none focus:border-emerald-600 focus:ring-4 focus:ring-emerald-600/10 transition-all"
                 />
               </div>
             </div>
           </div>
 
           {/* Account Security */}
-          <div className="space-y-4 pt-2 border-t border-slate-200 dark:border-slate-800">
-            <div className="flex items-center space-x-2 text-xs font-extrabold uppercase tracking-wider text-emerald-600 dark:text-emerald-400">
+          <div className="space-y-4 pt-2 border-t border-slate-200">
+            <div className="flex items-center space-x-2 text-xs font-extrabold uppercase tracking-wider text-emerald-600">
               <Lock className="w-4 h-4" />
               <span>Account Security</span>
             </div>
@@ -378,17 +378,17 @@ export const ApplyPage = () => {
           <button
             type="submit"
             disabled={loading}
-            className="w-full py-3 rounded-xl btn-cta text-sm"
+            className="w-full py-3 rounded-lg btn-cta text-sm"
           >
             <span>{loading ? 'Submitting...' : 'Submit Application'}</span>
             {!loading && <Send className="w-4 h-4" />}
           </button>
         </form>
 
-        <div className="pt-5 mt-3 border-t border-slate-200 dark:border-slate-800 flex items-center justify-between">
+        <div className="pt-5 mt-3 border-t border-slate-200 flex items-center justify-between">
           <Link
             to="/login"
-            className="flex items-center space-x-1.5 text-[11px] font-bold text-slate-500 dark:text-slate-400 hover:text-emerald-600 transition-colors"
+            className="flex items-center space-x-1.5 text-[11px] font-bold text-slate-500 hover:text-emerald-600 transition-colors"
           >
             <ArrowLeft className="w-3.5 h-3.5" />
             <span>Back to Sign In</span>

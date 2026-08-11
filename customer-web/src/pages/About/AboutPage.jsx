@@ -26,8 +26,8 @@ export const AboutPage = () => {
   return (
     <div className="space-y-20 pb-20 bg-slate-50 dark:bg-slate-950 text-slate-900 dark:text-slate-100 transition-colors">
       <Seo
-        title="About Us | Uday Electrical Works — Electrical Shop in Chhota Govindpur, Jamshedpur"
-        description="Family-run electrical shop & service centre in Chhota Govindpur, Jamshedpur. Our own wiremen — Prabhat, Chandan, Devnath, Appu & team — handle fan repair, geyser repair, wiring & more."
+        title="About Us | Uday Electrical Works - Electrical Shop in Chhota Govindpur, Jamshedpur"
+        description="Family-run electrical shop & service centre in Chhota Govindpur, Jamshedpur. Our own wiremen, Prabhat, Chandan, Devnath, Appu & team, handle fan repair, geyser repair, wiring & more."
       />
 
       {/* Hero */}
@@ -40,7 +40,7 @@ export const AboutPage = () => {
             className="inline-flex items-center space-x-2 px-4 py-2 rounded-full bg-orange-500/10 border border-orange-500/30 text-orange-500 dark:text-orange-400 font-extrabold text-xs uppercase tracking-widest"
           >
             <Store className="w-4 h-4" />
-            <span>Electrical Shop & Service Centre — Chhota Govindpur, Jamshedpur</span>
+            <span>Electrical Shop & Service Centre - Chhota Govindpur, Jamshedpur</span>
           </motion.div>
 
           <motion.h1
@@ -59,7 +59,7 @@ export const AboutPage = () => {
             className="text-slate-600 dark:text-slate-300 text-base sm:text-lg max-w-3xl mx-auto leading-relaxed"
           >
             Uday Electrical Works is a walk-in electrical retail shop and workshop on Chhota Govindpur
-            Main Road. We sell genuine fans, lights, wires, switches, MCBs and geysers — and our own
+            Main Road. We sell genuine fans, lights, wires, switches, MCBs and geysers, and our own
             wiremen do doorstep repairs, installations and house wiring across Jamshedpur.
           </motion.p>
         </AnimatedSection>
@@ -76,9 +76,9 @@ export const AboutPage = () => {
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
           {[
-            { icon: Store, color: 'bg-orange-500/10 text-orange-500', title: 'Retail Shop', desc: 'Ceiling fans, exhaust fans, LED lights, modular switches, wires & cables, MCBs & DB boxes, stabilizers, geysers and home appliances — from Havells, Crompton, Polycab, Philips, Anchor and more.' },
-            { icon: Wrench, color: 'bg-blue-500/10 text-blue-600', title: 'Doorstep Repairs', desc: 'Fan repair, geyser repair, switch & socket repair, MCB replacement, water pump repair, cooler repair, mixer grinder, iron and kettle repair — at your home.' },
-            { icon: Receipt, color: 'bg-emerald-500/10 text-emerald-500', title: 'Wiring & Installation', desc: 'House wiring repair, new light & fan installation, DB box upgrades and full-home inspections — with a digital GST invoice issued for every job.' }
+            { icon: Store, color: 'bg-orange-500/10 text-orange-500', title: 'Retail Shop', desc: 'Ceiling fans, exhaust fans, LED lights, modular switches, wires & cables, MCBs & DB boxes, stabilizers, geysers and home appliances, from Havells, Crompton, Polycab, Philips, Anchor and more.' },
+            { icon: Wrench, color: 'bg-blue-500/10 text-blue-600', title: 'Doorstep Repairs', desc: 'Fan repair, geyser repair, switch & socket repair, MCB replacement, water pump repair, cooler repair, mixer grinder, iron and kettle repair, done at your home.' },
+            { icon: Receipt, color: 'bg-emerald-500/10 text-emerald-500', title: 'Wiring & Installation', desc: 'House wiring repair, new light & fan installation, DB box upgrades and full-home inspections, with a digital GST invoice issued for every job.' }
           ].map(({ icon: Icon, color, title, desc }, idx) => (
             <motion.div
               key={idx}
@@ -138,7 +138,7 @@ export const AboutPage = () => {
               { value: '7', label: 'Wiremen on Our Team', icon: Users, color: 'text-orange-400' },
               { value: '13', label: 'Areas Served in Jamshedpur', icon: MapPin, color: 'text-blue-400' },
               { value: '10', label: 'Product Categories in Store', icon: Package, color: 'text-emerald-400' },
-              { value: 'Mon–Sat', label: 'Shop Hours · 8:30 AM – 9:00 PM', icon: Clock, color: 'text-amber-400' }
+              { value: 'Mon-Sat', label: 'Shop Hours · 8:30 AM - 9:00 PM', icon: Clock, color: 'text-amber-400' }
             ].map(({ value, label, icon: Icon, color }, idx) => (
               <motion.div
                 key={idx}
@@ -184,7 +184,7 @@ export const AboutPage = () => {
             <Phone className="w-4 h-4" />
             <span>Call 7903789402</span>
           </a>
-          <span className="text-xs font-bold text-slate-500">Open Mon–Sat: 8:30 AM – 9:00 PM</span>
+          <span className="text-xs font-bold text-slate-500">Open Mon-Sat: 8:30 AM - 9:00 PM</span>
         </div>
       </AnimatedSection>
 

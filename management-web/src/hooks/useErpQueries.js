@@ -1,7 +1,7 @@
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { getProductsApi, createProductApi, updateProductApi, deleteProductApi } from '../api/productApi';
 import { getServicesApi, createServiceApi, updateServiceApi, deleteServiceApi } from '../api/serviceApi';
-import { getBookingsApi, createBookingApi, updateBookingApi, deleteBookingApi } from '../api/bookingApi';
+import { getBookingsApi, createBookingApi, updateBookingApi, deleteBookingApi, getAvailableTechniciansApi, assignTechnicianApi, updateBookingStatusApi, cancelBookingApi } from '../api/bookingApi';
 import { getInvoicesApi, createInvoiceApi, updateInvoiceStatusApi } from '../api/invoiceApi';
 import { getUsersApi, createUserApi, updateUserRoleApi, deleteUserApi } from '../api/userApi';
 
@@ -16,6 +16,8 @@ import { getActivityLogsApi } from '../api/activityApi';
 import { getTicketsApi, createTicketApi, replyTicketApi } from '../api/ticketApi';
 import { getSettingsApi, updateSettingsApi } from '../api/settingsApi';
 import { exportDataApi, importDataApi } from '../api/backupApi';
+
+import { getReviewsApi } from '../api/reviewApi';
 
 import { createPaymentOrderApi, verifyPaymentApi, getPaymentHistoryApi } from '../api/paymentApi';
 import { getAMCsApi, createAMCApi, renewAMCApi } from '../api/amcApi';
@@ -62,6 +64,16 @@ export const useDeleteService = () => {
 };
 
 export const useBookings = (params) => useQuery({ queryKey: ['bookings', params], queryFn: () => getBookingsApi(params) });
+export const useCancelBooking = () => {
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: ({ id, reason }) => cancelBookingApi(id, reason),
+    onSuccess: () => {
+      qc.invalidateQueries({ queryKey: ['bookings'] });
+      qc.invalidateQueries({ queryKey: ['notifications'] });
+    }
+  });
+};
 export const useCreateBooking = () => {
   const qc = useQueryClient();
   return useMutation({ mutationFn: createBookingApi, onSuccess: () => qc.invalidateQueries({ queryKey: ['bookings'] }) });
@@ -73,6 +85,34 @@ export const useUpdateBooking = () => {
 export const useDeleteBooking = () => {
   const qc = useQueryClient();
   return useMutation({ mutationFn: deleteBookingApi, onSuccess: () => qc.invalidateQueries({ queryKey: ['bookings'] }) });
+};
+
+export const useAvailableTechnicians = (bookingId, enabled) => useQuery({
+  queryKey: ['availableTechnicians', bookingId],
+  queryFn: () => getAvailableTechniciansApi(bookingId),
+  enabled: !!bookingId && !!enabled
+});
+
+export const useAssignTechnician = () => {
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: ({ id, technicianId }) => assignTechnicianApi(id, technicianId),
+    onSuccess: () => {
+      qc.invalidateQueries({ queryKey: ['bookings'] });
+      qc.invalidateQueries({ queryKey: ['availableTechnicians'] });
+    }
+  });
+};
+
+export const useUpdateBookingStatus = () => {
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: ({ id, data }) => updateBookingStatusApi(id, data),
+    onSuccess: () => {
+      qc.invalidateQueries({ queryKey: ['bookings'] });
+      qc.invalidateQueries({ queryKey: ['invoices'] });
+    }
+  });
 };
 
 export const useInvoices = (params) => useQuery({ queryKey: ['invoices', params], queryFn: () => getInvoicesApi(params) });
@@ -152,6 +192,8 @@ export const useMarkAllNotificationsRead = () => {
 
 export const useAnalytics = () => useQuery({ queryKey: ['analytics'], queryFn: getAnalyticsDataApi });
 export const useActivityLogs = (params) => useQuery({ queryKey: ['activityLogs', params], queryFn: () => getActivityLogsApi(params) });
+
+export const useReviews = () => useQuery({ queryKey: ['reviews'], queryFn: getReviewsApi });
 
 export const useTickets = () => useQuery({ queryKey: ['tickets'], queryFn: getTicketsApi });
 export const useCreateTicket = () => {

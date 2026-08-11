@@ -1,4 +1,4 @@
-import React, { useMemo } from 'react';
+﻿import React, { useMemo } from 'react';
 
 /* 1. MeshGradient — soft multi-color radial gradient base. */
 export const MeshGradient = ({ variant = 'light', className = '', opacity = 1 }) => {
@@ -15,7 +15,7 @@ export const MeshGradient = ({ variant = 'light', className = '', opacity = 1 })
 export const AuroraBackground = ({ className = '', opacity = 0.55 }) => {
   return (
     <div className={`absolute inset-0 overflow-hidden pointer-events-none ${className}`} aria-hidden="true">
-      <div className="absolute -top-40 -left-40 w-[40rem] h-[40rem] rounded-full bg-gradient-to-tr from-[#FF6B00]/30 via-amber-400/20 to-transparent blur-[120px] animate-aurora-a" />
+      <div className="absolute -top-40 -left-40 w-[40rem] h-[40rem] rounded-full bg-gradient-to-tr from-[#F97316]/30 via-amber-400/20 to-transparent blur-[120px] animate-aurora-a" />
       <div className="absolute top-1/3 -right-40 w-[36rem] h-[36rem] rounded-full bg-gradient-to-bl from-[#0066FF]/30 via-sky-400/20 to-transparent blur-[120px] animate-aurora-b" />
       <div className="absolute -bottom-40 left-1/4 w-[32rem] h-[32rem] rounded-full bg-gradient-to-tr from-[#00C853]/25 via-emerald-400/15 to-transparent blur-[120px] animate-aurora-c" />
       <div className="absolute inset-0" style={{ opacity }} />
@@ -81,7 +81,7 @@ export const FloatingParticles = ({ className = '', count = 18 }) => {
       {particles.map((p, i) => (
         <span
           key={i}
-          className="absolute rounded-full bg-gradient-to-br from-[#FF6B00] to-[#0066FF] animate-particle"
+          className="absolute rounded-full bg-gradient-to-br from-[#F97316] to-[#0066FF] animate-particle"
           style={{
             left: p.left,
             top: p.top,

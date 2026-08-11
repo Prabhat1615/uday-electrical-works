@@ -1,4 +1,4 @@
-import React, { useMemo, useState } from 'react';
+﻿import React, { useMemo, useState } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { Search, SlidersHorizontal, X, Package, Phone } from 'lucide-react';
@@ -59,14 +59,14 @@ export const ShopPage = () => {
 
       {/* Page Header */}
       <div className="relative bg-gradient-to-b from-[#F8FAFC] to-white dark:from-slate-900 dark:to-slate-950 border-b border-[#E2E8F0] dark:border-slate-800 section-pattern">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 space-y-6">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-5">
           <div className="text-center space-y-2">
-            <span className="text-xs font-extrabold text-[#FF6B00] uppercase tracking-widest">In-Store Catalog</span>
+            <span className="text-xs font-extrabold text-[#F97316] uppercase tracking-widest">In-Store Catalog</span>
             <h1 className="text-3xl sm:text-4xl font-black text-[#0F172A] dark:text-white font-display">
               {category || 'Shop Electrical Products'}
             </h1>
             <p className="text-sm text-[#475569] dark:text-slate-400 max-w-2xl mx-auto">
-              Everything for your home — fans, lights, switches, wires & more. Buy from the shop in
+              Everything for your home: fans, lights, switches, wires & more. Buy from the shop in
               Chhota Govindpur or book online and collect at the counter.
             </p>
           </div>
@@ -79,7 +79,7 @@ export const ShopPage = () => {
               value={search}
               onChange={(e) => setSearch(e.target.value)}
               placeholder="Search fans, bulbs, wires, switches..."
-              className="w-full pl-11 pr-10 py-3 bg-white dark:bg-slate-900 border border-[#E2E8F0] dark:border-slate-800 rounded-2xl text-sm text-[#0F172A] dark:text-white placeholder-slate-400 focus:outline-none focus:border-[#FF6B00] focus:ring-4 focus:ring-[#FF6B00]/10 shadow-card transition-all"
+              className="w-full pl-11 pr-10 py-3 bg-white dark:bg-slate-900 border border-[#E2E8F0] dark:border-slate-800 rounded-2xl text-sm text-[#0F172A] dark:text-white placeholder-slate-400 focus:outline-none focus:border-[#F97316] focus:ring-4 focus:ring-[#F97316]/10 shadow-card transition-all"
             />
             {search && (
               <button onClick={() => setSearch('')} className="absolute right-3 top-1/2 -translate-y-1/2 p-1 text-slate-400 hover:text-slate-600" title="Clear search">
@@ -92,13 +92,13 @@ export const ShopPage = () => {
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
         {/* Category Chips */}
-        <div className="flex flex-wrap gap-2 justify-center mb-8">
+        <div className="flex flex-wrap gap-2 justify-center mb-5">
           <button
             onClick={() => setParam('category', '')}
             className={`px-3.5 py-1.5 rounded-full text-xs font-bold border transition-all ${
               !category
-                ? 'bg-[#FF6B00] text-white border-[#FF6B00] shadow-md shadow-[#FF6B00]/25'
-                : 'bg-white dark:bg-slate-900 border-[#E2E8F0] dark:border-slate-800 text-[#475569] dark:text-slate-300 hover:border-[#FF6B00] hover:text-[#FF6B00]'
+                ? 'bg-[#F97316] text-white border-[#F97316] shadow-md shadow-[#F97316]/25'
+                : 'bg-white dark:bg-slate-900 border-[#E2E8F0] dark:border-slate-800 text-[#475569] dark:text-slate-300 hover:border-[#F97316] hover:text-[#F97316]'
             }`}
           >
             All Products
@@ -109,8 +109,8 @@ export const ShopPage = () => {
               onClick={() => setParam('category', cat)}
               className={`px-3.5 py-1.5 rounded-full text-xs font-bold border transition-all ${
                 category === cat
-                  ? 'bg-[#FF6B00] text-white border-[#FF6B00] shadow-md shadow-[#FF6B00]/25'
-                  : 'bg-white dark:bg-slate-900 border-[#E2E8F0] dark:border-slate-800 text-[#475569] dark:text-slate-300 hover:border-[#FF6B00] hover:text-[#FF6B00]'
+                  ? 'bg-[#F97316] text-white border-[#F97316] shadow-md shadow-[#F97316]/25'
+                  : 'bg-white dark:bg-slate-900 border-[#E2E8F0] dark:border-slate-800 text-[#475569] dark:text-slate-300 hover:border-[#F97316] hover:text-[#F97316]'
               }`}
             >
               {cat}
@@ -119,7 +119,7 @@ export const ShopPage = () => {
         </div>
 
         {/* Filter Bar */}
-        <div className="flex flex-wrap items-center gap-3 mb-8 p-4 rounded-2xl bg-[#F8FAFC] dark:bg-slate-900 border border-[#E2E8F0] dark:border-slate-800">
+        <div className="flex flex-wrap items-center gap-3 mb-5 p-3 rounded-xl bg-[#F8FAFC] dark:bg-slate-900 border border-[#E2E8F0] dark:border-slate-800">
           <div className="flex items-center space-x-2 text-xs font-bold text-[#475569] dark:text-slate-400">
             <SlidersHorizontal className="w-4 h-4" />
             <span>Filters:</span>
@@ -128,7 +128,7 @@ export const ShopPage = () => {
           <select
             value={brand}
             onChange={(e) => setParam('brand', e.target.value)}
-            className="px-3 py-2 rounded-xl bg-white dark:bg-slate-950 border border-[#E2E8F0] dark:border-slate-800 text-xs font-bold text-[#0F172A] dark:text-white focus:outline-none focus:border-[#FF6B00]"
+            className="px-3 py-2 rounded-xl bg-white dark:bg-slate-950 border border-[#E2E8F0] dark:border-slate-800 text-xs font-bold text-[#0F172A] dark:text-white focus:outline-none focus:border-[#F97316]"
           >
             <option value="">All Brands</option>
             {brands.map((b) => (
@@ -139,7 +139,7 @@ export const ShopPage = () => {
           <select
             value={sortBy}
             onChange={(e) => setSortBy(e.target.value)}
-            className="px-3 py-2 rounded-xl bg-white dark:bg-slate-950 border border-[#E2E8F0] dark:border-slate-800 text-xs font-bold text-[#0F172A] dark:text-white focus:outline-none focus:border-[#FF6B00]"
+            className="px-3 py-2 rounded-xl bg-white dark:bg-slate-950 border border-[#E2E8F0] dark:border-slate-800 text-xs font-bold text-[#0F172A] dark:text-white focus:outline-none focus:border-[#F97316]"
           >
             <option value="featured">Newest First</option>
             <option value="price-asc">Price: Low to High</option>
@@ -151,7 +151,7 @@ export const ShopPage = () => {
               type="checkbox"
               checked={inStockOnly}
               onChange={(e) => setInStockOnly(e.target.checked)}
-              className="w-4 h-4 accent-[#FF6B00]"
+              className="w-4 h-4 accent-[#F97316]"
             />
             <span>In Stock Only</span>
           </label>
@@ -169,18 +169,18 @@ export const ShopPage = () => {
             <Package className="w-14 h-14 text-slate-300 dark:text-slate-700 mx-auto" />
             <h3 className="text-lg font-black text-[#0F172A] dark:text-white">No products match your filters</h3>
             <p className="text-sm text-[#475569] dark:text-slate-400">
-              Try a different category or search — or call the shop, we may have it in stock.
+              Try a different category or search, or call the shop, we may have it in stock.
             </p>
             <a
               href="tel:7903789402"
-              className="inline-flex items-center space-x-2 px-6 py-3 rounded-2xl bg-[#FF6B00] hover:bg-[#E55A00] text-white font-black text-xs transition-all shadow-md hover:shadow-glow-orange"
+              className="inline-flex items-center space-x-2 px-6 py-3 rounded-xl bg-[#F97316] hover:bg-[#E55A00] text-white font-black text-xs transition-all shadow-card hover:shadow-card-hover"
             >
               <Phone className="w-4 h-4" />
               <span>Call Shop: 7903789402</span>
             </a>
           </div>
         ) : (
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-3">
             {filtered.map((product, idx) => (
               <ProductCard key={product._id} product={product} index={idx} />
             ))}

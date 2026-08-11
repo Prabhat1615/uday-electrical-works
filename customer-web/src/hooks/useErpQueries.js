@@ -1,7 +1,7 @@
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { getProductsApi } from '../api/productApi';
 import { getServicesApi } from '../api/serviceApi';
-import { getBookingsApi, createBookingApi, updateBookingApi, deleteBookingApi } from '../api/bookingApi';
+import { getBookingsApi, createBookingApi, updateBookingApi, deleteBookingApi, cancelBookingApi } from '../api/bookingApi';
 import { getInvoicesApi, createInvoiceApi, updateInvoiceStatusApi } from '../api/invoiceApi';
 import { getUsersApi } from '../api/userApi';
 import { getLeadsApi } from '../api/leadApi';
@@ -17,11 +17,23 @@ import { getAMCsApi, createAMCApi, renewAMCApi } from '../api/amcApi';
 
 import { askAiAssistantApi } from '../api/aiApi';
 
+import { createReviewApi, getMyReviewsApi } from '../api/reviewApi';
+
 export const useProducts = (params) => useQuery({ queryKey: ['products', params], queryFn: () => getProductsApi(params) });
 
 export const useServices = (params) => useQuery({ queryKey: ['services', params], queryFn: () => getServicesApi(params) });
 
 export const useBookings = (params) => useQuery({ queryKey: ['bookings', params], queryFn: () => getBookingsApi(params) });
+export const useCancelBooking = () => {
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: ({ id, reason }) => cancelBookingApi(id, reason),
+    onSuccess: () => {
+      qc.invalidateQueries({ queryKey: ['bookings'] });
+      qc.invalidateQueries({ queryKey: ['notifications'] });
+    }
+  });
+};
 export const useCreateBooking = () => {
   const qc = useQueryClient();
   return useMutation({ mutationFn: createBookingApi, onSuccess: () => qc.invalidateQueries({ queryKey: ['bookings'] }) });
@@ -94,3 +106,16 @@ export const useRenewAMC = () => {
 };
 
 export const useAskAiAssistant = () => useMutation({ mutationFn: askAiAssistantApi });
+
+export const useCreateReview = () => {
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: createReviewApi,
+    onSuccess: () => {
+      qc.invalidateQueries({ queryKey: ['reviews'] });
+      qc.invalidateQueries({ queryKey: ['bookings'] });
+    }
+  });
+};
+export const useMyReviews = () =>
+  useQuery({ queryKey: ['reviews'], queryFn: getMyReviewsApi });

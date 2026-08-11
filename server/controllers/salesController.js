@@ -47,7 +47,18 @@ export const createSalesOrder = async (req, res, next) => {
   try {
     const { customerId, items, paymentStatus, isInterstate, customerGstNumber } = req.body;
 
-    const targetCustomerId = customerId || req.user._id;
+    // Customers can only ever place orders for their own account — never for
+    // a customerId supplied by the client.
+    let targetCustomerId;
+    if (req.user.role === 'Customer') {
+      if (customerId && String(customerId) !== String(req.user._id)) {
+        return next(new ApiError(403, 'Customers can only place orders for their own account'));
+      }
+      targetCustomerId = req.user._id;
+    } else {
+      targetCustomerId = customerId || req.user._id;
+    }
+
     const customer = await User.findById(targetCustomerId);
     if (!customer) {
       return next(new ApiError(404, 'Customer not found'));

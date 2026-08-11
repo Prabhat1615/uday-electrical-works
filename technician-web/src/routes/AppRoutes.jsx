@@ -16,7 +16,7 @@ const ScheduleCalendarPage = lazy(() => import('../pages/Dashboard/ScheduleCalen
 const ProfilePage = lazy(() => import('../pages/Dashboard/ProfilePage').then((m) => ({ default: m.ProfilePage })));
 
 const withSuspense = (element) => (
-  <Suspense fallback={<div className="min-h-screen flex items-center justify-center bg-slate-950"><LoadingSpinner /></div>}>
+  <Suspense fallback={<div className="min-h-screen flex items-center justify-center bg-slate-50"><LoadingSpinner /></div>}>
     {element}
   </Suspense>
 );

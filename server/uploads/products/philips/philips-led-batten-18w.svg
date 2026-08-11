@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 800" width="800" height="800">
+  <defs>
+    <!-- Background Gradient -->
+    <linearGradient id="bgGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#FFFFFF" />
+      <stop offset="100%" stop-color="#F1F5F9" />
+    </linearGradient>
+    
+    <!-- Metallic Shimmer -->
+    <linearGradient id="metallic" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#FFFFFF" />
+      <stop offset="50%" stop-color="#E2E8F0" />
+      <stop offset="100%" stop-color="#CBD5E1" />
+    </linearGradient>
+
+    <!-- Motor Metallic Gradient -->
+    <radialGradient id="motorGradient" cx="40%" cy="40%" r="60%">
+      <stop offset="0%" stop-color="#475569" />
+      <stop offset="70%" stop-color="#1E293B" />
+      <stop offset="100%" stop-color="#0F172A" />
+    </radialGradient>
+
+    <!-- Blade Aerodynamic Gradient -->
+    <linearGradient id="bladeGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#F8FAFC" />
+      <stop offset="100%" stop-color="#E2E8F0" />
+    </linearGradient>
+
+    <!-- Bulb Glow Light -->
+    <radialGradient id="bulbGlow" cx="50%" cy="40%" r="60%">
+      <stop offset="0%" stop-color="#FFFFFF" />
+      <stop offset="70%" stop-color="#FEF08A" />
+      <stop offset="100%" stop-color="#FDE047" />
+    </radialGradient>
+
+    <!-- Batten Glow Light -->
+    <linearGradient id="battenGlow" x1="0%" y1="50%" x2="100%" y2="50%">
+      <stop offset="0%" stop-color="#E0F2FE" />
+      <stop offset="50%" stop-color="#FFFFFF" />
+      <stop offset="100%" stop-color="#E0F2FE" />
+    </linearGradient>
+
+    <filter id="dropShadow" x="-10%" y="-10%" width="130%" height="130%">
+      <feDropShadow dx="0" dy="16" stdDeviation="20" flood-color="#0F172A" flood-opacity="0.1" />
+    </filter>
+  </defs>
+
+  <!-- Clean Surface Card Canvas -->
+  <rect width="800" height="800" fill="url(#bgGrad)" />
+  <rect x="40" y="40" width="720" height="720" rx="36" fill="#FFFFFF" stroke="#E2E8F0" stroke-width="4" filter="url(#dropShadow)" />
+
+  <!-- Manufacturer Brand Tag Header -->
+  <rect x="70" y="70" width="220" height="54" rx="16" fill="#0B5EA8" />
+  <text x="180" y="105" font-family="Montserrat, sans-serif" font-weight="900" font-size="22" fill="#FFFFFF" text-anchor="middle" letter-spacing="2">PHILIPS</text>
+
+  <!-- Verified Genuine Electrical Emblem -->
+  <g transform="translate(620, 70)">
+    <rect width="110" height="38" rx="12" fill="#10B981" opacity="0.15" />
+    <text x="55" y="24" font-family="Inter, sans-serif" font-weight="800" font-size="12" fill="#059669" text-anchor="middle">VERIFIED</text>
+  </g>
+
+  <!-- Main Technical Product Artwork -->
+  <g transform="translate(0, 30)">
+    
+      <!-- Linear LED Tube Body -->
+      <rect x="80" y="340" width="640" height="120" rx="20" fill="url(#battenGlow)" stroke="#0B5EA8" stroke-width="8" />
+      
+      <!-- End Caps -->
+      <rect x="60" y="330" width="50" height="140" rx="10" fill="url(#metallic)" stroke="#64748B" stroke-width="4" />
+      <rect x="690" y="330" width="50" height="140" rx="10" fill="url(#metallic)" stroke="#64748B" stroke-width="4" />
+
+      <!-- Internal Diffuser Line -->
+      <line x1="120" y1="400" x2="680" y2="400" stroke="#38BDF8" stroke-width="8" stroke-linecap="round" opacity="0.8" />
+      <text x="400" y="410" font-family="Montserrat, sans-serif" font-weight="900" font-size="28" fill="#0B5EA8" text-anchor="middle" letter-spacing="2">18W BATTEN</text>
+    
+  </g>
+
+  <!-- Footer Product Model Banner -->
+  <rect x="70" y="690" width="660" height="54" rx="16" fill="#0F172A" opacity="0.95" />
+  <text x="400" y="725" font-family="Montserrat, sans-serif" font-weight="800" font-size="18" fill="#FFFFFF" text-anchor="middle">Philips LED Batten 18W 4 Feet Cool Daylight</text>
+</svg>

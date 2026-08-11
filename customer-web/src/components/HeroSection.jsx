@@ -1,191 +1,295 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import { motion } from 'framer-motion';
-import { Zap, Phone, ArrowRight, Receipt, ShieldCheck, MessageCircle, Package, Wrench } from 'lucide-react';
-import { MagneticButton } from './MagneticButton';
-import { Tilt3D } from './Tilt3D';
-import { AuroraBackground, FloatingParticles, GlowBlobs, MeshGradient, AnimatedGrid } from './Backgrounds';
-
-const stockCategories = [
-  'Ceiling Fans', 'Exhaust Fans', 'Wall & Pedestal Fans', 'LED Bulbs & Battens',
-  'Modular Switches & Sockets', 'MCBs & DB Boxes', 'Wires & Cables',
-  'Voltage Stabilizers', 'Water Heaters & Geysers', 'Home Appliances'
-];
-
-const team = ['Prabhat', 'Chandan', 'Devnath', 'Appu', 'Dhruv', 'Amit', 'Sadhu'];
+import { motion, useMotionValue, useTransform, useSpring } from 'framer-motion';
+import { 
+  Zap, 
+  ArrowRight, 
+  MapPin, 
+  Package, 
+  Wrench, 
+  ShieldCheck, 
+  CheckCircle2,
+  Clock,
+  Sparkles
+} from 'lucide-react';
+import { AuroraBackground } from './Backgrounds';
+import { InteractiveBookingFlowModal } from './InteractiveBookingFlowModal';
 
 export const HeroSection = () => {
-  const whatsappLink = `https://wa.me/917903789402?text=${encodeURIComponent('Hi Uday Electrical Works! I need an electrician / electrical product at my home in Jamshedpur.')}`;
+  const [isMobile, setIsMobile] = useState(false);
+  const [bookingOpen, setBookingOpen] = useState(false);
+
+  useEffect(() => {
+    const checkMobile = () => setIsMobile(window.innerWidth < 768);
+    checkMobile();
+    window.addEventListener('resize', checkMobile);
+    return () => window.removeEventListener('resize', checkMobile);
+  }, []);
+
+  // Smooth 3D mouse perspective tilt controls for desktop
+  const mouseX = useMotionValue(0);
+  const mouseY = useMotionValue(0);
+
+  const rotateXSpring = useSpring(useTransform(mouseY, [-0.5, 0.5], [6, -6]), {
+    stiffness: 120,
+    damping: 20
+  });
+  const rotateYSpring = useSpring(useTransform(mouseX, [-0.5, 0.5], [-8, 8]), {
+    stiffness: 120,
+    damping: 20
+  });
+
+  const handleMouseMove = (e) => {
+    if (isMobile) return;
+    const rect = e.currentTarget.getBoundingClientRect();
+    const width = rect.width;
+    const height = rect.height;
+    const xPct = (e.clientX - rect.left) / width - 0.5;
+    const yPct = (e.clientY - rect.top) / height - 0.5;
+    mouseX.set(xPct);
+    mouseY.set(yPct);
+  };
+
+  const handleMouseLeave = () => {
+    mouseX.set(0);
+    mouseY.set(0);
+  };
+
+  const scrollToMap = (e) => {
+    e.preventDefault();
+    const mapElem = document.getElementById('store-location-map');
+    if (mapElem) {
+      mapElem.scrollIntoView({ behavior: 'smooth' });
+    }
+  };
 
   return (
-    <section className="relative pt-12 lg:pt-24 pb-24 bg-gradient-to-b from-white via-[#F8FAFC] to-white dark:from-slate-950 dark:via-slate-900 dark:to-slate-950 border-b border-[#E2E8F0] dark:border-slate-800 overflow-hidden transition-colors duration-300">
-      <AuroraBackground opacity={0.5} />
-      <MeshGradient variant="light" opacity={0.9} />
-      <GlowBlobs count={7} />
-      <FloatingParticles count={20} />
-      <AnimatedGrid />
-      <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[1200px] h-[550px] bg-gradient-to-tr from-[#FF6B00]/15 via-[#0066FF]/10 to-[#00C853]/10 blur-[160px] rounded-full pointer-events-none"></div>
+    <section 
+      onMouseMove={handleMouseMove}
+      onMouseLeave={handleMouseLeave}
+      className="relative min-h-[85vh] flex items-center pt-8 pb-14 bg-gradient-to-b from-white via-[#F8FAFC] to-white text-[#111827] overflow-hidden font-sans border-b border-[#E5E7EB]"
+    >
+      {/* Light Aurora Environmental Background */}
+      <AuroraBackground opacity={0.18} />
 
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 space-y-16">
-
-        <div className="text-center space-y-6 max-w-4xl mx-auto">
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5 }}
-            className="inline-flex items-center space-x-2 px-4 py-2 rounded-full bg-[#FF6B00]/10 border border-[#FF6B00]/30 text-[#FF6B00] dark:text-orange-400 text-xs font-black uppercase tracking-widest shadow-sm"
-          >
-            <Zap className="w-4 h-4 fill-[#FF6B00]" />
-            <span>Chhota Govindpur • Jamshedpur Retail Store & Home Services</span>
-          </motion.div>
-
-          <motion.h1
-            initial={{ opacity: 0, y: 24 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, delay: 0.1 }}
-            className="text-4xl sm:text-6xl lg:text-7xl font-black text-[#0F172A] dark:text-white tracking-tight leading-[1.08]"
-          >
-            Electrical Products & Home Repair Services in <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#FF6B00] via-amber-500 to-[#FF6B00]">Jamshedpur</span>
-          </motion.h1>
-
-          <motion.p
-            initial={{ opacity: 0, y: 24 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, delay: 0.2 }}
-            className="text-[#475569] dark:text-slate-300 text-lg sm:text-xl leading-relaxed max-w-3xl mx-auto font-medium"
-          >
-            Genuine Havells, Crompton, Polycab, Philips & Anchor electricals from our shop in
-            Chhota Govindpur — with doorstep fitting, repairs and house wiring by our own wiremen.
-          </motion.p>
-
-          <motion.div
-            initial={{ opacity: 0, y: 24 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, delay: 0.3 }}
-            className="flex flex-wrap items-center justify-center gap-4 pt-3"
-          >
-            <MagneticButton>
-              <Link to="/services" className="flex items-center space-x-2.5 px-8 py-4 rounded-2xl bg-[#FF6B00] hover:bg-[#E55A00] text-white font-black text-sm shadow-xl shadow-[#FF6B00]/25 transition-colors hover:shadow-glow-orange-lg">
-                <Zap className="w-4 h-4 fill-current" />
-                <span>Book Service</span>
-                <ArrowRight className="w-4 h-4" />
-              </Link>
-            </MagneticButton>
-
-            <MagneticButton>
-              <Link to="/shop" className="flex items-center space-x-2.5 px-8 py-4 rounded-2xl bg-[#0066FF] hover:bg-[#0052CC] text-white font-black text-sm shadow-xl shadow-[#0066FF]/25 transition-colors hover:shadow-glow-blue">
-                <Package className="w-4 h-4" />
-                <span>Shop Products</span>
-              </Link>
-            </MagneticButton>
-
-            <MagneticButton>
-              <a href={whatsappLink} target="_blank" rel="noopener noreferrer" className="flex items-center space-x-2.5 px-8 py-4 rounded-2xl bg-[#00C853] hover:bg-[#00A844] text-white font-black text-sm shadow-xl shadow-[#00C853]/25 transition-colors hover:shadow-glow-emerald">
-                <MessageCircle className="w-4 h-4 fill-current" />
-                <span>WhatsApp Us</span>
-              </a>
-            </MagneticButton>
-
-            <MagneticButton>
-              <a href="tel:7903789402" className="flex items-center space-x-2.5 px-8 py-4 rounded-2xl bg-white dark:bg-slate-900 hover:bg-slate-50 dark:hover:bg-slate-800 border border-[#E2E8F0] dark:border-slate-700 text-[#0F172A] dark:text-white font-bold text-sm shadow-md transition-all hover:border-[#0066FF] hover:shadow-glow-blue">
-                <Phone className="w-4 h-4 text-[#0066FF]" />
-                <span>Call Now (7903789402)</span>
-              </a>
-            </MagneticButton>
-          </motion.div>
-        </div>
-
-        <motion.div
-          initial={{ opacity: 0, y: 50, rotateX: 12 }}
-          animate={{ opacity: 1, y: 0, rotateX: 0 }}
-          transition={{ duration: 0.9, delay: 0.4, ease: 'easeOut' }}
-          className="relative max-w-5xl mx-auto"
-        >
-          <Tilt3D max={6} scale={1.01}>
-            <div className="p-4 sm:p-6 rounded-3xl bg-white/90 dark:bg-slate-900/90 border border-[#E2E8F0] dark:border-slate-800 shadow-2xl backdrop-blur-2xl gradient-border">
-
-              <div className="flex items-center justify-between border-b border-[#E2E8F0] dark:border-slate-800 pb-4 mb-6">
-                <div className="flex items-center space-x-2">
-                  <span className="w-3 h-3 rounded-full bg-rose-500 shadow-sm"></span>
-                  <span className="w-3 h-3 rounded-full bg-amber-500 shadow-sm"></span>
-                  <span className="w-3 h-3 rounded-full bg-[#00C853] shadow-sm"></span>
-                  <span className="text-xs font-mono font-bold text-[#475569] dark:text-slate-400 pl-3">uday-electrical.com — Chhota Govindpur Store</span>
-                </div>
-                <div className="flex items-center space-x-2">
-                  <span className="w-2 h-2 rounded-full bg-[#00C853] animate-ping"></span>
-                  <span className="text-xs font-bold text-[#00C853] px-3 py-1 rounded-full bg-[#00C853]/10 border border-[#00C853]/20">
-                    Open Mon–Sat · 8:30 AM – 9:00 PM
-                  </span>
-                </div>
-              </div>
-
-              <div className="grid grid-cols-1 md:grid-cols-12 gap-6 items-stretch">
-
-                <div className="md:col-span-5 p-5 rounded-2xl bg-white dark:bg-slate-950 border border-[#E2E8F0] dark:border-slate-800 shadow-xl space-y-4">
-                  <div className="flex items-center justify-between">
-                    <span className="text-[10px] font-black text-[#FF6B00] uppercase tracking-wider flex items-center space-x-1">
-                      <Package className="w-3.5 h-3.5" />
-                      <span>What We Stock</span>
-                    </span>
-                  </div>
-                  <div className="flex flex-wrap gap-1.5">
-                    {stockCategories.map((cat) => (
-                      <Link
-                        key={cat}
-                        to={`/shop?category=${encodeURIComponent(cat)}`}
-                        className="px-2.5 py-1 rounded-lg bg-[#F8FAFC] dark:bg-slate-900 border border-[#E2E8F0] dark:border-slate-800 text-[10px] font-bold text-[#475569] dark:text-slate-300 hover:border-[#FF6B00] hover:text-[#FF6B00] transition-all"
-                      >
-                        {cat}
-                      </Link>
-                    ))}
-                  </div>
-                  <div className="p-3 rounded-xl bg-[#F8FAFC] dark:bg-slate-900 border border-[#E2E8F0] dark:border-slate-800 space-y-1.5 text-xs">
-                    <p className="flex items-center space-x-2">
-                      <ShieldCheck className="w-3.5 h-3.5 text-[#00C853]" />
-                      <span className="font-bold text-[#0F172A] dark:text-white">Brands we keep:</span>
-                      <span className="text-[#475569]">Havells, Crompton, Polycab, Philips, Anchor</span>
-                    </p>
-                    <p className="flex items-center space-x-2">
-                      <Receipt className="w-3.5 h-3.5 text-[#0066FF]" />
-                      <span className="text-[#475569]">GST invoice issued with every purchase</span>
-                    </p>
-                  </div>
-                </div>
-
-                <div className="md:col-span-7 p-5 rounded-2xl bg-white dark:bg-slate-950 border border-[#E2E8F0] dark:border-slate-800 shadow-xl space-y-4">
-                  <div className="flex items-center justify-between">
-                    <span className="text-[10px] font-black text-[#0066FF] uppercase tracking-wider flex items-center space-x-1">
-                      <Wrench className="w-3.5 h-3.5" />
-                      <span>Doorstep Service Team</span>
-                    </span>
-                  </div>
-                  <p className="text-xs text-[#475569] dark:text-slate-400 leading-relaxed">
-                    Fan repair, geyser repair, wiring, DB upgrades, pump repair, appliance repair and
-                    installation — at your home across Jamshedpur.
-                  </p>
-                  <div className="flex flex-wrap gap-1.5">
-                    {team.map((name) => (
-                      <span key={name} className="px-2.5 py-1 rounded-lg bg-[#0066FF]/10 border border-[#0066FF]/20 text-[10px] font-bold text-[#0066FF]">
-                        {name}
-                      </span>
-                    ))}
-                  </div>
-                  <div className="p-3 rounded-xl bg-[#F8FAFC] dark:bg-slate-900 border border-[#E2E8F0] dark:border-slate-800 space-y-1.5 text-xs">
-                    <p className="flex items-center space-x-2">
-                      <Receipt className="w-3.5 h-3.5 text-[#0066FF]" />
-                      <span className="text-[#475569]">Starting fees shown for every service — see our service list</span>
-                    </p>
-                    <p className="flex items-center space-x-2">
-                      <ShieldCheck className="w-3.5 h-3.5 text-[#00C853]" />
-                      <span className="text-[#475569]">Booking status tracked online in your account</span>
-                    </p>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </Tilt3D>
-        </motion.div>
+      {/* Motion Particle Overlay */}
+      <div className="absolute inset-0 pointer-events-none overflow-hidden">
+        <div className="absolute top-1/4 left-1/3 w-2 h-2 rounded-full bg-[#F97316]/40 animate-particle opacity-60"></div>
+        <div className="absolute top-2/3 right-1/4 w-3 h-3 rounded-full bg-[#0284C7]/30 animate-particle opacity-50"></div>
+        <div className="absolute top-1/2 right-1/2 w-1.5 h-1.5 rounded-full bg-[#16A34A]/40 animate-particle opacity-70"></div>
       </div>
+
+      <div className="max-w-[1536px] mx-auto px-4 sm:px-6 lg:px-12 xl:px-16 relative z-10 w-full">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-8 items-center">
+
+          {/* LEFT HERO CONTENT (50% Desktop Width) */}
+          <div className="lg:col-span-6 space-y-6 text-left">
+            
+            {/* Top Official Badges */}
+            <div className="flex flex-wrap items-center gap-2">
+              <motion.div
+                initial={{ opacity: 0, y: 12 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.3 }}
+                className="inline-flex items-center space-x-2 px-3.5 py-1.5 rounded-full bg-[#FFF7ED] border border-[#FED7AA] text-[#EA580C] text-[11px] font-extrabold tracking-widest uppercase font-display"
+              >
+                <Zap className="w-3.5 h-3.5 text-[#F97316] fill-[#F97316]" />
+                <span>UDAY ELECTRICAL WORKS</span>
+              </motion.div>
+
+              <motion.div
+                initial={{ opacity: 0, y: 12 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.3, delay: 0.05 }}
+                className="inline-flex items-center space-x-1.5 px-3 py-1.5 rounded-full bg-[#F0FDF4] border border-[#BBF7D0] text-[#16A34A] text-[11px] font-bold tracking-wide font-display"
+              >
+                <span className="w-2 h-2 rounded-full bg-[#16A34A] animate-pulse"></span>
+                <span>Open Mon-Sat: 8:30 AM - 9:00 PM</span>
+              </motion.div>
+            </div>
+
+            {/* Staggered Animated Headline */}
+            <div className="space-y-1">
+              <motion.h1
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.45, delay: 0.08 }}
+                className="text-3xl sm:text-5xl lg:text-6xl font-black tracking-tight leading-[1.1] text-[#111827] font-display"
+              >
+                Powering Your Home.
+              </motion.h1>
+              <motion.h1
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.45, delay: 0.16 }}
+                className="text-3xl sm:text-5xl lg:text-6xl font-black tracking-tight leading-[1.1] text-[#F97316] font-display"
+              >
+                Building Your Future.
+              </motion.h1>
+            </div>
+
+            {/* Supporting Text */}
+            <motion.p
+              initial={{ opacity: 0, y: 18 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.45, delay: 0.22 }}
+              className="text-[#64748B] text-sm sm:text-base leading-relaxed max-w-xl"
+            >
+              Electrical products, house wiring, repair services and professional electrical solutions — all from your trusted local electrical store in Chhota Govindpur, Jamshedpur.
+            </motion.p>
+
+            {/* Action Buttons */}
+            <motion.div
+              initial={{ opacity: 0, y: 18 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.45, delay: 0.28 }}
+              className="flex flex-wrap items-center gap-3.5 pt-2"
+            >
+              {/* Primary CTA */}
+              <Link
+                to="/shop"
+                className="inline-flex items-center justify-center space-x-3 px-7 py-4 rounded-2xl bg-[#F97316] hover:bg-[#EA580C] text-white font-extrabold text-sm sm:text-base shadow-md shadow-[#F97316]/25 hover:scale-102 transition-all font-display shrink-0 whitespace-nowrap"
+              >
+                <Package className="w-5 h-5 shrink-0" />
+                <span>Explore Products</span>
+                <ArrowRight className="w-5 h-5 shrink-0" />
+              </Link>
+
+              {/* Secondary CTA */}
+              <button
+                onClick={() => setBookingOpen(true)}
+                className="inline-flex items-center justify-center space-x-3 px-7 py-4 rounded-2xl bg-white border border-[#E5E7EB] hover:border-[#F97316] text-[#111827] font-extrabold text-sm sm:text-base shadow-xs hover:scale-102 transition-all font-display shrink-0 whitespace-nowrap"
+              >
+                <Wrench className="w-5 h-5 text-[#F97316] shrink-0" />
+                <span>Book a Service</span>
+              </button>
+
+              {/* Additional Action */}
+              <a
+                href="#store-location-map"
+                onClick={scrollToMap}
+                className="inline-flex items-center space-x-2 px-5 py-3.5 rounded-2xl text-xs sm:text-sm font-extrabold text-[#64748B] hover:text-[#EA580C] transition-colors font-display shrink-0 whitespace-nowrap"
+              >
+                <MapPin className="w-4 h-4 text-[#F97316] shrink-0" />
+                <span>Visit Store</span>
+              </a>
+            </motion.div>
+
+            {/* Trust Indicators */}
+            <motion.div
+              initial={{ opacity: 0, y: 18 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.45, delay: 0.34 }}
+              className="pt-4 border-t border-[#E5E7EB] flex flex-wrap items-center gap-4 text-xs text-[#64748B]"
+            >
+              <span className="flex items-center gap-1.5 font-semibold">
+                <ShieldCheck className="w-4 h-4 text-[#16A34A]" />
+                Genuine Warranty
+              </span>
+              <span className="flex items-center gap-1.5 font-semibold">
+                <Zap className="w-4 h-4 text-[#F97316]" />
+                In-House Wiremen Team
+              </span>
+              <span className="flex items-center gap-1.5 font-semibold">
+                <MapPin className="w-4 h-4 text-[#0284C7]" />
+                Chhota Govindpur Main Road
+              </span>
+            </motion.div>
+
+          </div>
+
+          {/* RIGHT HERO 3D ARCHITECTURAL VISUALIZATION (50% Desktop Width) */}
+          <div className="lg:col-span-6 relative flex items-center justify-center pt-4 lg:pt-0">
+            
+            {/* Ambient Backlight Halo */}
+            <div className="absolute inset-0 bg-gradient-to-t from-[#F97316]/15 via-orange-500/5 to-transparent rounded-full blur-3xl opacity-80"></div>
+
+            {/* 3D Storefront Container with Smooth Perspective Mouse Tilt */}
+            <motion.div
+              style={{
+                rotateX: isMobile ? 0 : rotateXSpring,
+                rotateY: isMobile ? 0 : rotateYSpring,
+                transformStyle: 'preserve-3d'
+              }}
+              initial={{ opacity: 0, scale: 0.96 }}
+              animate={{ opacity: 1, scale: 1 }}
+              transition={{ duration: 0.6, ease: 'easeOut' }}
+              className="relative z-10 w-full max-w-lg lg:max-w-xl group"
+            >
+              {/* Floating Animation Wrapper */}
+              <motion.div
+                animate={{ y: [0, -8, 0] }}
+                transition={{ duration: 5, repeat: Infinity, ease: 'easeInOut' }}
+                className="relative"
+              >
+                {/* 3D Architectural Storefront Image */}
+                <img
+                  src="/ueworks.png"
+                  alt="Uday Electrical Works 3D Storefront Visualization"
+                  className="w-full h-auto object-contain rounded-2xl drop-shadow-[0_20px_25px_rgba(15,23,42,0.15)] transition-transform duration-500 group-hover:scale-[1.02]"
+                />
+
+                {/* Soft Ambient Floor Shadow */}
+                <div className="w-[85%] h-5 mx-auto bg-slate-900/20 blur-lg rounded-full mt-2"></div>
+              </motion.div>
+
+              {/* Floating Feature Card 1: Genuine Brands (Top Right) */}
+              <motion.div
+                animate={{ y: [0, -6, 0] }}
+                transition={{ duration: 4.5, repeat: Infinity, ease: 'easeInOut', delay: 0.5 }}
+                className="absolute -top-4 -right-2 sm:-right-6 p-3 rounded-2xl bg-white/95 border border-[#E5E7EB] shadow-md backdrop-blur-md flex items-center space-x-3 hidden sm:flex z-20 hover:border-[#F97316]/60 transition-colors"
+              >
+                <div className="p-2 rounded-xl bg-[#FFF7ED] text-[#EA580C] border border-[#FED7AA]">
+                  <Package className="w-4 h-4" />
+                </div>
+                <div>
+                  <h4 className="text-xs font-bold text-[#111827] font-display">Genuine Brands</h4>
+                  <span className="text-[10px] text-[#64748B] block font-sans">Havells, Philips, Polycab</span>
+                </div>
+              </motion.div>
+
+              {/* Floating Feature Card 2: House Wiring (Middle Left) */}
+              <motion.div
+                animate={{ y: [0, 6, 0] }}
+                transition={{ duration: 5.2, repeat: Infinity, ease: 'easeInOut', delay: 1 }}
+                className="absolute top-1/2 -left-4 sm:-left-8 -translate-y-1/2 p-3 rounded-2xl bg-white/95 border border-[#E5E7EB] shadow-md backdrop-blur-md flex items-center space-x-3 hidden sm:flex z-20 hover:border-[#0284C7]/60 transition-colors"
+              >
+                <div className="p-2 rounded-xl bg-[#F0F9FF] text-[#0284C7] border border-[#BAE6FD]">
+                  <Zap className="w-4 h-4" />
+                </div>
+                <div>
+                  <h4 className="text-xs font-bold text-[#111827] font-display">House Wiring</h4>
+                  <span className="text-[10px] text-[#64748B] block font-sans">Complete DB &amp; Fittings</span>
+                </div>
+              </motion.div>
+
+              {/* Floating Feature Card 3: Doorstep Service (Bottom Right) */}
+              <motion.div
+                animate={{ y: [0, -5, 0] }}
+                transition={{ duration: 4.8, repeat: Infinity, ease: 'easeInOut', delay: 1.5 }}
+                className="absolute -bottom-4 -right-2 sm:-right-4 p-3 rounded-2xl bg-white/95 border border-[#E5E7EB] shadow-md backdrop-blur-md flex items-center space-x-3 hidden sm:flex z-20 hover:border-[#16A34A]/60 transition-colors"
+              >
+                <div className="p-2 rounded-xl bg-[#F0FDF4] text-[#16A34A] border border-[#BBF7D0]">
+                  <Wrench className="w-4 h-4" />
+                </div>
+                <div>
+                  <h4 className="text-xs font-bold text-[#111827] font-display">Doorstep Service</h4>
+                  <span className="text-[10px] text-[#64748B] block font-sans">Jamshedpur Wiremen</span>
+                </div>
+              </motion.div>
+
+            </motion.div>
+
+          </div>
+
+        </div>
+      </div>
+
+      {/* Interactive Booking Stepper Modal */}
+      <InteractiveBookingFlowModal
+        isOpen={bookingOpen}
+        onClose={() => setBookingOpen(false)}
+      />
     </section>
   );
 };

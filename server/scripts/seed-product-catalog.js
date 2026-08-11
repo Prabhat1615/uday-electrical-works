@@ -5,37 +5,32 @@ import { productCatalog } from '../utils/productCatalogData.js';
 
 // Development-only product catalog seeding command.
 // Usage: node scripts/seed-product-catalog.js
-// This script is idempotent - it checks if a product with the same SKU already exists
-// and skips insertion to avoid duplicates.
-// Stock is set to 0 for catalog showcase purposes (no fake inventory).
+// Updates or inserts verified product imagery and model details.
 
 if (process.env.NODE_ENV === 'production') {
   console.error('✋ Refusing to seed: NODE_ENV=production. Product catalog seeding must never run against a production database.');
-  console.error('   Production starts with a clean database. Create real products through the application.');
   process.exit(1);
 }
 
 const run = async () => {
   await connectDB();
   
-  console.log('📦 Starting product catalog seeding...');
+  console.log('📦 Starting verified product catalog seeding...');
   console.log(`📋 Total products to process: ${productCatalog.length}`);
   
   let inserted = 0;
   let updated = 0;
-  let skipped = 0;
   let failed = 0;
   
   for (const productData of productCatalog) {
     try {
-      // Check if product already exists by SKU
       const existingProduct = await Product.findOne({ sku: productData.sku });
       
       if (existingProduct) {
-        console.log(`⏭️  Skipped: ${productData.name} (SKU: ${productData.sku}) - already exists`);
-        skipped++;
+        await Product.updateOne({ sku: productData.sku }, { $set: productData });
+        console.log(`🔄 Updated: ${productData.name} (SKU: ${productData.sku})`);
+        updated++;
       } else {
-        // Create new product
         await Product.create(productData);
         console.log(`✅ Inserted: ${productData.name} (SKU: ${productData.sku})`);
         inserted++;
@@ -48,12 +43,12 @@ const run = async () => {
   
   console.log('\n📊 Seeding Summary:');
   console.log(`   ✅ Inserted: ${inserted}`);
-  console.log(`   ⏭️  Skipped (already exists): ${skipped}`);
+  console.log(`   🔄 Updated: ${updated}`);
   console.log(`   ❌ Failed: ${failed}`);
   console.log(`   📋 Total processed: ${productCatalog.length}`);
   
   if (failed > 0) {
-    console.error('\n⚠️  Some products failed to insert. Please check the errors above.');
+    console.error('\n⚠️ Some products failed to process.');
     process.exit(1);
   }
   

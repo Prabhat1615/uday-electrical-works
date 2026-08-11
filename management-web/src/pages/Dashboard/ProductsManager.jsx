@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Package, Plus, Search, Edit2, Trash2, Tag, Upload, FileSpreadsheet } from 'lucide-react';
+import { Package, Plus, Search, Edit2, Trash2, Tag, Upload, FileSpreadsheet, AlertCircle, CheckCircle2 } from 'lucide-react';
 import { useProducts, useCreateProduct, useUpdateProduct, useDeleteProduct } from '../../hooks/useErpQueries';
 import { bulkImportProductsApi } from '../../api/productApi';
 import { StatusBadge } from '../../components/StatusBadge';
@@ -33,6 +33,8 @@ export const ProductsManager = () => {
   const [stock, setStock] = useState(10);
   const [description, setDescription] = useState('');
   const [imageUrl, setImageUrl] = useState('');
+  const [imgFormatError, setImgFormatError] = useState('');
+  const [imgPreviewError, setImgPreviewError] = useState(false);
 
   const { data: res, isLoading, refetch } = useProducts({ search });
   const createMutation = useCreateProduct();
@@ -79,6 +81,36 @@ export const ProductsManager = () => {
     'V-Guard'
   ];
 
+  const validateImageUrlFormat = (url) => {
+    if (!url || !url.trim()) {
+      return { valid: false, error: 'Product image URL is required.' };
+    }
+    const trimmed = url.trim();
+
+    // Reject non http/https protocols (javascript:, data:, file:, blob:)
+    if (!/^https?:\/\//i.test(trimmed)) {
+      return { valid: false, error: 'URL must begin with http:// or https://. Protocols like file:, blob:, data:, javascript: are rejected.' };
+    }
+
+    // Reject Google Images result URLs
+    if (/google\.[a-z.]+\/(imgres|url|search)/i.test(trimmed) || /images\.google\.[a-z.]+/i.test(trimmed)) {
+      return { valid: false, error: 'A Google Images search result URL is NOT a direct product image URL. Open the original image source page and copy the direct image link.' };
+    }
+
+    return { valid: true, error: null };
+  };
+
+  const handleImageUrlChange = (val) => {
+    setImageUrl(val);
+    setImgPreviewError(false);
+    const check = validateImageUrlFormat(val);
+    if (!check.valid && val.trim()) {
+      setImgFormatError(check.error);
+    } else {
+      setImgFormatError('');
+    }
+  };
+
   const handleOpenCreate = () => {
     setSelectedProduct(null);
     setName('');
@@ -89,7 +121,9 @@ export const ProductsManager = () => {
     setPrice(0);
     setStock(10);
     setDescription('');
-    setImageUrl('https://images.unsplash.com/photo-1618944847828-82e943c3bdb7?w=800&auto=format&fit=crop&q=60');
+    setImageUrl('');
+    setImgFormatError('');
+    setImgPreviewError(false);
     setActiveModal('create');
   };
 
@@ -103,7 +137,11 @@ export const ProductsManager = () => {
     setPrice(p.price);
     setStock(p.stock);
     setDescription(p.description);
-    setImageUrl(p.imageUrl);
+    const existingUrl = p.imageUrl || '';
+    setImageUrl(existingUrl);
+    const check = validateImageUrlFormat(existingUrl);
+    setImgFormatError(check.valid ? '' : check.error);
+    setImgPreviewError(false);
     setActiveModal('edit');
   };
 
@@ -112,13 +150,11 @@ export const ProductsManager = () => {
     setBulkLoading(true);
     setBulkResult('');
     try {
-      // Parse CSV or JSON lines
       let itemsToImport = [];
       if (bulkCsvText.trim().startsWith('[') || bulkCsvText.trim().startsWith('{')) {
         itemsToImport = JSON.parse(bulkCsvText);
       } else {
         const lines = bulkCsvText.split('\n').filter((l) => l.trim().length > 0);
-        // Header line expected: Name,Brand,Category,SKU,MRP,Price,Stock,Warranty
         const hasHeader = lines[0].toLowerCase().includes('name');
         const dataLines = hasHeader ? lines.slice(1) : lines;
 
@@ -149,6 +185,18 @@ export const ProductsManager = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+
+    // Validate Image URL before submission
+    const check = validateImageUrlFormat(imageUrl);
+    if (!check.valid) {
+      alert(check.error || 'Please provide a valid direct http:// or https:// product image URL.');
+      return;
+    }
+    if (imgPreviewError) {
+      alert('Unable to load this image. Please check that you pasted the direct image URL.');
+      return;
+    }
+
     try {
       if (activeModal === 'create') {
         await createMutation.mutateAsync({
@@ -160,7 +208,7 @@ export const ProductsManager = () => {
           price: Number(price),
           stock: Number(stock),
           description,
-          imageUrl
+          imageUrl: imageUrl.trim()
         });
       } else {
         await updateMutation.mutateAsync({
@@ -174,7 +222,7 @@ export const ProductsManager = () => {
             price: Number(price),
             stock: Number(stock),
             description,
-            imageUrl
+            imageUrl: imageUrl.trim()
           }
         });
       }
@@ -246,11 +294,11 @@ export const ProductsManager = () => {
             <StaggerItem key={p._id}>
               <Card hover>
                 <CardBody className="p-4">
-                  <div className="aspect-square rounded-lg bg-surface-100 mb-4 overflow-hidden">
+                  <div className="aspect-square rounded-lg bg-surface-100 p-2 mb-4 overflow-hidden flex items-center justify-center border border-surface-200">
                     <img
                       src={p.imageUrl}
                       alt={p.name}
-                      className="w-full h-full object-cover"
+                      className="max-h-full max-w-full object-contain"
                     />
                   </div>
                   <div className="space-y-2">
@@ -259,13 +307,13 @@ export const ProductsManager = () => {
                       <h3 className="font-medium text-text-primary text-sm line-clamp-2">{p.name}</h3>
                     </div>
                     <div className="flex items-center justify-between text-xs">
-                      <span className="text-text-muted">SKU: {p.sku}</span>
+                      <span className="text-text-muted font-mono">SKU: {p.sku}</span>
                       <StatusBadge status={p.status} />
                     </div>
                     <div className="flex items-center justify-between">
                       <div>
                         <p className="text-xs text-text-muted line-through">₹{p.mrp || p.price}</p>
-                        <p className="text-lg font-bold text-text-primary">{formatCurrency(p.price)}</p>
+                        <p className="text-lg font-bold text-text-primary font-mono">{formatCurrency(p.price)}</p>
                       </div>
                       <div className="text-right">
                         <p className="text-xs text-text-muted">Stock</p>
@@ -416,14 +464,53 @@ export const ProductsManager = () => {
               onChange={(e) => setStock(e.target.value)}
               placeholder="0"
             />
-            <Input
-              label="Product Image URL"
-              type="url"
-              value={imageUrl}
-              onChange={(e) => setImageUrl(e.target.value)}
-              placeholder="https://..."
-            />
+            
+            {/* Direct Product Image URL Field */}
+            <div>
+              <Input
+                label="Direct Product Image URL *"
+                type="url"
+                required
+                value={imageUrl}
+                onChange={(e) => handleImageUrlChange(e.target.value)}
+                placeholder="https://example.com/images/havells-fan.jpg"
+              />
+            </div>
           </div>
+
+          {/* Live Image URL Validation & Preview Container */}
+          {imageUrl.trim() && (
+            <div className="space-y-2">
+              <label className="block text-xs font-semibold text-text-secondary">Live Image Preview</label>
+              <div className="relative h-48 w-full rounded-xl bg-slate-100 border border-slate-200 p-3 flex items-center justify-center overflow-hidden">
+                {!imgFormatError && !imgPreviewError ? (
+                  <div className="relative w-full h-full flex items-center justify-center">
+                    <img
+                      src={imageUrl}
+                      alt="Product preview"
+                      onLoad={() => setImgPreviewError(false)}
+                      onError={() => setImgPreviewError(true)}
+                      className="max-h-full max-w-full object-contain"
+                    />
+                    <div className="absolute top-2 right-2 px-2 py-1 rounded bg-emerald-500/90 text-white text-[10px] font-bold flex items-center gap-1 shadow-sm">
+                      <CheckCircle2 className="w-3 h-3" />
+                      <span>Direct Image Verified</span>
+                    </div>
+                  </div>
+                ) : (
+                  <div className="flex flex-col items-center justify-center p-4 text-center text-rose-600 space-y-1">
+                    <AlertCircle className="w-8 h-8 text-rose-500" />
+                    <span className="text-xs font-bold text-rose-600">Unable to load this image. Please check that you pasted the direct image URL.</span>
+                    {imgFormatError && (
+                      <span className="text-[11px] text-rose-500/80 font-medium">
+                        {imgFormatError}
+                      </span>
+                    )}
+                  </div>
+                )}
+              </div>
+            </div>
+          )}
 
           <div>
             <label className="block text-sm font-medium text-text-primary mb-1">Description</label>
@@ -448,6 +535,7 @@ export const ProductsManager = () => {
             <Button
               type="submit"
               variant="primary"
+              disabled={!!imgFormatError || imgPreviewError || !imageUrl.trim()}
             >
               Save Product
             </Button>
@@ -458,3 +546,4 @@ export const ProductsManager = () => {
     </div>
   );
 };
+

@@ -72,9 +72,54 @@ export const sendBookingConfirmationEmail = async (userEmail, bookingNumber, ser
   }
 };
 
-// 3. Invoice Email
-export const sendInvoiceEmail = async (userEmail, invoiceNumber, totalAmount) => {
+// 3. Technician Assignment Email
+export const sendBookingAssignedEmail = async (technicianEmail, technicianName, bookingNumber, timeSlot, preferredDate) => {
   try {
+    await transporter.sendMail({
+      from: '"Uday Electrical Works Dispatch" <dispatch@udayelectrical.com>',
+      to: technicianEmail,
+      subject: `New Service Job Assigned - ${bookingNumber}`,
+      html: `
+        <div style="font-family: Arial, sans-serif; padding: 20px; background-color: #0f172a; color: #f8fafc;">
+          <h2 style="color: #38bdf8;">New Job Assigned, ${technicianName}!</h2>
+          <p>You have been assigned service job <strong>${bookingNumber}</strong>.</p>
+          <p>Scheduled Date: <strong>${preferredDate}</strong></p>
+          <p>Time Slot: <strong>${timeSlot}</strong></p>
+          <p>Please accept or decline the job from your Technician Portal.</p>
+        </div>
+      `
+    });
+  } catch (err) {
+    console.error('Email send error:', err.message);
+  }
+};
+
+// 3b. Service Completed Email (includes the feedback invite — sent once per
+// completed job, never repeated)
+export const sendBookingCompletedEmail = async (userEmail, bookingNumber, serviceTitle) => {
+  try {
+    await transporter.sendMail({
+      from: '"Uday Electrical Works Dispatch" <dispatch@udayelectrical.com>',
+      to: userEmail,
+      subject: `Service Completed - ${bookingNumber}`,
+      html: `
+        <div style="font-family: Arial, sans-serif; padding: 20px; background-color: #0f172a; color: #f8fafc;">
+          <h2 style="color: #10b981;">Service Completed: ${bookingNumber}</h2>
+          <p>Service: <strong>${serviceTitle}</strong></p>
+          <p>Thank you for choosing Uday Electrical Works. Your service has been completed successfully.</p>
+          <p style="margin-top: 18px; padding: 14px 18px; border-radius: 12px; background-color: #ff6b00; color: #ffffff; text-align: center; font-weight: bold;">
+            We'd love to hear about your experience, log in to your portal and rate your service from My Service Bookings.
+          </p>
+        </div>
+      `
+    });
+  } catch (err) {
+    console.error('Email send error:', err.message);
+  }
+};
+
+// 4. Invoice Email
+export const sendInvoiceEmail = async (userEmail, invoiceNumber, totalAmount) => {  try {
     await transporter.sendMail({
       from: '"Uday Electrical Works Billing" <billing@udayelectrical.com>',
       to: userEmail,

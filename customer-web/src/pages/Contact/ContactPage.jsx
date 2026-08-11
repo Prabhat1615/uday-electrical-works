@@ -60,7 +60,7 @@ export const ContactPage = () => {
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 space-y-12 bg-slate-50 dark:bg-slate-950 text-slate-900 dark:text-slate-100 transition-colors">
       <Seo
         title="Contact Us | Uday Electrical Works, Chhota Govindpur, Jamshedpur"
-        description="Contact Uday Electrical Works — Chhota Govindpur, Jamshedpur. Call 7903789402 / 9934187847, WhatsApp, or request an electrician visit online. Open Mon–Sat 8:30 AM – 9:00 PM."
+        description="Contact Uday Electrical Works, Chhota Govindpur, Jamshedpur. Call 7903789402 / 9934187847, WhatsApp, or request an electrician visit online. Open Mon-Sat 8:30 AM - 9:00 PM."
       />
 
       {/* Header */}
@@ -71,7 +71,7 @@ export const ContactPage = () => {
         </span>
         <h1 className="text-3xl sm:text-5xl font-black text-slate-900 dark:text-white font-display">Contact Uday Electrical Works</h1>
         <p className="text-slate-600 dark:text-slate-400 text-sm">
-          Chhota Govindpur, Jamshedpur, Jharkhand — doorstep service across 13 Jamshedpur localities.
+          Chhota Govindpur, Jamshedpur, Jharkhand, doorstep service across 13 Jamshedpur localities.
         </p>
       </AnimatedSection>
 
@@ -88,7 +88,7 @@ export const ContactPage = () => {
             <div className="p-6 rounded-2xl bg-emerald-500/10 border border-emerald-500/30 text-emerald-600 dark:text-emerald-400 text-xs font-bold text-center space-y-2">
               <CheckCircle2 className="w-10 h-10 mx-auto text-emerald-500" />
               <h4 className="text-base font-bold text-slate-900 dark:text-white">Visit Request Received!</h4>
-              <p>Our shop team will contact {name} at {phone}. We're open Mon–Sat, 8:30 AM – 9:00 PM.</p>
+              <p>Our shop team will contact {name} at {phone}. We're open Mon-Sat, 8:30 AM - 9:00 PM.</p>
             </div>
           ) : (
             <>
@@ -178,7 +178,7 @@ export const ContactPage = () => {
               {!isAuthenticated && (
                 <p className="text-[11px] text-center text-slate-500">
                   <Link to="/login?redirect=/contact" className="font-black text-orange-500 hover:underline">Sign in</Link> to send
-                  your request — or call us at{' '}
+                  your request, or call us at{' '}
                   <a href="tel:7903789402" className="font-black text-orange-500">7903789402</a>.
                 </p>
               )}
@@ -231,7 +231,7 @@ export const ContactPage = () => {
                 <div>
                   <span className="text-[10px] text-slate-500 font-bold uppercase block">Chhota Govindpur Shop</span>
                   <span className="text-slate-900 dark:text-white">Chhota Govindpur, Jamshedpur, Jharkhand - 831015</span>
-                  <span className="text-slate-500 block mt-0.5">Mon–Sat · 8:30 AM – 9:00 PM</span>
+                  <span className="text-slate-500 block mt-0.5">Mon-Sat · 8:30 AM - 9:00 PM</span>
                 </div>
               </div>
             </div>

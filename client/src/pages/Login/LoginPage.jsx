@@ -47,7 +47,7 @@ export const LoginPage = () => {
           <div className="p-3 w-fit mx-auto rounded-2xl bg-orange-500/10 border border-orange-500/30 text-orange-500 shadow-glow-orange">
             <Zap className="w-8 h-8 fill-current" />
           </div>
-          <h2 className="text-2xl font-black text-slate-900 dark:text-white font-display">Sign In to Uday ERP</h2>
+          <h2 className="text-2xl font-black text-slate-900 dark:text-white font-display">Sign In to Uday Electrical Works</h2>
           <p className="text-xs text-slate-500 dark:text-slate-400">Access sales, service bookings, invoices & technician tasks</p>
         </div>
 

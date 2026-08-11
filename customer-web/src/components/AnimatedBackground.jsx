@@ -1,4 +1,4 @@
-import React, { useRef } from 'react';
+﻿import React, { useRef } from 'react';
 import { motion, useMotionValue, useSpring, useTransform } from 'framer-motion';
 
 /* Floating orb that parallaxes against mouse position. Outer layer handles
@@ -20,7 +20,7 @@ const ORBS = [
   {
     depth: 1.0,
     className: 'top-[8%] left-[6%] w-24 h-24 hidden lg:block',
-    style: 'bg-gradient-to-br from-[#FF6B00]/25 to-amber-400/10 rounded-3xl blur-[2px] shadow-[0_0_60px_-10px_rgba(255,107,0,0.5)]',
+    style: 'bg-gradient-to-br from-[#F97316]/25 to-amber-400/10 rounded-3xl blur-[2px] shadow-[0_0_60px_-10px_rgba(255,107,0,0.5)]',
     animate: { y: [0, -24, 0], rotate: [0, 12, 0] },
     transition: { duration: 7, repeat: Infinity, ease: 'easeInOut' }
   },
@@ -48,7 +48,7 @@ const ORBS = [
   {
     depth: 0.9,
     className: 'top-[38%] left-[38%] w-12 h-12 hidden xl:block',
-    style: 'bg-gradient-to-tr from-[#FF6B00]/20 to-transparent rounded-xl rotate-45 border border-[#FF6B00]/20',
+    style: 'bg-gradient-to-tr from-[#F97316]/20 to-transparent rounded-xl rotate-45 border border-[#F97316]/20',
     animate: { y: [0, -20, 0], rotate: [45, 65, 45] },
     transition: { duration: 7.5, repeat: Infinity, ease: 'easeInOut', delay: 1.5 }
   },

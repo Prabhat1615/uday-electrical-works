@@ -1,7 +1,7 @@
-// Real Product Catalog for Uday Electrical Works
+// Real Verified Product Catalog for Uday Electrical Works
 // Products sourced from official manufacturer specifications
 // Stock set to 0 for catalog showcase (no fake inventory)
-// Images: Using professional placeholder images that correspond to product types
+// Images: Local static real commercial product photo assets stored in /products/
 
 export const productCatalog = [
   // ==================== CEILING FANS ====================
@@ -23,7 +23,7 @@ export const productCatalog = [
       'Motor': '100% Copper',
       'Blades': '3'
     },
-    imageUrl: 'https://images.unsplash.com/photo-1618944847828-82e943c3bdb7?w=800&auto=format&fit=crop&q=60'
+    imageUrl: '/products/havells/havells-utsav-ceiling-fan-1200mm.jpg'
   },
   {
     name: 'Crompton Energion Caelum BLDC Ceiling Fan 1200mm',
@@ -44,7 +44,7 @@ export const productCatalog = [
       'BEE Rating': '5 Star',
       'Control': 'Remote & Regulator Compatible'
     },
-    imageUrl: 'https://images.unsplash.com/photo-1618944847828-82e943c3bdb7?w=800&auto=format&fit=crop&q=60'
+    imageUrl: '/products/crompton/crompton-energion-caelum-bldc-fan.jpg'
   },
   {
     name: 'Polycab Silencio Mini BLDC Ceiling Fan 1200mm',
@@ -66,8 +66,10 @@ export const productCatalog = [
       'Control': 'RF Remote',
       'Blade Material': 'Aluminium'
     },
-    imageUrl: 'https://images.unsplash.com/photo-1618944847828-82e943c3bdb7?w=800&auto=format&fit=crop&q=60'
+    imageUrl: '/products/polycab/polycab-silencio-mini-bldc-fan.jpg'
   },
+
+  // ==================== EXHAUST FANS ====================
   {
     name: 'Havells Ventilair DX Exhaust Fan 200mm',
     brand: 'Havells',
@@ -86,7 +88,7 @@ export const productCatalog = [
       'Noise Level': '45 dB',
       'Features': 'Auto Back Shutter, Detachable Oil Tray'
     },
-    imageUrl: 'https://images.unsplash.com/photo-1581092160607-ee22621dd758?w=800&auto=format&fit=crop&q=60'
+    imageUrl: '/products/havells/havells-ventilair-dx-exhaust-fan-200mm.jpg'
   },
   {
     name: 'Crompton Brisk Air Exhaust Fan 150mm',
@@ -105,7 +107,7 @@ export const productCatalog = [
       'Features': 'Automatic Back Shutter, Rust-proof',
       'Application': 'Kitchen, Bathroom'
     },
-    imageUrl: 'https://images.unsplash.com/photo-1581092160607-ee22621dd758?w=800&auto=format&fit=crop&q=60'
+    imageUrl: '/products/crompton/crompton-brisk-air-exhaust-fan-150mm.jpg'
   },
 
   // ==================== LED BULBS ====================
@@ -128,7 +130,7 @@ export const productCatalog = [
       'Beam Angle': '180°',
       'CRI': '80'
     },
-    imageUrl: 'https://images.unsplash.com/photo-1550985616-10810253b84d?w=800&auto=format&fit=crop&q=60'
+    imageUrl: '/products/philips/philips-led-bulb-9w-b22.jpg'
   },
   {
     name: 'Philips LED Bulb 12W B22 Warm White',
@@ -150,7 +152,7 @@ export const productCatalog = [
       'CRI': '80',
       'Efficacy': '113 lm/W'
     },
-    imageUrl: 'https://images.unsplash.com/photo-1550985616-10810253b84d?w=800&auto=format&fit=crop&q=60'
+    imageUrl: '/products/philips/philips-led-bulb-12w-b22.jpg'
   },
   {
     name: 'Philips LED Bulb 20W B22 Cool White',
@@ -169,7 +171,7 @@ export const productCatalog = [
       'Application': 'Large Rooms, Offices',
       'Lifespan': '15,000 hours'
     },
-    imageUrl: 'https://images.unsplash.com/photo-1550985616-10810253b84d?w=800&auto=format&fit=crop&q=60'
+    imageUrl: '/products/philips/philips-led-bulb-20w-b22.jpg'
   },
   {
     name: 'Philips LED Bulb 30W B22 Neutral White',
@@ -188,7 +190,7 @@ export const productCatalog = [
       'Application': 'Commercial, Large Spaces',
       'Lifespan': '15,000 hours'
     },
-    imageUrl: 'https://images.unsplash.com/photo-1550985616-10810253b84d?w=800&auto=format&fit=crop&q=60'
+    imageUrl: '/products/philips/philips-led-bulb-30w-b22.jpg'
   },
   {
     name: 'Philips LED Bulb 40W B22 Cool Daylight',
@@ -207,7 +209,7 @@ export const productCatalog = [
       'Application': 'Large Rooms, Warehouses',
       'Lifespan': '15,000 hours'
     },
-    imageUrl: 'https://images.unsplash.com/photo-1550985616-10810253b84d?w=800&auto=format&fit=crop&q=60'
+    imageUrl: '/products/philips/philips-led-bulb-40w-b22.jpg'
   },
   {
     name: 'Havells LED Bulb 9W B22 Cool White',
@@ -226,7 +228,7 @@ export const productCatalog = [
       'Lifespan': '15,000 hours',
       'Application': 'General Lighting'
     },
-    imageUrl: 'https://images.unsplash.com/photo-1550985616-10810253b84d?w=800&auto=format&fit=crop&q=60'
+    imageUrl: '/products/havells/havells-led-bulb-9w-b22.jpg'
   },
   {
     name: 'Havells LED Bulb 12W B22 Warm White',
@@ -245,7 +247,7 @@ export const productCatalog = [
       'Lifespan': '15,000 hours',
       'Application': 'Living Rooms, Bedrooms'
     },
-    imageUrl: 'https://images.unsplash.com/photo-1550985616-10810253b84d?w=800&auto=format&fit=crop&q=60'
+    imageUrl: '/products/havells/havells-led-bulb-12w-b22.jpg'
   },
 
   // ==================== LED BATTENS / TUBES ====================
@@ -268,7 +270,7 @@ export const productCatalog = [
       'Lifespan': '50,000 hours',
       'CRI': '80'
     },
-    imageUrl: 'https://images.unsplash.com/photo-1550985616-10810253b84d?w=800&auto=format&fit=crop&q=60'
+    imageUrl: '/products/philips/philips-master-led-tube-t8.jpg'
   },
   {
     name: 'Havells LED Batten 20W 4 Feet Cool White',
@@ -287,7 +289,7 @@ export const productCatalog = [
       'Body Material': 'Polycarbonate',
       'Application': 'Home, Office, Shop'
     },
-    imageUrl: 'https://images.unsplash.com/photo-1550985616-10810253b84d?w=800&auto=format&fit=crop&q=60'
+    imageUrl: '/products/havells/havells-led-batten-20w.jpg'
   },
   {
     name: 'Wipro Garnet LED Batten 20W 4 Feet Natural White',
@@ -307,7 +309,7 @@ export const productCatalog = [
       'Standards': 'BIS Certified',
       'Application': 'Residential, Commercial'
     },
-    imageUrl: 'https://images.unsplash.com/photo-1550985616-10810253b84d?w=800&auto=format&fit=crop&q=60'
+    imageUrl: '/products/wipro/wipro-garnet-led-batten-20w.jpg'
   },
   {
     name: 'Philips LED Batten 18W 4 Feet Cool Daylight',
@@ -326,7 +328,7 @@ export const productCatalog = [
       'Body': 'Polycarbonate Diffuser',
       'Application': 'General Lighting'
     },
-    imageUrl: 'https://images.unsplash.com/photo-1550985616-10810253b84d?w=800&auto=format&fit=crop&q=60'
+    imageUrl: '/products/philips/philips-led-batten-18w.jpg'
   },
 
   // ==================== SWITCHES ====================
@@ -348,7 +350,7 @@ export const productCatalog = [
       'Features': 'Silent Operation, Double Rocker Design',
       'Standards': 'IS 3854 compliant'
     },
-    imageUrl: 'https://images.unsplash.com/photo-1544725121-be3bf52e2dc8?w=800&auto=format&fit=crop&q=60'
+    imageUrl: '/products/havells/havells-murano-10ax-2way-switch.jpg'
   },
   {
     name: 'Anchor by Panasonic Penta Modular 1-Way Switch',
@@ -368,7 +370,7 @@ export const productCatalog = [
       'Operations': '1 Lakh+',
       'Standards': 'BIS compliant'
     },
-    imageUrl: 'https://images.unsplash.com/photo-1544725121-be3bf52e2dc8?w=800&auto=format&fit=crop&q=60'
+    imageUrl: '/products/anchor/anchor-penta-modular-1way-switch.jpg'
   },
   {
     name: 'Polycab Modular Switch 10AX 2-Way',
@@ -388,7 +390,7 @@ export const productCatalog = [
       'Features': 'Silver Plated Contacts',
       'Standards': 'IS 3854 & IS 1293'
     },
-    imageUrl: 'https://images.unsplash.com/photo-1544725121-be3bf52e2dc8?w=800&auto=format&fit=crop&q=60'
+    imageUrl: '/products/polycab/polycab-modular-switch-10ax-2way.jpg'
   },
   {
     name: 'Havells Signia 10AX 1-Way Modular Switch',
@@ -408,7 +410,7 @@ export const productCatalog = [
       'Terminals': 'Silver Plated',
       'Protection': 'IP20'
     },
-    imageUrl: 'https://images.unsplash.com/photo-1544725121-be3bf52e2dc8?w=800&auto=format&fit=crop&q=60'
+    imageUrl: '/products/havells/havells-signia-10ax-1way-switch.jpg'
   },
 
   // ==================== SOCKETS ====================
@@ -430,7 +432,7 @@ export const productCatalog = [
       'Protection': 'IP20',
       'Standards': 'IS 1293 compliant'
     },
-    imageUrl: 'https://images.unsplash.com/photo-1544725121-be3bf52e2dc8?w=800&auto=format&fit=crop&q=60'
+    imageUrl: '/products/havells/havells-6a-3pin-socket.jpg'
   },
   {
     name: 'Havells 16A Heavy Duty Socket',
@@ -450,7 +452,7 @@ export const productCatalog = [
       'Features': 'High Load Capacity',
       'Standards': 'IS 1293 compliant'
     },
-    imageUrl: 'https://images.unsplash.com/photo-1544725121-be3bf52e2dc8?w=800&auto=format&fit=crop&q=60'
+    imageUrl: '/products/havells/havells-16a-heavyduty-socket.jpg'
   },
   {
     name: 'Anchor by Panasonic 6A 3-Pin Socket',
@@ -470,7 +472,7 @@ export const productCatalog = [
       'Standards': 'BIS compliant',
       'Series': 'Penta Modular'
     },
-    imageUrl: 'https://images.unsplash.com/photo-1544725121-be3bf52e2dc8?w=800&auto=format&fit=crop&q=60'
+    imageUrl: '/products/anchor/anchor-6a-3pin-socket.jpg'
   },
   {
     name: 'Anchor by Panasonic 16A 3-Pin Socket',
@@ -490,7 +492,7 @@ export const productCatalog = [
       'Material': 'Polycarbonate',
       'Series': 'Penta Modular'
     },
-    imageUrl: 'https://images.unsplash.com/photo-1544725121-be3bf52e2dc8?w=800&auto=format&fit=crop&q=60'
+    imageUrl: '/products/anchor/anchor-16a-heavyduty-socket.jpg'
   },
 
   // ==================== MODULAR ACCESSORIES ====================
@@ -512,7 +514,7 @@ export const productCatalog = [
       'Colors': 'White, Grey, Metallic',
       'Installation': 'Front Loading'
     },
-    imageUrl: 'https://images.unsplash.com/photo-1544725121-be3bf52e2dc8?w=800&auto=format&fit=crop&q=60'
+    imageUrl: '/products/havells/havells-6m-modular-plate.jpg'
   },
   {
     name: 'Anchor by Panasonic 4M Modular Plate',
@@ -532,6 +534,6 @@ export const productCatalog = [
       'Colors': 'White, Black & Silver, Black',
       'Features': 'LED Locator Option Available'
     },
-    imageUrl: 'https://images.unsplash.com/photo-1544725121-be3bf52e2dc8?w=800&auto=format&fit=crop&q=60'
+    imageUrl: '/products/anchor/anchor-4m-modular-plate.jpg'
   }
 ];

@@ -1,4 +1,4 @@
-﻿import React from 'react';
+import React from 'react';
 import { Link } from 'react-router-dom';
 import { 
   AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, BarChart, Bar 
@@ -7,7 +7,6 @@ import {
   TrendingUp, 
   CalendarCheck, 
   Receipt, 
-  AlertTriangle, 
   Users, 
   Wrench, 
   UserCheck, 
@@ -30,10 +29,13 @@ export const DashboardOverview = () => {
   const { user } = useAuth();
   const role = user?.role || 'Customer';
 
-  const { data: analyticsRes, isLoading: loadingAnalytics } = useAnalytics();
+  const isAdminOrStaff = role === 'Admin' || role === 'Staff';
+  const isCustomer = role === 'Customer';
+
+  const { data: analyticsRes, isLoading: loadingAnalytics } = useAnalytics({ enabled: isAdminOrStaff });
   const { data: bookingsRes } = useBookings();
-  const { data: invoicesRes } = useInvoices();
-  const { data: leadsRes } = useLeads();
+  const { data: invoicesRes } = useInvoices(undefined, { enabled: isAdminOrStaff || isCustomer });
+  const { data: leadsRes } = useLeads(undefined, { enabled: isAdminOrStaff });
 
   const cards = analyticsRes?.data?.cards || {};
   const charts = analyticsRes?.data?.charts || {};
@@ -41,23 +43,32 @@ export const DashboardOverview = () => {
   const invoices = invoicesRes?.data || [];
   const leads = leadsRes?.data || [];
 
+  const tooltipStyle = {
+    backgroundColor: '#ffffff',
+    borderColor: '#E2E8F0',
+    borderRadius: '8px',
+    color: '#0F172A',
+    fontSize: '12px',
+    boxShadow: '0 4px 12px rgba(15, 23, 42, 0.1)'
+  };
+
   return (
-    <div className="space-y-8">
+    <div className="space-y-6">
       
       {/* Header Banner */}
-      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 p-6 rounded-3xl bg-gradient-to-r from-slate-900 via-slate-900 to-blue-950/60 border border-slate-800 shadow-xl relative overflow-hidden">
-        <div className="absolute -top-16 -right-16 w-56 h-56 bg-blue-600/20 blur-[100px] rounded-full pointer-events-none"></div>
+      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 p-5 rounded-xl bg-white border border-slate-200 shadow-card relative overflow-hidden">
+        <div className="absolute -top-16 -right-16 w-56 h-56 bg-orange-500/10 blur-[100px] rounded-full pointer-events-none"></div>
         <div className="relative">
           <div className="flex items-center space-x-2">
-            <span className="text-xs font-bold text-blue-400 uppercase tracking-widest">
+            <span className="text-[11px] font-bold text-orange-600 uppercase tracking-widest">
               {role} Dashboard Console
             </span>
-            <span className="w-2 h-2 rounded-full bg-emerald-400 animate-ping"></span>
+            <span className="w-2 h-2 rounded-full bg-emerald-500 animate-ping"></span>
           </div>
-          <h1 className="text-2xl sm:text-3xl font-extrabold text-white mt-1 font-display">
-            Welcome back, {user?.name}! ðŸ‘‹
+          <h1 className="text-xl sm:text-2xl font-extrabold text-slate-900 mt-0.5">
+            Welcome back, {user?.name}!
           </h1>
-          <p className="text-xs sm:text-sm text-slate-400 mt-1">
+          <p className="text-xs sm:text-sm text-slate-500 mt-0.5">
             Uday Electrical Works Enterprise ERP (Phase 2) running with live analytics, auto-inventory & GST billing.
           </p>
         </div>
@@ -66,7 +77,7 @@ export const DashboardOverview = () => {
           {(role === 'Admin' || role === 'Staff') && (
             <Link
               to="/dashboard/sales"
-              className="btn-cta px-4 py-2.5 text-xs"
+              className="btn-cta btn-sm"
             >
               New Sale & Invoice
             </Link>
@@ -74,7 +85,7 @@ export const DashboardOverview = () => {
           {role === 'Customer' && (
             <Link
               to="/services"
-              className="btn-cta px-4 py-2.5 text-xs"
+              className="btn-cta btn-sm"
             >
               Book Electrical Service
             </Link>
@@ -88,7 +99,7 @@ export const DashboardOverview = () => {
       {(role === 'Admin' || role === 'Staff') && (
         <>
           {/* Metrics Grid */}
-          <StaggerGroup className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
+          <StaggerGroup className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
             <StaggerItem>
               <StatCard
                 title="Total Lifetime Revenue"
@@ -127,53 +138,53 @@ export const DashboardOverview = () => {
 
           {/* Recharts Analytics Row */}
           {loadingAnalytics ? (
-            <LoadingSpinner message="Loading Recharts visual analytics..." />
+            <LoadingSpinner message="Loading analytics..." />
           ) : (
-            <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
+            <div className="grid grid-cols-1 lg:grid-cols-12 gap-4">
               
               {/* Revenue Trend Area Chart */}
-              <div className="lg:col-span-8 glass-panel rounded-3xl p-6 space-y-4 relative overflow-hidden transition-all hover:shadow-glow-blue/20">
-                <div className="flex items-center justify-between border-b border-slate-800 pb-3">
+              <div className="lg:col-span-8 glass-panel rounded-xl p-5 space-y-3">
+                <div className="flex items-center justify-between border-b border-slate-200 pb-3">
                   <div>
-                    <h3 className="text-base font-extrabold text-white">Revenue Growth Trend (â‚¹)</h3>
-                    <p className="text-xs text-slate-400">Monthly gross turnover graph</p>
+                    <h3 className="text-sm font-bold text-slate-900">Revenue Growth Trend (₹)</h3>
+                    <p className="text-xs text-slate-500">Monthly gross turnover graph</p>
                   </div>
                 </div>
 
-                <div className="h-72 w-full pt-2">
+                <div className="h-64 w-full pt-2">
                   <ResponsiveContainer width="100%" height="100%">
                     <AreaChart data={charts.revenueTrend || []}>
                       <defs>
                         <linearGradient id="colorRev" x1="0" y1="0" x2="0" y2="1">
-                          <stop offset="5%" stopColor="#FF6B00" stopOpacity={0.4}/>
-                          <stop offset="95%" stopColor="#FF6B00" stopOpacity={0}/>
+                          <stop offset="5%" stopColor="#F97316" stopOpacity={0.3}/>
+                          <stop offset="95%" stopColor="#F97316" stopOpacity={0}/>
                         </linearGradient>
                       </defs>
-                      <CartesianGrid strokeDasharray="3 3" stroke="#1e293b" />
-                      <XAxis dataKey="month" stroke="#64748b" fontSize={11} />
-                      <YAxis stroke="#64748b" fontSize={11} />
-                      <Tooltip contentStyle={{ backgroundColor: '#0f172a', borderColor: '#334155', borderRadius: '12px', color: '#fff' }} />
-                      <Area type="monotone" dataKey="revenue" stroke="#FF6B00" strokeWidth={3} fillOpacity={1} fill="url(#colorRev)" />
+                      <CartesianGrid strokeDasharray="3 3" stroke="#E2E8F0" />
+                      <XAxis dataKey="month" stroke="#94A3B8" fontSize={11} />
+                      <YAxis stroke="#94A3B8" fontSize={11} />
+                      <Tooltip contentStyle={tooltipStyle} />
+                      <Area type="monotone" dataKey="revenue" stroke="#F97316" strokeWidth={2} fillOpacity={1} fill="url(#colorRev)" />
                     </AreaChart>
                   </ResponsiveContainer>
                 </div>
               </div>
 
               {/* Bookings & Sales Bar Chart */}
-              <div className="lg:col-span-4 glass-panel rounded-3xl p-6 space-y-4 relative overflow-hidden transition-all hover:shadow-glow-blue/20">
-                <div className="border-b border-slate-800 pb-3">
-                  <h3 className="text-base font-extrabold text-white">Service Bookings Trend</h3>
-                  <p className="text-xs text-slate-400">Monthly job requests</p>
+              <div className="lg:col-span-4 glass-panel rounded-xl p-5 space-y-3">
+                <div className="border-b border-slate-200 pb-3">
+                  <h3 className="text-sm font-bold text-slate-900">Service Bookings Trend</h3>
+                  <p className="text-xs text-slate-500">Monthly job requests</p>
                 </div>
 
-                <div className="h-72 w-full pt-2">
+                <div className="h-64 w-full pt-2">
                   <ResponsiveContainer width="100%" height="100%">
                     <BarChart data={charts.bookingTrend || []}>
-                      <CartesianGrid strokeDasharray="3 3" stroke="#1e293b" />
-                      <XAxis dataKey="month" stroke="#64748b" fontSize={11} />
-                      <YAxis stroke="#64748b" fontSize={11} />
-                      <Tooltip contentStyle={{ backgroundColor: '#0f172a', borderColor: '#334155', borderRadius: '12px', color: '#fff' }} />
-                      <Bar dataKey="bookings" fill="#0066FF" radius={[6, 6, 0, 0]} />
+                      <CartesianGrid strokeDasharray="3 3" stroke="#E2E8F0" />
+                      <XAxis dataKey="month" stroke="#94A3B8" fontSize={11} />
+                      <YAxis stroke="#94A3B8" fontSize={11} />
+                      <Tooltip contentStyle={tooltipStyle} />
+                      <Bar dataKey="bookings" fill="#0066FF" radius={[4, 4, 0, 0]} />
                     </BarChart>
                   </ResponsiveContainer>
                 </div>
@@ -183,22 +194,22 @@ export const DashboardOverview = () => {
           )}
 
           {/* Quick Action Tables */}
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
             
             {/* Recent Bookings */}
-            <div className="glass-panel rounded-3xl p-6 space-y-4 relative overflow-hidden transition-all hover:shadow-glow-blue/20">
-              <div className="flex items-center justify-between border-b border-slate-800 pb-3">
-                <h3 className="text-base font-extrabold text-white">Active Service Bookings</h3>
-                <Link to="/dashboard/bookings" className="text-xs font-bold text-blue-400 hover:underline">View All â†’</Link>
+            <div className="glass-panel rounded-xl p-5 space-y-3">
+              <div className="flex items-center justify-between border-b border-slate-200 pb-3">
+                <h3 className="text-sm font-bold text-slate-900">Active Service Bookings</h3>
+                <Link to="/dashboard/bookings" className="text-xs font-bold text-blue-600 hover:underline flex items-center gap-1">View All <ArrowUpRight className="w-3 h-3" /></Link>
               </div>
 
-              <div className="space-y-3">
+              <div className="space-y-2.5">
                 {bookings.slice(0, 4).map((b) => (
-                  <div key={b._id} className="p-3.5 rounded-2xl bg-slate-950 border border-slate-800/80 flex justify-between items-center text-xs">
+                  <div key={b._id} className="p-3 rounded-lg bg-slate-50 border border-slate-200 flex justify-between items-center text-xs">
                     <div>
-                      <span className="font-mono text-orange-500 font-bold block">{b.bookingNumber}</span>
-                      <p className="font-bold text-white mt-0.5">{b.service?.title}</p>
-                      <p className="text-slate-400">{b.customer?.name}</p>
+                      <span className="font-mono text-orange-600 font-bold block">{b.bookingNumber}</span>
+                      <p className="font-bold text-slate-900 mt-0.5">{b.service?.title}</p>
+                      <p className="text-slate-500">{b.customer?.name}</p>
                     </div>
                     <div className="text-right">
                       <StatusBadge status={b.status} />
@@ -210,18 +221,18 @@ export const DashboardOverview = () => {
             </div>
 
             {/* Pending Leads */}
-            <div className="glass-panel rounded-3xl p-6 space-y-4 relative overflow-hidden transition-all hover:shadow-glow-blue/20">
-              <div className="flex items-center justify-between border-b border-slate-800 pb-3">
-                <h3 className="text-base font-extrabold text-white">Recent Customer Leads</h3>
-                <Link to="/dashboard/leads" className="text-xs font-bold text-blue-400 hover:underline">View CRM Pipeline â†’</Link>
+            <div className="glass-panel rounded-xl p-5 space-y-3">
+              <div className="flex items-center justify-between border-b border-slate-200 pb-3">
+                <h3 className="text-sm font-bold text-slate-900">Recent Customer Leads</h3>
+                <Link to="/dashboard/leads" className="text-xs font-bold text-blue-600 hover:underline flex items-center gap-1">View CRM Pipeline <ArrowUpRight className="w-3 h-3" /></Link>
               </div>
 
-              <div className="space-y-3">
+              <div className="space-y-2.5">
                 {leads.slice(0, 4).map((l) => (
-                  <div key={l._id} className="p-3.5 rounded-2xl bg-slate-950 border border-slate-800/80 flex justify-between items-center text-xs">
+                  <div key={l._id} className="p-3 rounded-lg bg-slate-50 border border-slate-200 flex justify-between items-center text-xs">
                     <div>
-                      <p className="font-bold text-white">{l.name}</p>
-                      <p className="text-blue-400 font-semibold mt-0.5">{l.serviceRequired}</p>
+                      <p className="font-bold text-slate-900">{l.name}</p>
+                      <p className="text-blue-600 font-semibold mt-0.5">{l.serviceRequired}</p>
                       <p className="text-slate-500">{l.phone}</p>
                     </div>
                     <div className="text-right">
@@ -238,14 +249,14 @@ export const DashboardOverview = () => {
 
       {/* 2. TECHNICIAN DASHBOARD */}
       {role === 'Technician' && (
-        <div className="space-y-6">
-          <StaggerGroup className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
+        <div className="space-y-5">
+          <StaggerGroup className="grid grid-cols-1 sm:grid-cols-3 gap-4">
             <StaggerItem>
               <StatCard
                 title="Assigned Service Jobs"
                 value={<CountUp to={bookings.length} duration={1.5} />}
                 icon={Wrench}
-                color="orange"
+                color="amber"
               />
             </StaggerItem>
             <StaggerItem>
@@ -266,26 +277,26 @@ export const DashboardOverview = () => {
             </StaggerItem>
           </StaggerGroup>
 
-          <div className="glass-panel rounded-3xl p-6 space-y-4 relative overflow-hidden transition-all hover:shadow-glow-blue/20">
-            <h3 className="text-base font-extrabold text-white border-b border-slate-800 pb-3">My Technician Dispatch Queue</h3>
+          <div className="glass-panel rounded-xl p-5 space-y-3">
+            <h3 className="text-sm font-bold text-slate-900 border-b border-slate-200 pb-3">My Technician Dispatch Queue</h3>
             
             {bookings.length === 0 ? (
               <p className="text-xs text-slate-500 text-center py-6">No jobs currently assigned to you.</p>
             ) : (
-              <div className="space-y-3">
+              <div className="space-y-2.5">
                 {bookings.map((b) => (
-                  <div key={b._id} className="p-4 rounded-2xl bg-slate-950 border border-slate-800 flex justify-between items-center text-xs">
+                  <div key={b._id} className="p-3.5 rounded-lg bg-slate-50 border border-slate-200 flex justify-between items-center text-xs">
                     <div className="space-y-1">
-                      <span className="font-mono text-orange-500 font-bold">{b.bookingNumber}</span>
-                      <p className="font-bold text-white text-sm">{b.service?.title}</p>
-                      <p className="text-slate-300">Customer: {b.customer?.name} ({b.customer?.phone})</p>
-                      <p className="text-slate-400">Site: {b.address}</p>
+                      <span className="font-mono text-orange-600 font-bold">{b.bookingNumber}</span>
+                      <p className="font-bold text-slate-900 text-sm">{b.service?.title}</p>
+                      <p className="text-slate-600">Customer: {b.customer?.name} ({b.customer?.phone})</p>
+                      <p className="text-slate-500">Site: {b.address}</p>
                     </div>
                     <div className="text-right space-y-2">
                       <StatusBadge status={b.status} />
                       <Link
                         to="/dashboard/bookings"
-                        className="block px-3 py-1.5 rounded-lg bg-orange-500 hover:bg-orange-600 text-white font-bold transition-all"
+                        className="block px-3 py-1.5 rounded-lg bg-orange-500 hover:bg-orange-600 text-white font-bold transition-colors"
                       >
                         Update Job
                       </Link>
@@ -300,8 +311,8 @@ export const DashboardOverview = () => {
 
       {/* 3. CUSTOMER DASHBOARD */}
       {role === 'Customer' && (
-        <div className="space-y-6">
-          <StaggerGroup className="grid grid-cols-1 sm:grid-cols-3 gap-5">
+        <div className="space-y-5">
+          <StaggerGroup className="grid grid-cols-1 sm:grid-cols-3 gap-4">
             <StaggerItem>
               <StatCard
                 title="My Booked Services"
@@ -328,28 +339,29 @@ export const DashboardOverview = () => {
             </StaggerItem>
           </StaggerGroup>
 
-          <div className="glass-panel rounded-3xl p-6 space-y-4 relative overflow-hidden transition-all hover:shadow-glow-blue/20">
-            <div className="flex justify-between items-center border-b border-slate-800 pb-3">
-              <h3 className="text-base font-extrabold text-white">My Maintenance Requests & History</h3>
-              <Link to="/services" className="px-3.5 py-1.5 rounded-xl bg-orange-500 hover:bg-orange-600 text-white font-extrabold text-xs transition-all shadow-md shadow-orange-500/20">
-                + Book New Service
+          <div className="glass-panel rounded-xl p-5 space-y-3">
+            <div className="flex justify-between items-center border-b border-slate-200 pb-3">
+              <h3 className="text-sm font-bold text-slate-900">My Maintenance Requests & History</h3>
+              <Link to="/services" className="btn-primary btn-sm">
+                <Plus className="w-3.5 h-3.5" />
+                Book New Service
               </Link>
             </div>
 
             {bookings.length === 0 ? (
               <p className="text-xs text-slate-500 text-center py-6">You haven't requested any electrical service bookings yet.</p>
             ) : (
-              <div className="space-y-3">
+              <div className="space-y-2.5">
                 {bookings.map((b) => (
-                  <div key={b._id} className="p-4 rounded-2xl bg-slate-950 border border-slate-800 flex justify-between items-center text-xs">
+                  <div key={b._id} className="p-3.5 rounded-lg bg-slate-50 border border-slate-200 flex justify-between items-center text-xs">
                     <div>
-                      <span className="font-mono text-orange-500 font-bold">{b.bookingNumber}</span>
-                      <p className="font-bold text-white text-sm mt-0.5">{b.service?.title}</p>
-                      <p className="text-slate-400">Scheduled Date: {formatDate(b.preferredDate)}</p>
+                      <span className="font-mono text-orange-600 font-bold">{b.bookingNumber}</span>
+                      <p className="font-bold text-slate-900 text-sm mt-0.5">{b.service?.title}</p>
+                      <p className="text-slate-500">Scheduled Date: {formatDate(b.preferredDate)}</p>
                     </div>
                     <div className="text-right">
                       <StatusBadge status={b.status} />
-                      <p className="text-white font-bold mt-1">{formatCurrency(b.totalCost)}</p>
+                      <p className="text-slate-900 font-bold mt-1">{formatCurrency(b.totalCost)}</p>
                     </div>
                   </div>
                 ))}

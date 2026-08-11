@@ -46,6 +46,7 @@ export const AppRoutes = () => {
         <Route path="/services" element={withSuspense(<ServicesPage />)} />
         <Route path="/services/:id" element={withSuspense(<ServiceDetailPage />)} />
         <Route path="/services/:id/book" element={withSuspense(<BookingPage />)} />
+        <Route path="/book" element={withSuspense(<BookingPage />)} />
         <Route path="/cart" element={withSuspense(<CartPage />)} />
         <Route path="/about" element={withSuspense(<AboutPage />)} />
         <Route path="/contact" element={withSuspense(<ContactPage />)} />

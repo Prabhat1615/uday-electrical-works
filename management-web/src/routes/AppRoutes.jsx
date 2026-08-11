@@ -42,8 +42,11 @@ const AiInventoryForecastPage = lazy(() => import('../pages/Dashboard/AiInventor
 const SystemHealthPage = lazy(() => import('../pages/Dashboard/SystemHealthPage').then((m) => ({ default: m.SystemHealthPage })));
 const ExecutiveInsightsPage = lazy(() => import('../pages/Dashboard/ExecutiveInsightsPage').then((m) => ({ default: m.ExecutiveInsightsPage })));
 
+// Service Feedback (customer reviews)
+const ServiceFeedbackPage = lazy(() => import('../pages/Dashboard/ServiceFeedbackPage').then((m) => ({ default: m.ServiceFeedbackPage })));
+
 const withSuspense = (element) => (
-  <Suspense fallback={<div className="min-h-screen flex items-center justify-center bg-slate-950"><LoadingSpinner /></div>}>
+  <Suspense fallback={<div className="min-h-screen flex items-center justify-center bg-slate-50"><LoadingSpinner /></div>}>
     {element}
   </Suspense>
 );
@@ -79,6 +82,7 @@ export const AppRoutes = () => {
             <Route path="activity" element={withSuspense(<SystemAuditLogsPage />)} />
             <Route path="schedule" element={withSuspense(<ScheduleCalendarPage />)} />
             <Route path="field-service" element={withSuspense(<FieldServicePage />)} />
+            <Route path="feedback" element={withSuspense(<ServiceFeedbackPage />)} />
           </Route>
 
           {/* Admin Only */}

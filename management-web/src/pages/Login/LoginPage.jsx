@@ -36,7 +36,7 @@ export const LoginPage = () => {
   };
 
   return (
-    <div className="relative min-h-screen flex items-center justify-center px-4 py-12 overflow-hidden bg-gradient-to-b from-slate-50 to-slate-100 dark:from-slate-950 dark:to-slate-950">
+    <div className="relative min-h-screen flex items-center justify-center px-4 py-12 overflow-hidden bg-gradient-to-b from-slate-50 to-slate-100">
       {/* 3D Background System */}
       <AnimatedBackground className="opacity-70" />
 
@@ -44,21 +44,21 @@ export const LoginPage = () => {
         initial={{ opacity: 0, y: 32 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
-        className="relative w-full max-w-md space-y-7 glass-card p-8 rounded-3xl shadow-2xl"
+        className="relative w-full max-w-md space-y-7 glass-card p-8 rounded-xl shadow-card"
       >
-        <div className="absolute top-0 left-0 right-0 h-1.5 bg-gradient-to-r from-orange-500 via-amber-400 to-blue-600 rounded-t-3xl"></div>
+        <div className="absolute top-0 left-0 right-0 h-1.5 bg-gradient-to-r from-orange-500 via-amber-400 to-blue-600 rounded-t-xl"></div>
 
         {/* Header */}
         <div className="text-center space-y-2">
-          <div className="p-3 w-fit mx-auto rounded-2xl bg-orange-500/10 border border-orange-500/30 text-orange-500 shadow-glow-orange">
+          <div className="p-3 w-fit mx-auto rounded-xl bg-orange-500/10 border border-orange-500/30 text-orange-500 shadow-glow-orange">
             <Zap className="w-8 h-8 fill-current" />
           </div>
-          <h2 className="text-2xl font-black text-slate-900 dark:text-white font-display">Management Portal</h2>
-          <p className="text-xs text-slate-500 dark:text-slate-400">Uday Electrical Works ERP — Admin & Staff operations console</p>
+          <h2 className="text-2xl font-black text-slate-900">Management Portal</h2>
+          <p className="text-xs text-slate-500">Uday Electrical Works ERP - Admin & Staff operations console</p>
         </div>
 
         {error && (
-          <div className="p-3.5 rounded-xl bg-rose-500/10 border border-rose-500/30 text-rose-600 dark:text-rose-400 text-xs font-semibold flex items-center space-x-2">
+          <div className="p-3.5 rounded-xl bg-rose-50 border border-rose-500/30 text-rose-700 text-xs font-semibold flex items-center space-x-2">
             <AlertCircle className="w-4 h-4 shrink-0" />
             <span>{error}</span>
           </div>
@@ -66,7 +66,7 @@ export const LoginPage = () => {
 
         <form onSubmit={handleSubmit} className="space-y-4">
           <div>
-            <label className="block text-xs font-bold uppercase text-slate-600 dark:text-slate-300 mb-1.5">
+            <label className="block text-xs font-bold uppercase text-slate-600 mb-1.5">
               Email Address
             </label>
             <div className="relative">
@@ -77,13 +77,13 @@ export const LoginPage = () => {
                 placeholder="name@udayelectrical.com"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                className="w-full pl-10 pr-4 py-2.5 bg-white dark:bg-slate-950 border border-slate-300 dark:border-slate-800 rounded-xl text-slate-900 dark:text-slate-200 text-sm focus:outline-none focus:border-blue-600 focus:ring-4 focus:ring-blue-600/10 transition-all"
+                className="w-full pl-10 pr-4 py-2.5 bg-white border border-slate-200 rounded-lg text-slate-900 text-sm focus:outline-none focus:border-blue-600 focus:ring-4 focus:ring-blue-600/10 transition-all"
               />
             </div>
           </div>
 
           <div>
-            <label className="block text-xs font-bold uppercase text-slate-600 dark:text-slate-300 mb-1.5">
+            <label className="block text-xs font-bold uppercase text-slate-600 mb-1.5">
               Password
             </label>
             <div className="relative">
@@ -94,7 +94,7 @@ export const LoginPage = () => {
                 placeholder="••••••••"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
-                className="w-full pl-10 pr-4 py-2.5 bg-white dark:bg-slate-950 border border-slate-300 dark:border-slate-800 rounded-xl text-slate-900 dark:text-slate-200 text-sm focus:outline-none focus:border-blue-600 focus:ring-4 focus:ring-blue-600/10 transition-all"
+                className="w-full pl-10 pr-4 py-2.5 bg-white border border-slate-200 rounded-lg text-slate-900 text-sm focus:outline-none focus:border-blue-600 focus:ring-4 focus:ring-blue-600/10 transition-all"
               />
             </div>
           </div>
@@ -109,7 +109,7 @@ export const LoginPage = () => {
           </button>
         </form>
 
-        <div className="pt-3 border-t border-slate-200 dark:border-slate-800 flex items-center justify-center space-x-2 text-[11px] text-slate-400 font-semibold">
+        <div className="pt-3 border-t border-slate-200 flex items-center justify-center space-x-2 text-[11px] text-slate-500 font-semibold">
           <ShieldCheck className="w-4 h-4 text-emerald-500" />
           <span>Secured by JWT Authentication · Role-based Access Control</span>
         </div>

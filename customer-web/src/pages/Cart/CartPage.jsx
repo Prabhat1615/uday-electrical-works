@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+﻿import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { Minus, Plus, Trash2, ShoppingCart, Phone, CheckCircle2, CreditCard, Store, ArrowRight } from 'lucide-react';
@@ -71,10 +71,10 @@ export const CartPage = () => {
               </p>
             </div>
             <div className="flex flex-wrap justify-center gap-3 pt-2">
-              <Link to="/dashboard/sales" className="px-6 py-3 rounded-2xl bg-[#FF6B00] hover:bg-[#E55A00] text-white font-black text-xs transition-all shadow-md">
+              <Link to="/dashboard/sales" className="px-6 py-3 rounded-2xl bg-[#F97316] hover:bg-[#E55A00] text-white font-black text-xs transition-all shadow-md">
                 View My Orders
               </Link>
-              <Link to="/shop" className="px-6 py-3 rounded-2xl bg-white dark:bg-slate-950 border border-[#E2E8F0] dark:border-slate-800 text-[#0F172A] dark:text-white font-black text-xs hover:border-[#FF6B00] transition-all">
+              <Link to="/shop" className="px-6 py-3 rounded-2xl bg-white dark:bg-slate-950 border border-[#E2E8F0] dark:border-slate-800 text-[#0F172A] dark:text-white font-black text-xs hover:border-[#F97316] transition-all">
                 Continue Shopping
               </Link>
             </div>
@@ -87,14 +87,14 @@ export const CartPage = () => {
             </div>
             <h1 className="text-2xl font-black text-[#0F172A] dark:text-white font-display">Your cart is empty</h1>
             <p className="text-sm text-[#475569] dark:text-slate-400">
-              Browse our shop catalog — fans, lights, switches, wires and more.
+              Browse our shop catalog: fans, lights, switches, wires and more.
             </p>
             <div className="flex flex-wrap justify-center gap-3">
-              <Link to="/shop" className="px-7 py-3.5 rounded-2xl bg-[#FF6B00] hover:bg-[#E55A00] text-white font-black text-xs transition-all shadow-md hover:shadow-glow-orange">
+              <Link to="/shop" className="px-7 py-3.5 rounded-2xl bg-[#F97316] hover:bg-[#E55A00] text-white font-black text-xs transition-all shadow-md hover:shadow-glow-orange">
                 Browse Products
               </Link>
-              <a href="tel:7903789402" className="px-7 py-3.5 rounded-2xl bg-white dark:bg-slate-900 border border-[#E2E8F0] dark:border-slate-800 text-[#0F172A] dark:text-white font-black text-xs flex items-center space-x-2 hover:border-[#FF6B00] transition-all">
-                <Phone className="w-4 h-4 text-[#FF6B00]" />
+              <a href="tel:7903789402" className="px-7 py-3.5 rounded-2xl bg-white dark:bg-slate-900 border border-[#E2E8F0] dark:border-slate-800 text-[#0F172A] dark:text-white font-black text-xs flex items-center space-x-2 hover:border-[#F97316] transition-all">
+                <Phone className="w-4 h-4 text-[#F97316]" />
                 <span>Call Shop</span>
               </a>
             </div>
@@ -106,7 +106,7 @@ export const CartPage = () => {
                 <h1 className="text-3xl font-black text-[#0F172A] dark:text-white font-display">Your Cart</h1>
                 <p className="text-sm text-[#475569] dark:text-slate-400 mt-1">{itemCount} item{itemCount !== 1 ? 's' : ''}</p>
               </div>
-              <Link to="/shop" className="text-xs font-extrabold text-[#FF6B00] hover:underline flex items-center space-x-1">
+              <Link to="/shop" className="text-xs font-extrabold text-[#F97316] hover:underline flex items-center space-x-1">
                 <span>Continue Shopping</span>
                 <ArrowRight className="w-4 h-4" />
               </Link>
@@ -132,7 +132,7 @@ export const CartPage = () => {
                     </div>
 
                     <div className="flex-1 min-w-0">
-                      <Link to={`/shop/product/${item.productId}`} className="text-sm font-bold text-[#0F172A] dark:text-white hover:text-[#FF6B00] transition-colors line-clamp-1">
+                      <Link to={`/shop/product/${item.productId}`} className="text-sm font-bold text-[#0F172A] dark:text-white hover:text-[#F97316] transition-colors line-clamp-1">
                         {item.name}
                       </Link>
                       <p className="text-xs text-[#475569] dark:text-slate-400 mt-0.5">
@@ -142,7 +142,7 @@ export const CartPage = () => {
                         <div className="flex items-center space-x-2">
                           <button
                             onClick={() => updateQuantity(item.productId, item.quantity - 1)}
-                            className="w-7 h-7 rounded-lg bg-[#F8FAFC] dark:bg-slate-950 border border-[#E2E8F0] dark:border-slate-800 text-[#0F172A] dark:text-white flex items-center justify-center hover:border-[#FF6B00] transition-all"
+                            className="w-7 h-7 rounded-lg bg-[#F8FAFC] dark:bg-slate-950 border border-[#E2E8F0] dark:border-slate-800 text-[#0F172A] dark:text-white flex items-center justify-center hover:border-[#F97316] transition-all"
                             title="Decrease quantity"
                           >
                             <Minus className="w-3.5 h-3.5" />
@@ -150,7 +150,7 @@ export const CartPage = () => {
                           <span className="w-8 text-center text-sm font-black text-[#0F172A] dark:text-white">{item.quantity}</span>
                           <button
                             onClick={() => updateQuantity(item.productId, item.quantity + 1)}
-                            className="w-7 h-7 rounded-lg bg-[#F8FAFC] dark:bg-slate-950 border border-[#E2E8F0] dark:border-slate-800 text-[#0F172A] dark:text-white flex items-center justify-center hover:border-[#FF6B00] transition-all"
+                            className="w-7 h-7 rounded-lg bg-[#F8FAFC] dark:bg-slate-950 border border-[#E2E8F0] dark:border-slate-800 text-[#0F172A] dark:text-white flex items-center justify-center hover:border-[#F97316] transition-all"
                             title="Increase quantity"
                           >
                             <Plus className="w-3.5 h-3.5" />
@@ -189,7 +189,7 @@ export const CartPage = () => {
                   </div>
                   <div className="pt-3 border-t border-[#E2E8F0] dark:border-slate-800 flex justify-between text-base">
                     <span className="font-black text-[#0F172A] dark:text-white">Total</span>
-                    <span className="font-black text-[#FF6B00]">{formatCurrency(total)}</span>
+                    <span className="font-black text-[#F97316]">{formatCurrency(total)}</span>
                   </div>
                 </div>
 
@@ -211,7 +211,7 @@ export const CartPage = () => {
                     className="w-full py-3.5 rounded-2xl btn-cta text-sm"
                   >
                     <Store className="w-4 h-4" />
-                    <span>{placing ? 'Placing Order...' : 'Place Order — Pay at Shop'}</span>
+                    <span>{placing ? 'Placing Order...' : 'Place Order - Pay at Shop'}</span>
                   </button>
                   {import.meta.env.DEV ? (
                     <button
@@ -224,7 +224,7 @@ export const CartPage = () => {
                     </button>
                   ) : (
                     <p className="text-[11px] text-center text-[#475569] dark:text-slate-400">
-                      Online payment is not enabled yet. Pay at the shop on pickup — cash, card or UPI.
+                      Online payment is not enabled yet. Pay at the shop on pickup: cash, card or UPI.
                     </p>
                   )}
                 </div>
@@ -232,11 +232,11 @@ export const CartPage = () => {
                 {!isAuthenticated && (
                   <p className="text-[11px] text-center text-[#475569] dark:text-slate-400">
                     <Link to="/login?redirect=/cart" className="font-black text-orange-500 hover:underline">Sign in</Link> to place
-                    your order — your cart is saved.
+                    your order, your cart is saved.
                   </p>
                 )}
 
-                <a href="tel:7903789402" className="block text-center text-[11px] text-[#475569] dark:text-slate-400 hover:text-[#FF6B00] transition-colors">
+                <a href="tel:7903789402" className="block text-center text-[11px] text-[#475569] dark:text-slate-400 hover:text-[#F97316] transition-colors">
                   Prefer to order by phone? Call 7903789402
                 </a>
               </div>

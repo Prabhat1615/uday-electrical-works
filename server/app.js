@@ -28,6 +28,7 @@ import paymentRoutes from './routes/paymentRoutes.js';
 import amcRoutes from './routes/amcRoutes.js';
 import warehouseRoutes from './routes/warehouseRoutes.js';
 import fieldServiceRoutes from './routes/fieldServiceRoutes.js';
+import reviewRoutes from './routes/reviewRoutes.js';
 
 import branchRoutes from './routes/branchRoutes.js';
 import aiRoutes from './routes/aiRoutes.js';
@@ -43,12 +44,18 @@ const __dirname = path.dirname(__filename);
 
 const app = express();
 
+// Enable CORS Preflight and CORS headers BEFORE rate limiters
+app.use(cors(corsOptions));
+app.options('*', cors(corsOptions));
+
 // Security Hardening
 app.use(helmet({ contentSecurityPolicy: false }));
 
+// Rate Limiters (configured to skip preflight OPTIONS requests)
 const apiLimiter = rateLimit({
   windowMs: 15 * 60 * 1000,
   max: 500,
+  skip: (req) => req.method === 'OPTIONS',
   message: { success: false, message: 'Too many API requests, please try again later.' }
 });
 app.use('/api/', apiLimiter);
@@ -56,21 +63,21 @@ app.use('/api/', apiLimiter);
 // Stricter limiter for authentication endpoints (brute-force protection)
 const authLimiter = rateLimit({
   windowMs: 15 * 60 * 1000,
-  max: 30,
+  max: 100,
+  skip: (req) => req.method === 'OPTIONS',
   message: { success: false, message: 'Too many login attempts, please try again later.' }
 });
 app.use('/api/auth/', authLimiter);
 
-// Stricter limiter for the public technician application endpoint so it
-// cannot be flooded with automated submissions.
+// Stricter limiter for public technician application endpoint
 const technicianLimiter = rateLimit({
   windowMs: 15 * 60 * 1000,
-  max: 20,
+  max: 50,
+  skip: (req) => req.method === 'OPTIONS',
   message: { success: false, message: 'Too many technician application attempts, please try again later.' }
 });
 app.use('/api/technician/', technicianLimiter);
 
-app.use(cors(corsOptions));
 app.use(express.json({ limit: '15mb' }));
 app.use(express.urlencoded({ extended: true, limit: '15mb' }));
 
@@ -100,6 +107,7 @@ app.use('/api/payments', paymentRoutes);
 app.use('/api/amc', amcRoutes);
 app.use('/api/warehouses', warehouseRoutes);
 app.use('/api/field-service', fieldServiceRoutes);
+app.use('/api/reviews', reviewRoutes);
 
 app.use('/api/branches', branchRoutes);
 app.use('/api/ai', aiRoutes);

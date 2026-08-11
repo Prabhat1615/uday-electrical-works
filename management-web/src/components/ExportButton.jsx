@@ -34,9 +34,9 @@ export const ExportButton = ({ filename = 'report.csv', data = [], title = 'Expo
   return (
     <button
       onClick={downloadCSV}
-      className="flex items-center space-x-2 px-3.5 py-2 rounded-xl bg-slate-900 hover:bg-slate-800 border border-slate-800 text-slate-200 text-xs font-semibold transition-all hover:border-slate-700"
+      className="flex items-center space-x-2 px-3.5 py-2 rounded-xl bg-white hover:bg-slate-50 border border-slate-200 text-slate-700 text-xs font-semibold transition-all hover:border-slate-300"
     >
-      <Download className="w-4 h-4 text-amber-400" />
+      <Download className="w-4 h-4 text-amber-600" />
       <span>{title}</span>
     </button>
   );

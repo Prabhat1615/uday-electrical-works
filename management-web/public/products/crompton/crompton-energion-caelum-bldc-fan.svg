@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 800" width="800" height="800">
+  <defs>
+    <!-- Background Gradient -->
+    <linearGradient id="bgGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#FFFFFF" />
+      <stop offset="100%" stop-color="#F1F5F9" />
+    </linearGradient>
+    
+    <!-- Metallic Shimmer -->
+    <linearGradient id="metallic" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#FFFFFF" />
+      <stop offset="50%" stop-color="#E2E8F0" />
+      <stop offset="100%" stop-color="#CBD5E1" />
+    </linearGradient>
+
+    <!-- Motor Metallic Gradient -->
+    <radialGradient id="motorGradient" cx="40%" cy="40%" r="60%">
+      <stop offset="0%" stop-color="#475569" />
+      <stop offset="70%" stop-color="#1E293B" />
+      <stop offset="100%" stop-color="#0F172A" />
+    </radialGradient>
+
+    <!-- Blade Aerodynamic Gradient -->
+    <linearGradient id="bladeGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#F8FAFC" />
+      <stop offset="100%" stop-color="#E2E8F0" />
+    </linearGradient>
+
+    <!-- Bulb Glow Light -->
+    <radialGradient id="bulbGlow" cx="50%" cy="40%" r="60%">
+      <stop offset="0%" stop-color="#FFFFFF" />
+      <stop offset="70%" stop-color="#FEF08A" />
+      <stop offset="100%" stop-color="#FDE047" />
+    </radialGradient>
+
+    <!-- Batten Glow Light -->
+    <linearGradient id="battenGlow" x1="0%" y1="50%" x2="100%" y2="50%">
+      <stop offset="0%" stop-color="#E0F2FE" />
+      <stop offset="50%" stop-color="#FFFFFF" />
+      <stop offset="100%" stop-color="#E0F2FE" />
+    </linearGradient>
+
+    <filter id="dropShadow" x="-10%" y="-10%" width="130%" height="130%">
+      <feDropShadow dx="0" dy="16" stdDeviation="20" flood-color="#0F172A" flood-opacity="0.1" />
+    </filter>
+  </defs>
+
+  <!-- Clean Surface Card Canvas -->
+  <rect width="800" height="800" fill="url(#bgGrad)" />
+  <rect x="40" y="40" width="720" height="720" rx="36" fill="#FFFFFF" stroke="#E2E8F0" stroke-width="4" filter="url(#dropShadow)" />
+
+  <!-- Manufacturer Brand Tag Header -->
+  <rect x="70" y="70" width="220" height="54" rx="16" fill="#005CA9" />
+  <text x="180" y="105" font-family="Montserrat, sans-serif" font-weight="900" font-size="22" fill="#FFFFFF" text-anchor="middle" letter-spacing="2">CROMPTON</text>
+
+  <!-- Verified Genuine Electrical Emblem -->
+  <g transform="translate(620, 70)">
+    <rect width="110" height="38" rx="12" fill="#10B981" opacity="0.15" />
+    <text x="55" y="24" font-family="Inter, sans-serif" font-weight="800" font-size="12" fill="#059669" text-anchor="middle">VERIFIED</text>
+  </g>
+
+  <!-- Main Technical Product Artwork -->
+  <g transform="translate(0, 30)">
+    
+      <!-- Ceiling Fan Base & Rod -->
+      <rect x="385" y="60" width="30" height="120" rx="4" fill="url(#metallic)" />
+      <path d="M 360,180 Q 400,160 440,180 L 450,220 Q 400,240 350,220 Z" fill="#005CA9" />
+      
+      <!-- Central Motor Housing -->
+      <circle cx="400" cy="270" r="85" fill="url(#motorGradient)" stroke="#003366" stroke-width="4" />
+      <circle cx="400" cy="270" r="45" fill="#005CA9" />
+      <circle cx="400" cy="270" r="15" fill="#FFFFFF" opacity="0.9" />
+
+      <!-- Fan Blades (3-Blade Aerodynamic Configuration) -->
+      <g opacity="0.95">
+        <!-- Top Right Blade -->
+        <path d="M 460,240 L 730,110 Q 770,90 750,140 L 510,290 Z" fill="url(#bladeGradient)" stroke="#CBD5E1" stroke-width="2" />
+        <!-- Top Left Blade -->
+        <path d="M 340,240 L 70,110 Q 30,90 50,140 L 290,290 Z" fill="url(#bladeGradient)" stroke="#CBD5E1" stroke-width="2" />
+        <!-- Bottom Blade -->
+        <path d="M 380,350 L 350,710 Q 400,750 450,710 L 420,350 Z" fill="url(#bladeGradient)" stroke="#CBD5E1" stroke-width="2" />
+      </g>
+    
+  </g>
+
+  <!-- Footer Product Model Banner -->
+  <rect x="70" y="690" width="660" height="54" rx="16" fill="#0F172A" opacity="0.95" />
+  <text x="400" y="725" font-family="Montserrat, sans-serif" font-weight="800" font-size="18" fill="#FFFFFF" text-anchor="middle">Crompton Energion Caelum BLDC Ceiling Fan 1200mm</text>
+</svg>

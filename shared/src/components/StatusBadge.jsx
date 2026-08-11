@@ -6,31 +6,57 @@ export const StatusBadge = ({ status, className = '' }) => {
       case 'Pending':
       case 'Unpaid':
       case 'Low Stock':
-        return 'bg-warning-50 text-warning-700 border-warning-200';
+      case 'In Review':
+        return {
+          bg: 'bg-[#FFFBEB] text-[#D97706] border-[#FDE68A]',
+          dot: 'bg-[#D97706]'
+        };
       case 'Confirmed':
       case 'In Progress':
+      case 'En Route':
       case 'Partially Paid':
-        return 'bg-info-50 text-info-700 border-info-200';
+      case 'Processing':
+      case 'Assigned':
+      case 'Accepted':
+      case 'On The Way':
+        return {
+          bg: 'bg-[#F0F9FF] text-[#0284C7] border-[#BAE6FD]',
+          dot: 'bg-[#0284C7]'
+        };
       case 'Completed':
       case 'Paid':
       case 'In Stock':
+      case 'Approved':
       case 'Active':
-        return 'bg-success-50 text-success-700 border-success-200';
+        return {
+          bg: 'bg-[#F0FDF4] text-[#16A34A] border-[#BBF7D0]',
+          dot: 'bg-[#16A34A]'
+        };
       case 'Cancelled':
+      case 'Rejected':
       case 'Out of Stock':
       case 'Inactive':
-        return 'bg-danger-50 text-danger-700 border-danger-200';
+      case 'Failed':
+        return {
+          bg: 'bg-[#FEF2F2] text-[#DC2626] border-[#FECACA]',
+          dot: 'bg-[#DC2626]'
+        };
       default:
-        return 'bg-surface-100 text-text-secondary border-surface-200';
+        return {
+          bg: 'bg-[#F8FAFC] text-[#64748B] border-[#E5E7EB]',
+          dot: 'bg-[#94A3B8]'
+        };
     }
   };
 
+  const style = getBadgeStyle(status);
+
   return (
     <span
-      className={`badge border ${getBadgeStyle(status)} ${className}`}
+      className={`inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-[11px] font-bold border ${style.bg} ${className}`}
     >
-      <span className="w-1.5 h-1.5 rounded-full bg-current mr-1.5"></span>
-      {status}
+      <span className={`w-1.5 h-1.5 rounded-full ${style.dot}`} />
+      {status || 'Unknown'}
     </span>
   );
 };

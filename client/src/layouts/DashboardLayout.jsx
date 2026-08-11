@@ -240,7 +240,7 @@ export const DashboardLayout = () => {
                 UDAY <span className="text-orange-400">ERP</span>
               </h1>
               <span className="text-[10px] text-slate-400 font-semibold tracking-wider uppercase block">
-                Enterprise Intelligence v5.0
+                Uday Electrical Works
               </span>
             </div>
           </Link>

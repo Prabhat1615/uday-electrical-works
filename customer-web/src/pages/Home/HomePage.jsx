@@ -1,83 +1,131 @@
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import { ShieldCheck, Clock, CheckCircle2, ChevronRight, ChevronLeft, Star, Phone, Wrench, Package, Send, Building2, ExternalLink, X, Play, Pause, Store, Receipt } from 'lucide-react';
-import { useProducts, useServices } from '../../hooks/useErpQueries';
+import { 
+  ShieldCheck, 
+  Clock, 
+  CheckCircle2, 
+  ChevronRight, 
+  Phone, 
+  Wrench, 
+  Package, 
+  Send, 
+  Building2, 
+  ExternalLink, 
+  Store, 
+  MapPin,
+  Check,
+  Zap,
+  Sliders,
+  Cpu,
+  HelpCircle,
+  Lightbulb,
+  Fan,
+  Eye,
+  Star,
+  ShoppingCart,
+  Truck,
+  User
+} from 'lucide-react';
+import { useProducts } from '../../hooks/useErpQueries';
 import { formatCurrency } from '../../utils/formatters';
 import { BrandMarquee } from '../../components/BrandMarquee';
 import { SkeletonLoader } from '../../components/SkeletonLoader';
 import { HeroSection } from '../../components/HeroSection';
 import { AnimatedSection } from '../../components/AnimatedSection';
 import { Seo } from '../../components/Seo';
+import { ProductQuickViewModal } from '../../components/ProductQuickViewModal';
+import { InteractiveBookingFlowModal } from '../../components/InteractiveBookingFlowModal';
 import { useAuth } from '../../hooks/useAuth';
+import { useCart } from '../../context/CartContext';
 import { createLeadApi } from '../../api/leadApi';
 
-const productCategories = [
-  { title: 'Ceiling Fans', icon: '🌀' },
-  { title: 'Exhaust Fans', icon: '🌬️' },
-  { title: 'LED Bulbs & Battens', icon: '💡' },
-  { title: 'Modular Switches & Sockets', icon: '🔌' },
-  { title: 'Wires & Cables', icon: '⚡' },
-  { title: 'MCBs & DB Boxes', icon: '🛡️' },
-  { title: 'Water Heaters & Geysers', icon: '🚿' },
-  { title: 'Voltage Stabilizers', icon: '🔋' }
+const everythingCategories = [
+  { title: 'Switches & Sockets', icon: Sliders, link: '/shop?category=Modular%20Switches%20%26%20Sockets', desc: 'Modular switches, sockets, regulator plates & gang boxes' },
+  { title: 'Wires & Cables', icon: Zap, link: '/shop?category=Wires%20%26%20Cables', desc: 'FR PVC insulated copper wires & multi-core industrial cables' },
+  { title: 'LED Lighting', icon: Lightbulb, link: '/shop?category=LED%20Bulbs%20%26%20Battens', desc: 'Energy saving LED bulbs, tube battens, panel lights & spotlights' },
+  { title: 'Fans', icon: Fan, link: '/shop?category=Ceiling%20Fans', desc: 'High-speed ceiling fans, exhaust fans, wall & pedestal fans' },
+  { title: 'MCB & Distribution', icon: ShieldCheck, link: '/shop?category=MCBs%20%26%20DB%20Boxes', desc: 'Single & double pole MCBs, isolators, RCCB & DB enclosure boxes' },
+  { title: 'Electrical Accessories', icon: Cpu, link: '/shop?category=Home%20Appliances', desc: 'Plug tops, extension cords, insulation tapes, PVC pipes & fittings' }
+];
+
+const professionalServices = [
+  { 
+    id: 'wiring',
+    title: 'House Wiring', 
+    icon: Zap, 
+    desc: 'Complete new residential & commercial building wiring, DB fitting, earthing and load distribution.' 
+  },
+  { 
+    id: 'repair',
+    title: 'Electrical Repair', 
+    icon: Wrench, 
+    desc: 'Prompt repair for short circuits, tripped MCBs, loose wiring sockets, burnt switches & power failures.' 
+  },
+  { 
+    id: 'installation',
+    title: 'Installation', 
+    icon: CheckCircle2, 
+    desc: 'Ceiling fan hanging, geyser mounting, LED fixture setup, inverter connection & stabilizer fitting.' 
+  },
+  { 
+    id: 'maintenance',
+    title: 'Maintenance', 
+    icon: ShieldCheck, 
+    desc: 'Periodic electrical audit, main panel maintenance, DB box tightening & home electrical safety checks.' 
+  },
+  { 
+    id: 'diagnosis',
+    title: 'Fault Diagnosis', 
+    icon: HelpCircle, 
+    desc: 'Tracing hidden wiring faults, high electricity bill inspection & voltage fluctuation troubleshooting.' 
+  },
+  { 
+    id: 'lighting',
+    title: 'Lighting Setup', 
+    icon: Lightbulb, 
+    desc: 'False ceiling LED profile lights, decorative chandeliers, outdoor gate lights & shop floodlight fitting.' 
+  }
+];
+
+const wiremenTeam = [
+  'Prabhat (Master Wireman)',
+  'Chandan (Fitting Specialist)',
+  'Devnath (Appliance Repair)',
+  'Appu (Wiring Technician)',
+  'Dhruv (Lighting Expert)',
+  'Amit (DB & MCB Specialist)'
+];
+
+const customerReviews = [
+  {
+    name: 'Rajesh Kumar',
+    location: 'Telco Colony, Jamshedpur',
+    rating: 5,
+    comment: 'Got complete house wiring materials from Havells and Polycab at Uday Electrical Shop. Genuine rates and official warranty. Their electrician Prabhat fitted the entire DB box perfectly.'
+  },
+  {
+    name: 'Sunita Sharma',
+    location: 'Chhota Govindpur, Jamshedpur',
+    rating: 5,
+    comment: 'Prompt doorstep repair! Called for MCB tripping issue in our home. Electrician arrived within 40 minutes and fixed the short circuit in the kitchen wiring.'
+  },
+  {
+    name: 'Amitabh Singh',
+    location: 'Baridih, Jamshedpur',
+    rating: 5,
+    comment: 'Bought Crompton ceiling fans and Philips LED battens. Very polite staff and honest billing. Best electrical store in Chhota Govindpur area.'
+  }
 ];
 
 export const HomePage = () => {
-  const serviceScrollRef = useRef(null);
-  const rafRef = useRef(null);
-  const progressRef = useRef(0);
-  const resumeTimerRef = useRef(null);
-  const [selectedService, setSelectedService] = useState(null);
-  const [autoPlay, setAutoPlay] = useState(true);
-  const [isHovered, setIsHovered] = useState(false);
+  const [quickViewProduct, setQuickViewProduct] = useState(null);
+  const [bookingOpen, setBookingOpen] = useState(false);
   const { isAuthenticated } = useAuth();
-  const { data: productsRes, isLoading: loadingProducts } = useProducts({ limit: 6 });
-  const { data: servicesRes, isLoading: loadingServices } = useServices({ limit: 12 });
+  const { addToCart } = useCart();
+  const { data: productsRes, isLoading: loadingProducts } = useProducts({ limit: 4 });
 
   const products = productsRes?.data || [];
-  const services = servicesRes?.data || [];
-
-  const autoScrollPaused = !autoPlay || isHovered || !!selectedService;
-
-  useEffect(() => {
-    const track = serviceScrollRef.current;
-    if (!track || !services.length) return;
-    const speed = 1.1;
-    let last = performance.now();
-
-    const step = (now) => {
-      const dt = Math.min(now - last, 64);
-      last = now;
-      if (!autoScrollPaused) {
-        progressRef.current += speed * dt;
-      }
-      const half = track.scrollWidth / 2;
-      if (half > 0 && progressRef.current >= half) {
-        progressRef.current -= half;
-      }
-      track.style.transform = `translate3d(-${progressRef.current}px, 0, 0)`;
-      rafRef.current = requestAnimationFrame(step);
-    };
-
-    rafRef.current = requestAnimationFrame(step);
-    return () => cancelAnimationFrame(rafRef.current);
-  }, [services, autoScrollPaused]);
-
-  useEffect(() => () => clearTimeout(resumeTimerRef.current), []);
-
-  const handleManualScroll = (dir) => {
-    setAutoPlay(false);
-    clearTimeout(resumeTimerRef.current);
-    resumeTimerRef.current = setTimeout(() => setAutoPlay(true), 8000);
-    const track = serviceScrollRef.current;
-    if (!track) return;
-    const first = track.firstElementChild;
-    const step = (first?.getBoundingClientRect().width || 300) + 24;
-    const half = track.scrollWidth / 2;
-    progressRef.current = (progressRef.current + dir * step + half) % half;
-    track.style.transform = `translate3d(-${progressRef.current}px, 0, 0)`;
-  };
 
   const [cbName, setCbName] = useState('');
   const [cbPhone, setCbPhone] = useState('');
@@ -108,504 +156,445 @@ export const HomePage = () => {
   };
 
   return (
-    <div className="space-y-20 pb-20 bg-white dark:bg-slate-950 text-[#0F172A] dark:text-slate-100 transition-colors duration-300 overflow-hidden">
+    <div className="space-y-16 pb-16 bg-[#F8FAFC] text-[#111827] font-sans overflow-hidden">
       <Seo
         title="Uday Electrical Works | Electrical Shop & Home Services in Jamshedpur"
-        description="Electrical shop & doorstep service centre in Chhota Govindpur, Jamshedpur. Genuine Havells, Crompton, Polycab products. Fan repair, geyser repair, house wiring. Call 7903789402."
+        description="Electrical store & doorstep service centre in Chhota Govindpur, Jamshedpur. Genuine Havells, Crompton, Polycab, Philips products. House wiring, fan repair, geyser servicing. Call 7903789402."
       />
 
+      {/* 1. Cinematic 3D Architectural Storefront Hero */}
       <HeroSection />
+
+      {/* 2. Official Brand Logo Marquee (Dark Contrast Section) */}
       <BrandMarquee />
 
-      {/* Product Categories Grid */}
-      <AnimatedSection direction="up" className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-10">
+      {/* 3. Product Section: Everything Electrical, Under One Roof (Light Section) */}
+      <AnimatedSection direction="up" className="max-w-[1536px] mx-auto px-4 sm:px-6 lg:px-12 xl:px-16 space-y-8">
         <div className="text-center space-y-2 max-w-3xl mx-auto">
-          <span className="text-xs font-extrabold text-[#FF6B00] uppercase tracking-widest">Store Department</span>
-          <h2 className="text-3xl sm:text-4xl font-black text-[#0F172A] dark:text-white font-display">What We Sell at Our Shop</h2>
+          <span className="text-[11px] font-extrabold text-[#F97316] uppercase tracking-widest font-display">In-Store &amp; Online Catalog</span>
+          <h2 className="text-2xl sm:text-4xl font-black text-[#111827] tracking-tight font-display">Everything Electrical, Under One Roof</h2>
+          <p className="text-xs sm:text-sm text-[#64748B]">Genuine items stocked at our Chhota Govindpur shop with manufacturer warranty &amp; GST invoice</p>
         </div>
 
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-          {productCategories.map((cat, idx) => (
-            <Link
-              key={cat.title}
-              to={`/shop?category=${encodeURIComponent(cat.title)}`}
-              className="group p-5 rounded-3xl bg-white dark:bg-slate-900 border border-[#E2E8F0] dark:border-slate-800 shadow-card text-center space-y-2 hover:border-[#FF6B00] hover:shadow-glow-orange transition-all hover:-translate-y-1.5 block"
-            >
-              <span className="text-3xl block group-hover:scale-125 transition-transform duration-300">{cat.icon}</span>
-              <h3 className="text-xs font-bold text-[#0F172A] dark:text-white leading-tight group-hover:text-[#FF6B00] transition-colors">{cat.title}</h3>
-            </Link>
-          ))}
+        {/* Category Grid */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-5">
+          {everythingCategories.map((cat) => {
+            const Icon = cat.icon;
+            return (
+              <Link
+                key={cat.title}
+                to={cat.link}
+                className="group p-5 rounded-2xl bg-white border border-[#E5E7EB] shadow-xs hover:border-[#F97316] hover:shadow-md transition-all flex items-start space-x-4 block"
+              >
+                <div className="p-3 rounded-xl bg-[#FFF7ED] text-[#EA580C] border border-[#FED7AA] shrink-0 group-hover:bg-[#F97316] group-hover:text-white transition-colors duration-300">
+                  <Icon className="w-5 h-5" />
+                </div>
+                <div>
+                  <h3 className="text-sm font-bold text-[#111827] group-hover:text-[#F97316] transition-colors font-display">{cat.title}</h3>
+                  <p className="text-xs text-[#64748B] mt-1 leading-relaxed">{cat.desc}</p>
+                </div>
+              </Link>
+            );
+          })}
         </div>
-      </AnimatedSection>
 
-      {/* Home Services Marquee */}
-      <AnimatedSection direction="up" delay={0.05} className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-8">
-        <div className="flex flex-col md:flex-row md:items-end justify-between border-b border-[#E2E8F0] dark:border-slate-800 pb-4 gap-4">
-          <div>
-            <span className="text-xs font-extrabold text-[#FF6B00] uppercase tracking-widest">Doorstep Electrician Services</span>
-            <h2 className="text-3xl sm:text-4xl font-black text-[#0F172A] dark:text-white mt-1 font-display">Home Repair & Installation Services</h2>
-          </div>
-
-          <div className="flex items-center space-x-3">
-            <div className="flex items-center space-x-2">
-              <button
-                onClick={() => handleManualScroll(-1)}
-                className="p-3 rounded-2xl bg-white dark:bg-slate-900 border border-[#E2E8F0] dark:border-slate-800 hover:border-[#FF6B00] text-[#0F172A] dark:text-white shadow-md hover:scale-105 transition-all"
-                title="Scroll Left"
-              >
-                <ChevronLeft className="w-5 h-5 text-[#FF6B00]" />
-              </button>
-              <button
-                onClick={() => setAutoPlay((prev) => !prev)}
-                className="p-3 rounded-2xl bg-white dark:bg-slate-900 border border-[#E2E8F0] dark:border-slate-800 hover:border-[#FF6B00] text-[#0F172A] dark:text-white shadow-md hover:scale-105 transition-all"
-                title={autoPlay ? 'Pause Auto Scroll' : 'Resume Auto Scroll'}
-              >
-                {autoPlay ? <Pause className="w-5 h-5 text-[#FF6B00]" /> : <Play className="w-5 h-5 text-[#FF6B00]" />}
-              </button>
-              <button
-                onClick={() => handleManualScroll(1)}
-                className="p-3 rounded-2xl bg-white dark:bg-slate-900 border border-[#E2E8F0] dark:border-slate-800 hover:border-[#FF6B00] text-[#0F172A] dark:text-white shadow-md hover:scale-105 transition-all"
-                title="Scroll Right"
-              >
-                <ChevronRight className="w-5 h-5 text-[#FF6B00]" />
-              </button>
+        {/* Real Product Showcase */}
+        <div className="pt-6 border-t border-[#E5E7EB]">
+          <div className="flex flex-col sm:flex-row sm:items-end justify-between mb-6 gap-3">
+            <div>
+              <span className="text-[10px] font-extrabold text-[#F97316] uppercase tracking-wider block font-display">Featured Inventory</span>
+              <h3 className="text-xl sm:text-2xl font-black text-[#111827] font-display">Top Selling Products</h3>
             </div>
-
-            <Link to="/services" className="text-xs font-extrabold px-4 py-2.5 rounded-2xl bg-[#FF6B00]/10 hover:bg-[#FF6B00] text-[#FF6B00] hover:text-white transition-all flex items-center space-x-1">
-              <span>View All Services</span>
-              <ChevronRight className="w-4 h-4" />
+            <Link 
+              to="/shop" 
+              className="inline-flex items-center justify-center space-x-2 px-5 py-2.5 sm:px-6 sm:py-3 rounded-xl bg-[#F97316] hover:bg-[#EA580C] text-white text-xs sm:text-sm font-extrabold shadow-xs hover:scale-102 transition-all font-display shrink-0 whitespace-nowrap"
+            >
+              <Package className="w-4 h-4 shrink-0" />
+              <span>Browse Full Catalog</span>
+              <ChevronRight className="w-4 h-4 shrink-0" />
             </Link>
           </div>
-        </div>
 
-        {loadingServices ? (
-          <SkeletonLoader count={3} />
-        ) : (
-          <div
-            onMouseEnter={() => setIsHovered(true)}
-            onMouseLeave={() => setIsHovered(false)}
-            onTouchStart={() => setIsHovered(true)}
-            onTouchEnd={() => setIsHovered(false)}
-            className="relative overflow-hidden edge-fade-x py-2"
-          >
-            <div
-              ref={serviceScrollRef}
-              className="flex items-stretch gap-6 will-change-transform"
-              style={{ transform: 'translate3d(0, 0, 0)' }}
-            >
-              {services.concat(services).map((item, idx) => (
+          {loadingProducts ? (
+            <SkeletonLoader count={4} />
+          ) : (
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
+              {products.slice(0, 4).map((product, idx) => (
                 <motion.div
-                  key={`${item._id}-${idx}`}
+                  key={product._id}
                   initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.4, delay: (idx % services.length) * 0.08 }}
-                  whileHover={{ y: -6 }}
-                  onClick={() => setSelectedService(item)}
-                  role="button"
-                  tabIndex={0}
-                  onKeyDown={(e) => {
-                    if (e.key === 'Enter' || e.key === ' ') {
-                      e.preventDefault();
-                      setSelectedService(item);
-                    }
-                  }}
-                  className="w-[300px] sm:w-[360px] shrink-0 bg-white dark:bg-slate-900 border border-[#E2E8F0] dark:border-slate-800 rounded-3xl overflow-hidden shadow-xl flex flex-col justify-between group hover:border-[#FF6B00]/40 hover:shadow-glow-orange transition-all cursor-pointer"
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true, margin: '-30px' }}
+                  transition={{ duration: 0.4, delay: idx * 0.08 }}
+                  whileHover={{ y: -4 }}
+                  className="bg-white border border-[#E5E7EB] rounded-2xl overflow-hidden shadow-xs flex flex-col justify-between group hover:border-[#F97316]/50 hover:shadow-md transition-all relative"
                 >
-                  <div className="h-48 overflow-hidden relative">
-                    <img src={item.imageUrl} alt={item.title} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
-                    <div className="absolute top-3 left-3">
-                      <span className="px-3 py-1 rounded-lg bg-slate-900/90 text-white font-bold text-[10px] uppercase shadow">
-                        {item.category}
+                  <div className="h-44 overflow-hidden relative bg-slate-950/60 p-2 flex items-center justify-center">
+                    <img src={product.imageUrl} alt={product.name} className="max-h-full max-w-full object-contain group-hover:scale-105 transition-transform duration-500" />
+                    <div className="absolute top-2.5 left-2.5">
+                      <span className="px-2.5 py-0.5 rounded-md bg-[#F97316] text-white font-extrabold text-[10px] uppercase shadow-xs font-display">
+                        {product.brand}
                       </span>
                     </div>
+
+                    {/* Quick View Button on Hover */}
+                    <button
+                      onClick={() => setQuickViewProduct(product)}
+                      className="absolute inset-x-4 bottom-3 py-2 rounded-xl bg-white/95 text-[#111827] font-extrabold text-xs shadow-md opacity-0 group-hover:opacity-100 transition-all duration-300 flex items-center justify-center space-x-1.5 font-display"
+                    >
+                      <Eye className="w-3.5 h-3.5 text-[#F97316]" />
+                      <span>Quick View</span>
+                    </button>
                   </div>
 
-                  <div className="p-6 space-y-4 flex-1 flex flex-col justify-between">
+                  <div className="p-4 space-y-3 flex-1 flex flex-col justify-between">
                     <div>
-                      <h3 className="text-base font-bold text-[#0F172A] dark:text-white group-hover:text-[#FF6B00] transition-colors">{item.title}</h3>
-                      <p className="text-xs text-[#475569] dark:text-slate-400 mt-2 line-clamp-2">{item.description}</p>
+                      <span className="text-[10px] font-extrabold text-[#0284C7] uppercase tracking-wider block font-display">{product.category}</span>
+                      <h3 className="text-sm font-bold text-[#111827] mt-0.5 group-hover:text-[#F97316] transition-colors line-clamp-1 font-display">{product.name}</h3>
+                      <p className="text-xs text-[#64748B] mt-1 line-clamp-2 leading-relaxed">{product.description}</p>
                     </div>
 
-                    <div className="pt-4 border-t border-[#E2E8F0] dark:border-slate-800 flex items-center justify-between">
+                    <div className="pt-3 border-t border-[#E5E7EB] flex items-center justify-between">
                       <div>
-                        <span className="text-[10px] text-slate-400 uppercase block">Starting Fee</span>
-                        <span className="text-lg font-black text-[#0F172A] dark:text-white">{formatCurrency(item.estimatedPrice)}</span>
+                        {product.mrp > product.price && (
+                          <span className="text-[10px] text-slate-400 line-through block font-mono">MRP: {formatCurrency(product.mrp)}</span>
+                        )}
+                        <span className="text-base font-black text-[#111827] font-mono">{formatCurrency(product.price)}</span>
                       </div>
-                      <Link
-                        to="/services"
-                        onClick={(e) => e.stopPropagation()}
-                        className="px-4 py-2 rounded-xl bg-[#FF6B00]/10 hover:bg-[#FF6B00] text-[#FF6B00] hover:text-white font-black text-xs transition-all"
+                      <button
+                        onClick={() => addToCart(product, 1)}
+                        className="p-2.5 rounded-xl bg-[#FFF7ED] hover:bg-[#F97316] hover:text-white text-[#EA580C] border border-[#FED7AA] text-xs font-extrabold transition-colors font-display"
+                        title="Add to Cart"
                       >
-                        Book Visit
-                      </Link>
+                        <ShoppingCart className="w-4 h-4" />
+                      </button>
                     </div>
                   </div>
                 </motion.div>
               ))}
             </div>
-          </div>
-        )}
+          )}
+        </div>
       </AnimatedSection>
 
-      {/* Service Detail Modal */}
-      {selectedService && (
-        <div
-          className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/70 backdrop-blur-md animate-fade-in"
-          onClick={() => setSelectedService(null)}
-        >
-          <div
-            className="bg-white dark:bg-slate-900 border border-[#E2E8F0] dark:border-slate-800 rounded-3xl w-full max-w-lg shadow-2xl overflow-hidden flex flex-col max-h-[90vh]"
-            onClick={(e) => e.stopPropagation()}
-          >
-            <div className="relative h-52 shrink-0">
-              <img src={selectedService.imageUrl} alt={selectedService.title} className="w-full h-full object-cover" />
-              <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-transparent"></div>
+      {/* 4. Services Section: Professional Electrical Services (Warm Cream Canvas) */}
+      <section className="py-12 bg-[#FAFAF8] border-y border-[#E5E7EB]">
+        <AnimatedSection direction="up" className="max-w-[1536px] mx-auto px-4 sm:px-6 lg:px-12 xl:px-16 space-y-8">
+          <div className="flex flex-col sm:flex-row sm:items-end justify-between border-b border-[#E5E7EB] pb-4 gap-4">
+            <div>
+              <span className="text-[11px] font-extrabold text-[#F97316] uppercase tracking-widest font-display">Doorstep Solutions</span>
+              <h2 className="text-2xl sm:text-4xl font-black text-[#111827] mt-0.5 font-display">Professional Electrical Services</h2>
+            </div>
+
+            <div className="flex flex-wrap items-center gap-2.5 shrink-0">
               <button
-                onClick={() => setSelectedService(null)}
-                className="absolute top-4 right-4 p-2 rounded-full bg-white/90 text-slate-900 shadow hover:scale-105 transition-transform"
-                title="Close"
+                onClick={() => setBookingOpen(true)}
+                className="inline-flex items-center justify-center space-x-2 text-xs sm:text-sm font-extrabold px-5 py-2.5 sm:px-6 sm:py-3 rounded-xl bg-[#F97316] hover:bg-[#EA580C] text-white shadow-xs hover:scale-102 transition-all font-display whitespace-nowrap"
               >
-                <X className="w-5 h-5" />
+                <Wrench className="w-4 h-4 shrink-0" />
+                <span>Book Service</span>
               </button>
-              <div className="absolute bottom-4 left-6 right-6">
-                <span className="px-3 py-1 rounded-lg bg-slate-900/90 text-white font-bold text-[10px] uppercase shadow">
-                  {selectedService.category}
-                </span>
-                <h3 className="text-xl font-black text-white mt-2 leading-tight">{selectedService.title}</h3>
-              </div>
-            </div>
-
-            <div className="p-6 space-y-5 overflow-y-auto">
-              <p className="text-xs text-[#475569] dark:text-slate-300 leading-relaxed">{selectedService.description}</p>
-
-              <div className="grid grid-cols-2 gap-3">
-                <div className="p-3.5 rounded-2xl bg-[#F8FAFC] dark:bg-slate-950 border border-[#E2E8F0] dark:border-slate-800 space-y-1">
-                  <span className="text-[10px] text-slate-400 uppercase font-bold flex items-center space-x-1">
-                    <Clock className="w-3.5 h-3.5 text-[#0066FF]" />
-                    <span>Duration</span>
-                  </span>
-                  <span className="text-sm font-black text-[#0F172A] dark:text-white">{selectedService.estimatedDuration}</span>
-                </div>
-                <div className="p-3.5 rounded-2xl bg-[#F8FAFC] dark:bg-slate-950 border border-[#E2E8F0] dark:border-slate-800 space-y-1">
-                  <span className="text-[10px] text-slate-400 uppercase font-bold">Starting Fee</span>
-                  <span className="text-lg font-black text-[#FF6B00]">{formatCurrency(selectedService.estimatedPrice)}</span>
-                </div>
-              </div>
-
-              <div className="space-y-2.5">
-                {[
-                  { icon: Receipt, text: 'Digital GST invoice after the job' },
-                  { icon: CheckCircle2, text: 'Booking status tracked online in your account' },
-                  { icon: ShieldCheck, text: 'Genuine brand spares available at the shop' },
-                  { icon: Wrench, text: 'Done by our own wiremen — Prabhat, Chandan, Devnath, Appu & team' }
-                ].map(({ icon: Icon, text }, idx) => (
-                  <div key={idx} className="flex items-center space-x-2.5 text-xs text-[#475569] dark:text-slate-300">
-                    <span className="p-1.5 rounded-lg bg-[#00C853]/10 text-[#00C853] shrink-0"><Icon className="w-3.5 h-3.5" /></span>
-                    <span className="font-semibold">{text}</span>
-                  </div>
-                ))}
-              </div>
-
-              <div className="pt-4 border-t border-[#E2E8F0] dark:border-slate-800 grid grid-cols-2 gap-3">
-                <a
-                  href="tel:7903789402"
-                  className="py-3 px-4 rounded-2xl bg-white dark:bg-slate-950 border border-[#E2E8F0] dark:border-slate-800 hover:border-[#0066FF] text-[#0F172A] dark:text-white font-black text-xs flex items-center justify-center space-x-2 transition-all"
-                >
-                  <Phone className="w-4 h-4 text-[#0066FF]" />
-                  <span>Call Now</span>
-                </a>
-                <Link
-                  to="/services"
-                  onClick={() => setSelectedService(null)}
-                  className="py-3 px-4 rounded-2xl bg-[#FF6B00] hover:bg-[#E55A00] text-white font-black text-xs flex items-center justify-center space-x-2 transition-all shadow-md hover:shadow-glow-orange"
-                >
-                  <Wrench className="w-4 h-4" />
-                  <span>Book Visit</span>
-                </Link>
-              </div>
-            </div>
-          </div>
-        </div>
-      )}
-
-      {/* Why Choose Us */}
-      <section className="relative py-20 bg-gradient-to-b from-white via-[#F8FAFC] to-white dark:from-slate-950 dark:via-slate-900/60 dark:to-slate-950 section-pattern overflow-hidden">
-        <div className="absolute -top-24 -right-24 w-96 h-96 bg-[#FF6B00]/10 blur-[120px] rounded-full pointer-events-none"></div>
-        <div className="absolute -bottom-24 -left-24 w-96 h-96 bg-[#0066FF]/10 blur-[120px] rounded-full pointer-events-none"></div>
-
-        <AnimatedSection direction="up" className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-10 relative">
-          <div className="text-center space-y-2 max-w-3xl mx-auto">
-            <span className="text-xs font-extrabold text-[#FF6B00] uppercase tracking-widest">Why Local Families Choose Us</span>
-            <h2 className="text-3xl font-black text-[#0F172A] dark:text-white font-display">A Real Shop with Real Wiremen</h2>
-          </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-4 gap-6 text-center">
-            {[
-              { icon: Store, color: 'text-[#FF6B00] bg-[#FF6B00]/10', title: 'Local Shop & Workshop', desc: 'Walk-in store on Chhota Govindpur Main Road, Jamshedpur — buy today, no delivery wait.' },
-              { icon: Wrench, color: 'text-[#0066FF] bg-[#0066FF]/10', title: 'Our Own Wiremen', desc: 'Prabhat, Chandan, Devnath, Appu and team do the doorstep work themselves.' },
-              { icon: Package, color: 'text-[#00C853] bg-[#00C853]/10', title: 'Genuine Brand Products', desc: 'Havells, Crompton, Polycab, Philips & Anchor — with a GST invoice on every sale.' },
-              { icon: Receipt, color: 'text-purple-600 bg-purple-600/10', title: 'Clear Starting Fees', desc: 'Every service lists its starting fee and duration — see them before booking.' }
-            ].map(({ icon: Icon, color, title, desc }, idx) => (
-              <motion.div
-                key={idx}
-                initial={{ opacity: 0, y: 30 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true, margin: '-40px' }}
-                transition={{ duration: 0.5, delay: idx * 0.12, ease: [0.22, 1, 0.36, 1] }}
-                whileHover={{ y: -8 }}
-                className="card-premium p-6 space-y-3 text-center group"
+              <Link
+                to="/services"
+                className="inline-flex items-center justify-center space-x-2 text-xs sm:text-sm font-extrabold px-5 py-2.5 sm:px-6 sm:py-3 rounded-xl bg-white border border-[#E5E7EB] hover:border-[#F97316] text-[#111827] shadow-xs hover:scale-102 transition-all font-display whitespace-nowrap"
               >
-                <div className={`p-3 w-fit rounded-2xl mx-auto ${color} transition-transform duration-300 group-hover:scale-110 group-hover:rotate-6`}>
-                  <Icon className="w-8 h-8" />
-                </div>
-                <h3 className="text-sm font-bold text-[#0F172A] dark:text-white">{title}</h3>
-                <p className="text-xs text-[#475569]">{desc}</p>
-              </motion.div>
-            ))}
+                <span>View All Services</span>
+                <ChevronRight className="w-4 h-4 text-[#F97316] shrink-0" />
+              </Link>
+            </div>
+          </div>
+
+          {/* 6 Service Cards */}
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
+            {professionalServices.map((svc, idx) => {
+              const Icon = svc.icon;
+              return (
+                <motion.div
+                  key={svc.title}
+                  initial={{ opacity: 0, y: 20 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true, margin: '-30px' }}
+                  transition={{ duration: 0.4, delay: idx * 0.08 }}
+                  whileHover={{ y: -5 }}
+                  className="p-5 rounded-2xl bg-white border border-[#E5E7EB] shadow-xs flex flex-col justify-between group hover:border-[#F97316] hover:shadow-md transition-all"
+                >
+                  <div className="space-y-3">
+                    <div className="flex items-center space-x-3">
+                      <div className="p-2.5 rounded-xl bg-[#FFF7ED] text-[#EA580C] border border-[#FED7AA] flex items-center justify-center shrink-0 transition-transform duration-300 group-hover:scale-105 group-hover:bg-[#F97316] group-hover:text-white">
+                        <Icon className="w-5 h-5" />
+                      </div>
+                      <h3 className="text-base font-bold text-[#111827] group-hover:text-[#F97316] transition-colors font-display">{svc.title}</h3>
+                    </div>
+                    <p className="text-xs text-[#64748B] leading-relaxed pt-0.5">{svc.desc}</p>
+                  </div>
+
+                  <div className="pt-4 mt-4 border-t border-slate-100 flex items-center justify-between">
+                    <span className="text-[11px] font-semibold text-slate-400">By Our Wiremen</span>
+                    <button
+                      onClick={() => setBookingOpen(true)}
+                      className="inline-flex items-center space-x-1 text-xs font-extrabold text-[#F97316] hover:text-[#EA580C] font-display"
+                    >
+                      <span>Request Visit</span>
+                      <ChevronRight className="w-3.5 h-3.5" />
+                    </button>
+                  </div>
+                </motion.div>
+              );
+            })}
           </div>
         </AnimatedSection>
       </section>
 
-      {/* Service Process */}
-      <AnimatedSection direction="up" className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-10">
+      {/* 5. Real Store Identity & About Section (Light Section) */}
+      <section className="relative py-12 bg-white overflow-hidden">
+        <AnimatedSection direction="up" className="max-w-[1536px] mx-auto px-4 sm:px-6 lg:px-12 xl:px-16 space-y-8 relative">
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
+            {/* Left Store Overview */}
+            <div className="lg:col-span-6 space-y-4">
+              <span className="text-[11px] font-extrabold text-[#F97316] uppercase tracking-widest font-display">Store Identity &amp; Mission</span>
+              <h2 className="text-2xl sm:text-4xl font-black text-[#111827] tracking-tight font-display">
+                Your Trusted Local Electrical Store in Jamshedpur
+              </h2>
+              <p className="text-xs sm:text-sm text-[#64748B] leading-relaxed">
+                Located on Chhota Govindpur Main Road, <strong>Uday Electrical Works</strong> operates both a retail electrical store and a dedicated doorstep electrician service. We supply 100% genuine brand products from Havells, Crompton, Polycab, Philips, Anchor, and Bajaj with official GST billing.
+              </p>
+              <p className="text-xs sm:text-sm text-[#64748B] leading-relaxed">
+                Whether you need a single LED bulb, complete house wiring materials, fan repairs, or emergency fault diagnosis, our in-house wiremen team visits your home across Jamshedpur to deliver reliable electrical work.
+              </p>
+
+              <div className="pt-2 flex flex-wrap gap-2">
+                {wiremenTeam.map((w) => (
+                  <span key={w} className="px-3 py-1 rounded-xl bg-slate-50 border border-[#E5E7EB] text-xs font-semibold text-[#111827] flex items-center gap-1.5 shadow-xs">
+                    <Check className="w-3.5 h-3.5 text-[#16A34A]" />
+                    {w}
+                  </span>
+                ))}
+              </div>
+            </div>
+
+            {/* Right Storefront Snapshot Box */}
+            <div className="lg:col-span-6">
+              <div className="p-6 rounded-3xl bg-[#FAFAF8] border border-[#E5E7EB] shadow-xs space-y-4">
+                <div className="flex items-center space-x-3">
+                  <Store className="w-6 h-6 text-[#F97316] shrink-0" />
+                  <div>
+                    <h3 className="text-base font-bold text-[#111827] font-display">Uday Electrical Works Retail Store</h3>
+                    <p className="text-xs text-[#64748B]">Chhota Govindpur Main Road, Jamshedpur, Jharkhand - 831015</p>
+                  </div>
+                </div>
+
+                <div className="space-y-2 pt-3 border-t border-[#E5E7EB] text-xs text-[#64748B]">
+                  <p><strong className="text-[#111827]">Store Hours:</strong> Monday - Saturday (8:30 AM - 9:00 PM)</p>
+                  <p><strong className="text-[#111827]">Doorstep Coverage:</strong> Telco, Govindpur, Baridih, Sidhgora, Sakchi, Mango, Adityapur &amp; all Jamshedpur areas</p>
+                  <p><strong className="text-[#111827]">Direct Phone:</strong> 7903789402 / 9934187847</p>
+                </div>
+
+                <a
+                  href="#store-location-map"
+                  className="inline-flex items-center space-x-2 text-xs font-extrabold px-5 py-2.5 rounded-xl bg-[#F97316] hover:bg-[#EA580C] text-white shadow-xs transition-all font-display"
+                >
+                  <span>View Map &amp; Directions</span>
+                  <ExternalLink className="w-4 h-4" />
+                </a>
+              </div>
+            </div>
+          </div>
+        </AnimatedSection>
+      </section>
+
+      {/* 6. Trust Indicators Section (Dark Contrast Section) */}
+      <section className="py-12 bg-[#111827] text-white overflow-hidden border-y border-slate-800">
+        <AnimatedSection direction="up" className="max-w-[1536px] mx-auto px-4 sm:px-6 lg:px-12 xl:px-16 space-y-8">
+          <div className="text-center space-y-2 max-w-3xl mx-auto">
+            <span className="text-[11px] font-extrabold text-[#F97316] uppercase tracking-widest font-display">Our Promise</span>
+            <h2 className="text-2xl sm:text-4xl font-black text-white font-display">Why Jamshedpur Trusts Uday Electrical</h2>
+          </div>
+
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
+            <div className="p-5 rounded-2xl bg-slate-900/90 border border-slate-800 text-left space-y-3">
+              <div className="flex items-center space-x-3">
+                <div className="p-2 rounded-xl bg-slate-800 text-[#16A34A] border border-slate-700 shrink-0">
+                  <ShieldCheck className="w-5 h-5" />
+                </div>
+                <h4 className="text-sm font-bold text-white font-display">100% Genuine Products</h4>
+              </div>
+              <p className="text-xs text-slate-400 leading-relaxed pt-0.5">Direct factory sourcing from Havells, Crompton, Polycab with GST invoices.</p>
+            </div>
+
+            <div className="p-5 rounded-2xl bg-slate-900/90 border border-slate-800 text-left space-y-3">
+              <div className="flex items-center space-x-3">
+                <div className="p-2 rounded-xl bg-slate-800 text-[#F97316] border border-slate-700 shrink-0">
+                  <User className="w-5 h-5" />
+                </div>
+                <h4 className="text-sm font-bold text-white font-display">Verified Wiremen</h4>
+              </div>
+              <p className="text-xs text-slate-400 leading-relaxed pt-0.5">Experienced local technicians for house wiring, DB fitting &amp; appliances.</p>
+            </div>
+
+            <div className="p-5 rounded-2xl bg-slate-900/90 border border-slate-800 text-left space-y-3">
+              <div className="flex items-center space-x-3">
+                <div className="p-2 rounded-xl bg-slate-800 text-[#0284C7] border border-slate-700 shrink-0">
+                  <Truck className="w-5 h-5" />
+                </div>
+                <h4 className="text-sm font-bold text-white font-display">Fast Doorstep Visit</h4>
+              </div>
+              <p className="text-xs text-slate-400 leading-relaxed pt-0.5">Quick electrician visit across Govindpur, Telco, Baridih &amp; Jamshedpur.</p>
+            </div>
+
+            <div className="p-5 rounded-2xl bg-slate-900/90 border border-slate-800 text-left space-y-3">
+              <div className="flex items-center space-x-3">
+                <div className="p-2 rounded-xl bg-slate-800 text-amber-400 border border-slate-700 shrink-0">
+                  <Phone className="w-5 h-5" />
+                </div>
+                <h4 className="text-sm font-bold text-white font-display">Local Shop Support</h4>
+              </div>
+              <p className="text-xs text-slate-400 leading-relaxed pt-0.5">Call 7903789402 directly or visit our Chhota Govindpur main road store.</p>
+            </div>
+          </div>
+        </AnimatedSection>
+      </section>
+
+      {/* 7. Customer Reviews Section (Light Section) */}
+      <AnimatedSection direction="up" className="max-w-[1536px] mx-auto px-4 sm:px-6 lg:px-12 xl:px-16 space-y-8">
         <div className="text-center space-y-2 max-w-3xl mx-auto">
-          <span className="text-xs font-extrabold text-[#FF6B00] uppercase tracking-widest">Simple 4-Step Booking</span>
-          <h2 className="text-3xl font-black text-[#0F172A] dark:text-white font-display">How Our Doorstep Service Works</h2>
+          <span className="text-[11px] font-extrabold text-[#F97316] uppercase tracking-widest font-display">Customer Feedback</span>
+          <h2 className="text-2xl sm:text-4xl font-black text-[#111827] font-display">What Our Customers Say</h2>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
-          {[
-            { step: '1', title: 'Book Online or Call', desc: 'Pick a service and preferred date, or call 7903789402.' },
-            { step: '2', title: 'Wireman Assigned', desc: 'One of our wiremen is assigned to your visit slot.' },
-            { step: '3', title: 'Job Completed at Home', desc: 'Repair or installation done at your doorstep.' },
-            { step: '4', title: 'Invoice Issued', desc: 'Digital GST invoice with your booking record.' }
-          ].map(({ step, title, desc }, idx) => (
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
+          {customerReviews.map((rev, idx) => (
             <motion.div
               key={idx}
-              initial={{ opacity: 0, y: 30 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true, margin: '-40px' }}
-              transition={{ duration: 0.5, delay: idx * 0.12, ease: [0.22, 1, 0.36, 1] }}
-              whileHover={{ y: -8 }}
-              className="card-premium p-6 space-y-3 text-center"
+              whileHover={{ y: -3 }}
+              className="p-6 rounded-2xl bg-white border border-[#E5E7EB] shadow-xs space-y-3 flex flex-col justify-between"
             >
-              <div className="w-10 h-10 rounded-full bg-gradient-to-br from-[#FF6B00] to-amber-500 text-white font-black text-base flex items-center justify-center mx-auto shadow-md shadow-[#FF6B00]/30">
-                {step}
+              <div className="space-y-2">
+                <div className="flex items-center space-x-1 text-amber-400">
+                  {[...Array(rev.rating)].map((_, i) => (
+                    <Star key={i} className="w-4 h-4 fill-current" />
+                  ))}
+                </div>
+                <p className="text-xs text-[#64748B] leading-relaxed italic">"{rev.comment}"</p>
               </div>
-              <h3 className="text-sm font-bold text-[#0F172A] dark:text-white">{title}</h3>
-              <p className="text-xs text-[#475569]">{desc}</p>
+              <div className="pt-3 border-t border-[#E5E7EB]">
+                <h4 className="text-xs font-bold text-[#111827] font-display">{rev.name}</h4>
+                <span className="text-[10px] text-[#64748B] block font-sans">{rev.location}</span>
+              </div>
             </motion.div>
           ))}
         </div>
       </AnimatedSection>
 
-      {/* Featured Products */}
-      <AnimatedSection direction="up" className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-10">
-        <div className="flex flex-col md:flex-row md:items-end justify-between border-b border-[#E2E8F0] dark:border-slate-800 pb-4">
-          <div>
-            <span className="text-xs font-extrabold text-[#FF6B00] uppercase tracking-widest">In-Store Electrical Catalog</span>
-            <h2 className="text-3xl sm:text-4xl font-black text-[#0F172A] dark:text-white mt-1 font-display">Featured Household Electricals</h2>
-          </div>
-          <Link to="/shop" className="group text-sm font-extrabold text-[#FF6B00] hover:underline flex items-center space-x-1 mt-2 md:mt-0">
-            <span>Browse Full Catalog</span>
-            <ChevronRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
-          </Link>
-        </div>
-
-        {loadingProducts ? (
-          <SkeletonLoader count={3} />
-        ) : (
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            {products.map((product, idx) => (
-              <motion.div
-                key={product._id}
-                initial={{ opacity: 0, y: 24 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true, margin: '-40px' }}
-                transition={{ duration: 0.45, delay: idx * 0.1, ease: [0.22, 1, 0.36, 1] }}
-                whileHover={{ y: -8 }}
-                className="card-premium flex flex-col justify-between group"
-              >
-                <div className="h-48 overflow-hidden relative bg-[#F8FAFC] dark:bg-slate-950">
-                  <img src={product.imageUrl} alt={product.name} className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" />
-                  <div className="absolute top-3 left-3">
-                    <span className="px-2.5 py-1 rounded-lg bg-[#FF6B00] text-white font-black text-[10px] uppercase shadow-md">
-                      {product.brand}
-                    </span>
-                  </div>
-                </div>
-
-                <div className="p-6 space-y-4 flex-1 flex flex-col justify-between">
-                  <div>
-                    <span className="text-[10px] font-bold text-[#0066FF] uppercase">{product.category}</span>
-                    <h3 className="text-base font-bold text-[#0F172A] dark:text-white mt-1 group-hover:text-[#FF6B00] transition-colors line-clamp-1">{product.name}</h3>
-                    <p className="text-xs text-[#475569] dark:text-slate-400 mt-2 line-clamp-2">{product.description}</p>
-                  </div>
-
-                  <div className="pt-4 border-t border-[#E2E8F0] dark:border-slate-800 flex items-center justify-between">
-                    <div>
-                      {product.mrp > product.price && (
-                        <span className="text-[10px] text-slate-400 line-through block">MRP: {formatCurrency(product.mrp)}</span>
-                      )}
-                      <span className="text-xl font-black text-[#0F172A] dark:text-white">{formatCurrency(product.price)}</span>
-                    </div>
-                    <Link
-                      to="/shop"
-                      className="px-4 py-2 rounded-xl bg-[#F8FAFC] dark:bg-slate-800 hover:bg-[#FF6B00] hover:text-white text-[#0F172A] dark:text-slate-200 text-xs font-bold transition-all"
-                    >
-                      View Specs
-                    </Link>
-                  </div>
-                </div>
-              </motion.div>
-            ))}
-          </div>
-        )}
-      </AnimatedSection>
-
-      {/* Google Reviews CTA */}
-      <AnimatedSection direction="up" className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="relative p-8 sm:p-12 rounded-3xl bg-gradient-to-br from-[#0F172A] via-slate-900 to-slate-950 dark:from-slate-900 dark:via-slate-900 dark:to-slate-950 border border-slate-800 shadow-2xl grid grid-cols-1 lg:grid-cols-12 gap-10 items-center overflow-hidden">
-          <div className="absolute -top-16 -right-16 w-64 h-64 bg-[#FF6B00]/20 blur-[100px] rounded-full pointer-events-none"></div>
-          <div className="absolute -bottom-16 -left-16 w-64 h-64 bg-[#0066FF]/20 blur-[100px] rounded-full pointer-events-none"></div>
-
-          <div className="relative lg:col-span-5 space-y-4">
-            <span className="text-xs font-black text-[#FF8A3D] uppercase tracking-widest">We Value Your Feedback</span>
-            <h2 className="text-3xl font-black text-white font-display">Bought from us or used our service?</h2>
-            <p className="text-slate-400 text-xs max-w-xl leading-relaxed">
-              Share your experience on our Google Maps listing, or read what local families say
-              about our shop and wiremen.
+      {/* 8. Phone Assistance & Callback Request */}
+      <AnimatedSection direction="up" className="max-w-[1536px] mx-auto px-4 sm:px-6 lg:px-12 xl:px-16">
+        <div className="p-8 sm:p-10 rounded-3xl bg-white border border-[#E5E7EB] shadow-xs grid grid-cols-1 lg:grid-cols-12 gap-8 items-center relative overflow-hidden">
+          {/* Left Column: Heading & Information */}
+          <div className="lg:col-span-5 space-y-3">
+            <span className="text-[11px] font-extrabold text-[#F97316] uppercase tracking-widest font-display">Instant Phone Assistance</span>
+            <h3 className="text-2xl sm:text-3xl font-black text-[#111827] font-display">Request an Electrician Callback</h3>
+            <p className="text-xs sm:text-sm text-[#64748B] leading-relaxed">
+              Have an electrical query, wiring project, or need urgent repair? Enter your mobile number and our Chhota Govindpur shop team will call you back during store hours.
             </p>
-            <div className="flex flex-wrap gap-3 pt-1">
-              <a
-                href="https://www.google.com/maps/place/Uday+Electrical+Shop/"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="relative inline-flex px-7 py-3.5 rounded-2xl bg-gradient-to-r from-[#FF6B00] to-amber-500 hover:from-[#E55A00] hover:to-[#FF6B00] text-white font-black text-xs shadow-lg shadow-orange-500/30 hover:scale-105 hover:shadow-glow-orange-lg transition-all text-center"
-              >
-                <Star className="w-4 h-4 fill-current mr-2" />
-                Review Us on Google
-              </a>
-              <Link
-                to="/reviews"
-                className="relative inline-flex px-7 py-3.5 rounded-2xl bg-white/10 hover:bg-white/20 border border-white/20 text-white font-black text-xs transition-all"
-              >
-                Leave Feedback →
-              </Link>
-            </div>
           </div>
 
-          <div className="relative lg:col-span-7 grid grid-cols-1 sm:grid-cols-3 gap-4">
-            {[
-              { title: 'Phone', value: '7903789402', sub: 'Also on WhatsApp' },
-              { title: 'Store Hours', value: 'Mon–Sat', sub: '8:30 AM – 9:00 PM' },
-              { title: 'Our Team', value: '7 Wiremen', sub: 'Prabhat, Chandan, Devnath, Appu & more' }
-            ].map((card, idx) => (
-              <div key={idx} className="p-5 rounded-2xl bg-white/5 border border-white/10 backdrop-blur-xl space-y-1.5 text-center">
-                <p className="text-[10px] font-black uppercase tracking-widest text-[#FF8A3D]">{card.title}</p>
-                <p className="text-lg font-black text-white">{card.value}</p>
-                <p className="text-[11px] text-slate-400">{card.sub}</p>
+          {/* Right Column: Spacious Form */}
+          <div className="lg:col-span-7">
+            {cbSubmitted ? (
+              <div className="p-6 rounded-2xl bg-[#F0FDF4] border border-[#BBF7D0] text-[#16A34A] text-xs font-bold text-center space-y-2">
+                <CheckCircle2 className="w-8 h-8 text-[#16A34A] mx-auto" />
+                <h4 className="text-base font-bold font-display">Callback Request Received!</h4>
+                <p className="text-xs text-slate-600">Our wiremen team will call {cbPhone} shortly during store hours (Mon-Sat, 8:30 AM - 9:00 PM).</p>
               </div>
-            ))}
-          </div>
-        </div>
-      </AnimatedSection>
+            ) : (
+              <div className="space-y-3.5">
+                <form onSubmit={handleCallbackSubmit} className="grid grid-cols-1 sm:grid-cols-12 gap-3 text-xs">
+                  <input
+                    type="text"
+                    required
+                    placeholder="Your Name"
+                    value={cbName}
+                    onChange={(e) => setCbName(e.target.value)}
+                    className="sm:col-span-4 px-4 py-3 h-12 rounded-xl bg-slate-50 border border-[#E5E7EB] text-[#111827] placeholder:text-slate-400 focus:outline-none focus:border-[#F97316] text-xs sm:text-sm font-medium"
+                  />
+                  <input
+                    type="tel"
+                    required
+                    placeholder="Mobile Number"
+                    value={cbPhone}
+                    onChange={(e) => setCbPhone(e.target.value)}
+                    className="sm:col-span-4 px-4 py-3 h-12 rounded-xl bg-slate-50 border border-[#E5E7EB] text-[#111827] placeholder:text-slate-400 focus:outline-none focus:border-[#F97316] text-xs sm:text-sm font-medium"
+                  />
+                  <button
+                    type="submit"
+                    disabled={cbLoading}
+                    className="sm:col-span-4 px-6 py-3 h-12 rounded-xl bg-[#F97316] hover:bg-[#EA580C] text-white font-extrabold text-xs sm:text-sm transition-all shadow-xs flex items-center justify-center space-x-2 font-display whitespace-nowrap"
+                  >
+                    <Send className="w-4 h-4 shrink-0" />
+                    <span>{cbLoading ? 'Submitting...' : 'Call Me Back'}</span>
+                  </button>
+                </form>
 
-      {/* Callback Request Form */}
-      <AnimatedSection direction="up" className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="relative p-8 rounded-3xl bg-gradient-to-br from-white to-[#FFF4EB] dark:from-slate-900 dark:to-slate-900 border border-[#E2E8F0] dark:border-slate-800 shadow-card space-y-6 overflow-hidden">
-          <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-[#FF6B00] via-amber-400 to-[#0066FF]"></div>
-          <div className="text-center space-y-2">
-            <span className="text-xs font-extrabold text-[#FF6B00] uppercase tracking-widest">Instant Phone Assistance</span>
-            <h3 className="text-2xl font-black text-[#0F172A] dark:text-white font-display">Request an Electrician Callback</h3>
-            <p className="text-xs text-[#475569] dark:text-slate-400">Our shop team will call you back during opening hours. For urgent help, call us directly.</p>
-          </div>
-
-          {cbSubmitted ? (
-            <div className="p-6 rounded-2xl bg-[#00C853]/10 border border-[#00C853]/30 text-[#00C853] text-xs font-bold text-center space-y-1">
-              <CheckCircle2 className="w-8 h-8 text-[#00C853] mx-auto" />
-              <p className="text-sm">Callback requested! Our team will call {cbPhone} during shop hours (Mon–Sat, 8:30 AM – 9:00 PM).</p>
-            </div>
-          ) : (
-            <>
-              <form onSubmit={handleCallbackSubmit} className="grid grid-cols-1 sm:grid-cols-3 gap-4 text-xs">
-                <input
-                  type="text"
-                  required
-                  placeholder="Your Name"
-                  value={cbName}
-                  onChange={(e) => setCbName(e.target.value)}
-                  className="px-4 py-3 bg-white dark:bg-slate-950 border border-[#E2E8F0] dark:border-slate-800 rounded-xl text-[#0F172A] dark:text-white placeholder-slate-400 focus:outline-none focus:border-[#FF6B00] focus:ring-2 focus:ring-[#FF6B00]/20 transition-all"
-                />
-                <input
-                  type="tel"
-                  required
-                  placeholder="Mobile Number"
-                  value={cbPhone}
-                  onChange={(e) => setCbPhone(e.target.value)}
-                  className="px-4 py-3 bg-white dark:bg-slate-950 border border-[#E2E8F0] dark:border-slate-800 rounded-xl text-[#0F172A] dark:text-white placeholder-slate-400 focus:outline-none focus:border-[#FF6B00] focus:ring-2 focus:ring-[#FF6B00]/20 transition-all"
-                />
-                <button
-                  type="submit"
-                  disabled={cbLoading}
-                  className="btn-cta py-3 px-6 text-xs"
-                >
-                  <Send className="w-4 h-4" />
-                  <span>{cbLoading ? 'Submitting...' : 'Call Me Back'}</span>
-                </button>
-              </form>
-              {cbError && (
-                <div className="p-3 rounded-xl bg-rose-500/10 border border-rose-500/30 text-rose-600 dark:text-rose-400 text-xs font-semibold flex items-center space-x-2">
-                  <Phone className="w-4 h-4 shrink-0" />
-                  <span>{cbError}</span>
+                {/* Direct Phone Numbers Line — Below Button */}
+                <div className="pt-1 flex flex-wrap items-center justify-between gap-2 text-xs text-[#64748B]">
+                  <div className="flex items-center space-x-2 font-bold text-[#F97316] font-display">
+                    <Phone className="w-4 h-4 shrink-0" />
+                    <span>Store Direct: <a href="tel:7903789402" className="hover:underline">7903789402</a> / <a href="tel:9934187847" className="hover:underline">9934187847</a></span>
+                  </div>
+                  <span className="text-[11px] text-slate-400 font-semibold">Store Hours: Mon-Sat (8:30 AM - 9:00 PM)</span>
                 </div>
-              )}
-              {!isAuthenticated && (
-                <p className="text-[11px] text-slate-400 text-center">
-                  <Link to="/login" className="font-bold text-orange-500 hover:underline">Sign in</Link> to request a callback — or call us at{' '}
-                  <a href="tel:7903789402" className="font-bold text-orange-500">7903789402</a>.
-                </p>
-              )}
-            </>
-          )}
+
+                {cbError && (
+                  <div className="p-3 rounded-xl bg-[#FEF2F2] border border-[#FECACA] text-[#DC2626] text-xs font-semibold flex items-center space-x-2">
+                    <Phone className="w-4 h-4 shrink-0" />
+                    <span>{cbError}</span>
+                  </div>
+                )}
+                {!isAuthenticated && (
+                  <p className="text-[11px] text-[#64748B]">
+                    <Link to="/login" className="font-bold text-[#F97316] hover:underline">Sign in</Link> to track callback status online.
+                  </p>
+                )}
+              </div>
+            )}
+          </div>
         </div>
       </AnimatedSection>
 
-      {/* Store Location */}
-      <AnimatedSection direction="up" className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-6">
-        <div className="text-center space-y-2">
-          <span className="text-xs font-extrabold text-[#FF6B00] uppercase tracking-widest">Visit Our Retail Store</span>
-          <h2 className="text-3xl font-black text-[#0F172A] dark:text-white font-display">Chhota Govindpur Store Location</h2>
+      {/* 9. Store Location & Embedded Google Maps */}
+      <AnimatedSection direction="up" className="max-w-[1536px] mx-auto px-4 sm:px-6 lg:px-12 xl:px-16 space-y-5" id="store-location-map">
+        <div className="text-center space-y-1.5">
+          <span className="text-[11px] font-extrabold text-[#F97316] uppercase tracking-widest font-display">Visit Our Retail Store</span>
+          <h2 className="text-2xl sm:text-4xl font-black text-[#111827] tracking-tight font-display">Chhota Govindpur Store Location</h2>
         </div>
 
-        <div className="card-premium p-6 grid grid-cols-1 md:grid-cols-12 gap-6 items-center">
-          <div className="md:col-span-5 space-y-5 text-xs">
-            <div className="flex items-center space-x-3">
-              <Building2 className="w-6 h-6 text-[#FF6B00] shrink-0" />
+        <div className="p-5 sm:p-6 rounded-3xl bg-white border border-[#E5E7EB] shadow-xs grid grid-cols-1 md:grid-cols-12 gap-6 items-center">
+          <div className="md:col-span-5 space-y-4 text-xs">
+            <div className="flex items-start space-x-3">
+              <Building2 className="w-6 h-6 text-[#F97316] shrink-0 mt-0.5" />
               <div>
-                <h4 className="text-base font-bold text-[#0F172A] dark:text-white">Uday Electrical Works (Store & Workshop)</h4>
-                <p className="text-[#475569]">Chhota Govindpur Main Road, Jamshedpur, Jharkhand - 831015</p>
+                <h4 className="text-base font-bold text-[#111827] font-display">Uday Electrical Works (Store & Workshop)</h4>
+                <p className="text-[#64748B] mt-1">Chhota Govindpur Main Road, Jamshedpur, Jharkhand - 831015</p>
               </div>
             </div>
 
-            <div className="space-y-2 pt-3 border-t border-[#E2E8F0] dark:border-slate-800 text-[#475569] dark:text-slate-400">
-              <p><strong className="text-[#0F172A] dark:text-white">Store Hours:</strong> Monday - Saturday (8:30 AM - 9:00 PM)</p>
-              <p><strong className="text-[#0F172A] dark:text-white">Service Visits:</strong> Booked across Jamshedpur — see our service areas</p>
-              <p><strong className="text-[#0F172A] dark:text-white">Store Phone:</strong> 7903789402 / 9934187847</p>
+            <div className="space-y-2 pt-3 border-t border-[#E5E7EB] text-[#64748B]">
+              <p><strong className="text-[#111827]">Store Hours:</strong> Monday - Saturday (8:30 AM - 9:00 PM)</p>
+              <p><strong className="text-[#111827]">Service Area:</strong> Doorstep electrician visits across Jamshedpur</p>
+              <p><strong className="text-[#111827]">Store Phone:</strong> 7903789402 / 9934187847</p>
             </div>
 
             <a
               href="https://www.google.com/maps/place/Uday+Electrical+Shop/"
               target="_blank"
               rel="noopener noreferrer"
-              className="inline-flex items-center space-x-2 px-5 py-3 rounded-xl bg-[#0066FF] hover:bg-[#0052CC] text-white font-extrabold text-xs shadow-md transition-all hover:scale-105 hover:shadow-glow-blue"
+              className="inline-flex items-center space-x-2 text-xs font-extrabold px-5 py-3 rounded-xl bg-[#F97316] hover:bg-[#EA580C] text-white shadow-xs transition-all font-display"
             >
-              <span>Open Directions in Google Maps</span>
+              <span>Get Directions in Google Maps</span>
               <ExternalLink className="w-4 h-4" />
             </a>
           </div>
 
-          <div className="md:col-span-7 h-72 rounded-2xl overflow-hidden border border-[#E2E8F0] dark:border-slate-700 shadow-inner bg-[#F8FAFC]">
+          <div className="md:col-span-7 h-64 sm:h-72 rounded-2xl overflow-hidden border border-[#E5E7EB] shadow-inner bg-slate-100">
             <iframe
               src="https://maps.google.com/maps?q=Uday%20Electrical%20Shop%2C%20Chhota%20Govindpur%2C%20Jamshedpur%2C%20Jharkhand&t=&z=16&ie=UTF8&iwloc=&output=embed"
               width="100%"
@@ -619,6 +608,19 @@ export const HomePage = () => {
           </div>
         </div>
       </AnimatedSection>
+
+      {/* Quick View Modal Component */}
+      <ProductQuickViewModal
+        product={quickViewProduct}
+        isOpen={Boolean(quickViewProduct)}
+        onClose={() => setQuickViewProduct(null)}
+      />
+
+      {/* Interactive Booking Stepper Modal */}
+      <InteractiveBookingFlowModal
+        isOpen={bookingOpen}
+        onClose={() => setBookingOpen(false)}
+      />
 
     </div>
   );

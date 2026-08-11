@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useCallback } from 'react';
+﻿import React, { useEffect, useState, useCallback } from 'react';
 import { AnimatePresence, motion } from 'framer-motion';
 import { Star, Quote, ChevronLeft, ChevronRight } from 'lucide-react';
 
@@ -102,7 +102,7 @@ export const ReviewsSlider = ({ interval = 5000, className = '' }) => {
               key={i}
               onClick={() => setIndex([i, i > index ? 1 : -1])}
               className={`h-1.5 rounded-full transition-all duration-300 ${
-                i === index ? 'w-6 bg-[#FF6B00]' : 'w-2 bg-white/20 hover:bg-white/40'
+                i === index ? 'w-6 bg-[#F97316]' : 'w-2 bg-white/20 hover:bg-white/40'
               }`}
               aria-label={`Go to review ${i + 1}`}
             />
@@ -112,14 +112,14 @@ export const ReviewsSlider = ({ interval = 5000, className = '' }) => {
         <div className="flex items-center space-x-2">
           <button
             onClick={() => go(-1)}
-            className="p-2 rounded-xl bg-white/10 hover:bg-[#FF6B00] text-slate-200 hover:text-white transition-all"
+            className="p-2 rounded-xl bg-white/10 hover:bg-[#F97316] text-slate-200 hover:text-white transition-all"
             aria-label="Previous review"
           >
             <ChevronLeft className="w-4 h-4" />
           </button>
           <button
             onClick={() => go(1)}
-            className="p-2 rounded-xl bg-white/10 hover:bg-[#FF6B00] text-slate-200 hover:text-white transition-all"
+            className="p-2 rounded-xl bg-white/10 hover:bg-[#F97316] text-slate-200 hover:text-white transition-all"
             aria-label="Next review"
           >
             <ChevronRight className="w-4 h-4" />

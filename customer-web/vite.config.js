@@ -5,7 +5,7 @@ import react from '@vitejs/plugin-react';
 export default defineConfig({
   plugins: [react()],
   resolve: {
-    dedupe: ['react', 'react-dom', 'react-router-dom', 'lucide-react', 'qrcode', 'axios']
+    dedupe: ['react', 'react-dom', 'react-router-dom', 'framer-motion', 'lucide-react', 'qrcode', 'axios']
   },
   server: {
     port: 5173,

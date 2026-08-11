@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+﻿import React, { useEffect, useState } from 'react';
 import { motion, useMotionValue, useSpring } from 'framer-motion';
 
 /* Premium desktop-only cursor: a fast dot + trailing glow ring that reacts to
@@ -52,7 +52,7 @@ export const CustomCursor = () => {
         style={{ x: glowX, y: glowY }}
         className="fixed top-0 left-0 z-[9998] pointer-events-none mix-blend-multiply dark:mix-blend-screen"
       >
-        <div className="-translate-x-1/2 -translate-y-1/2 w-40 h-40 rounded-full bg-gradient-to-tr from-[#FF6B00]/25 via-transparent to-[#0066FF]/25 blur-2xl" />
+        <div className="-translate-x-1/2 -translate-y-1/2 w-40 h-40 rounded-full bg-gradient-to-tr from-[#F97316]/25 via-transparent to-[#0066FF]/25 blur-2xl" />
       </motion.div>
 
       {/* Trailing ring */}
@@ -62,7 +62,7 @@ export const CustomCursor = () => {
       >
         <div
           className={`-translate-x-1/2 -translate-y-1/2 rounded-full border transition-all duration-200 ${
-            hovering ? 'w-12 h-12 border-[#FF6B00] bg-[#FF6B00]/10 scale-110' : 'w-8 h-8 border-slate-400/60'
+            hovering ? 'w-12 h-12 border-[#F97316] bg-[#F97316]/10 scale-110' : 'w-8 h-8 border-slate-400/60'
           }`}
           style={{ opacity: visible ? 1 : 0 }}
         />
@@ -74,7 +74,7 @@ export const CustomCursor = () => {
         className="fixed top-0 left-0 z-[9999] pointer-events-none"
       >
         <div
-          className={`-translate-x-1/2 -translate-y-1/2 rounded-full bg-[#FF6B00] transition-all duration-150 ${
+          className={`-translate-x-1/2 -translate-y-1/2 rounded-full bg-[#F97316] transition-all duration-150 ${
             hovering ? 'w-1.5 h-1.5' : 'w-2 h-2'
           }`}
           style={{ opacity: visible ? 1 : 0 }}

@@ -92,16 +92,16 @@ export const UserManagementPage = () => {
     <div className="space-y-6">
       
       {/* Header */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-slate-800 pb-4">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-slate-200 pb-4">
         <div>
-          <h1 className="text-2xl font-extrabold text-white">System User Management</h1>
-          <p className="text-xs text-slate-400">Manage ERP user accounts, assign roles (Admin, Staff, Technician, Customer)</p>
+          <h1 className="text-2xl font-extrabold text-slate-900">System User Management</h1>
+          <p className="text-xs text-slate-500">Manage ERP user accounts, assign roles (Admin, Staff, Technician, Customer)</p>
         </div>
 
         <div className="flex items-center space-x-2">
           <button
             onClick={() => setCreateModalOpen(true)}
-            className="flex items-center space-x-2 px-4 py-2 rounded-xl bg-amber-500 hover:bg-amber-400 text-slate-950 text-xs font-extrabold transition-all shadow-md"
+            className="flex items-center space-x-2 px-4 py-2 rounded-xl bg-amber-500 hover:bg-amber-600 text-white text-xs font-extrabold transition-all shadow-md"
           >
             <Plus className="w-4 h-4" />
             <span>Add User</span>
@@ -112,13 +112,13 @@ export const UserManagementPage = () => {
       {/* Search & Role Filters */}
       <div className="flex flex-col md:flex-row gap-4 justify-between items-center">
         <div className="relative w-full md:w-96">
-          <Search className="w-4 h-4 absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400" />
+          <Search className="w-4 h-4 absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-500" />
           <input
             type="text"
             placeholder="Search by name or email..."
             value={search}
             onChange={(e) => setSearch(e.target.value)}
-            className="w-full pl-10 pr-4 py-2.5 bg-slate-900 border border-slate-800 rounded-xl text-slate-200 placeholder-slate-500 text-xs font-medium focus:outline-none focus:border-amber-500"
+            className="w-full pl-10 pr-4 py-2.5 bg-white border border-slate-200 rounded-xl text-slate-900 placeholder-slate-400 text-xs font-medium focus:outline-none focus:border-orange-400 focus:ring-2 focus:ring-orange-500/30"
           />
         </div>
 
@@ -131,8 +131,8 @@ export const UserManagementPage = () => {
                 onClick={() => setRoleFilter(r === 'All' ? '' : r)}
                 className={`px-3 py-1.5 rounded-xl text-xs font-semibold whitespace-nowrap transition-all ${
                   isSelected
-                    ? 'bg-amber-500 text-slate-950 font-bold'
-                    : 'bg-slate-900 text-slate-400 hover:text-white border border-slate-800'
+                    ? 'bg-amber-500 text-white font-bold'
+                    : 'bg-white text-slate-600 hover:text-slate-900 border border-slate-200'
                 }`}
               >
                 {r}
@@ -146,58 +146,58 @@ export const UserManagementPage = () => {
       {isLoading ? (
         <LoadingSpinner message="Fetching user directory..." />
       ) : (
-        <div className="bg-slate-900 border border-slate-800 rounded-2xl overflow-hidden shadow-xl">
+        <div className="bg-white border border-slate-200 rounded-xl overflow-hidden shadow-card">
           <div className="overflow-x-auto">
-            <table className="w-full text-left text-xs text-slate-300">
-              <thead className="bg-slate-950 text-slate-400 uppercase text-[10px] font-bold tracking-wider border-b border-slate-800">
+            <table className="w-full text-left text-xs text-slate-600">
+              <thead className="bg-slate-50 text-slate-500 uppercase text-[10px] font-bold tracking-wider border-b border-slate-200">
                 <tr>
-                  <th className="px-6 py-4">User</th>
-                  <th className="px-6 py-4">Contact Phone</th>
-                  <th className="px-6 py-4">Role</th>
-                  <th className="px-6 py-4">Registered Date</th>
-                  <th className="px-6 py-4 text-right">Actions</th>
+                  <th className="px-4 py-2.5">User</th>
+                  <th className="px-4 py-2.5">Contact Phone</th>
+                  <th className="px-4 py-2.5">Role</th>
+                  <th className="px-4 py-2.5">Registered Date</th>
+                  <th className="px-4 py-2.5 text-right">Actions</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-slate-800/80">
+              <tbody className="divide-y divide-slate-100">
                 {users.map((u) => (
-                  <tr key={u._id} className="hover:bg-slate-800/40 transition-colors">
-                    <td className="px-6 py-4 font-bold text-white">
+                  <tr key={u._id} className="hover:bg-slate-50 transition-colors">
+                    <td className="px-4 py-2.5 font-bold text-slate-900">
                       <div>
-                        <p className="text-white">{u.name}</p>
-                        <p className="text-[11px] text-slate-400 font-normal">{u.email}</p>
+                        <p className="text-slate-900">{u.name}</p>
+                        <p className="text-[11px] text-slate-500 font-normal">{u.email}</p>
                       </div>
                     </td>
-                    <td className="px-6 py-4 text-slate-300 font-semibold">
+                    <td className="px-4 py-2.5 text-slate-600 font-semibold">
                       {u.phone || 'N/A'}
                     </td>
-                    <td className="px-6 py-4">
+                    <td className="px-4 py-2.5">
                       <span
                         className={`inline-block px-2.5 py-1 rounded-full text-[10px] font-extrabold uppercase border ${
                           u.role === 'Admin'
-                            ? 'bg-rose-500/10 text-rose-400 border-rose-500/30'
+                            ? 'bg-rose-500/10 text-rose-600 border-rose-500/30'
                             : u.role === 'Staff'
-                            ? 'bg-sky-500/10 text-sky-400 border-sky-500/30'
+                            ? 'bg-sky-500/10 text-sky-600 border-sky-500/30'
                             : u.role === 'Technician'
-                            ? 'bg-amber-500/10 text-amber-400 border-amber-500/30'
-                            : 'bg-slate-800 text-slate-300 border-slate-700'
+                            ? 'bg-amber-50 text-amber-600 border-amber-500/30'
+                            : 'bg-white text-slate-600 border-slate-200'
                         }`}
                       >
                         {u.role}
                       </span>
                     </td>
-                    <td className="px-6 py-4 text-slate-400">
+                    <td className="px-4 py-2.5 text-slate-500">
                       {formatDate(u.createdAt)}
                     </td>
-                    <td className="px-6 py-4 text-right space-x-2">
+                    <td className="px-4 py-2.5 text-right space-x-2">
                       <button
                         onClick={() => handleOpenModal(u)}
-                        className="px-3 py-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-200 font-semibold transition-colors"
+                        className="px-3 py-1.5 rounded-lg bg-white border border-slate-200 hover:bg-slate-200 text-slate-600 font-semibold transition-colors"
                       >
                         Change Role
                       </button>
                       <button
                         onClick={() => handleDeleteUser(u._id)}
-                        className="p-1.5 rounded-lg bg-slate-800 hover:bg-rose-500/20 text-rose-400 transition-colors"
+                        className="p-1.5 rounded-lg bg-white border border-slate-200 hover:bg-rose-50 text-rose-600 transition-colors"
                       >
                         <Trash2 className="w-4 h-4" />
                       </button>
@@ -218,19 +218,19 @@ export const UserManagementPage = () => {
       >
         {activeUser && (
           <form onSubmit={handleRoleSubmit} className="space-y-4 text-xs">
-            <div className="p-3 rounded-xl bg-slate-950 border border-slate-800">
-              <p className="font-bold text-white">{activeUser.name}</p>
-              <p className="text-slate-400">{activeUser.email}</p>
+            <div className="p-3 rounded-xl bg-slate-50 border border-slate-200">
+              <p className="font-bold text-slate-900">{activeUser.name}</p>
+              <p className="text-slate-500">{activeUser.email}</p>
             </div>
 
             <div>
-              <label className="block text-slate-300 font-bold uppercase mb-1">
+              <label className="block text-slate-600 font-bold uppercase mb-1">
                 Assign System Access Role *
               </label>
               <select
                 value={newRole}
                 onChange={(e) => setNewRole(e.target.value)}
-                className="w-full px-3.5 py-2.5 bg-slate-950 border border-slate-800 rounded-xl text-slate-200 text-sm focus:outline-none focus:border-amber-500/50 font-semibold"
+                className="w-full px-3.5 py-2.5 bg-white border border-slate-200 rounded-lg text-slate-900 text-sm focus:outline-none focus:border-orange-400 focus:ring-2 focus:ring-orange-500/30 font-semibold"
               >
                 <option value="Customer">Customer / Industrial Client</option>
                 <option value="Technician">Service Technician</option>
@@ -242,13 +242,13 @@ export const UserManagementPage = () => {
               <button
                 type="button"
                 onClick={() => setActiveUser(null)}
-                className="px-4 py-2 rounded-xl bg-slate-800 text-slate-300 font-semibold"
+                className="px-4 py-2 rounded-xl bg-white border border-slate-200 text-slate-600 font-semibold"
               >
                 Cancel
               </button>
               <button
                 type="submit"
-                className="px-5 py-2 rounded-xl bg-amber-500 hover:bg-amber-400 text-slate-950 font-extrabold shadow-md"
+                className="px-5 py-2 rounded-xl bg-amber-500 hover:bg-amber-600 text-white font-extrabold shadow-md"
               >
                 Save Role
               </button>
@@ -265,39 +265,39 @@ export const UserManagementPage = () => {
       >
         <form onSubmit={handleCreateSubmit} className="space-y-4 text-xs">
           {createError && (
-            <div className="p-3 rounded-xl bg-rose-500/10 border border-rose-500/30 text-rose-400 text-xs font-semibold">
+            <div className="p-3 rounded-xl bg-rose-500/10 border border-rose-500/30 text-rose-600 text-xs font-semibold">
               {createError}
             </div>
           )}
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div>
-              <label className="block text-slate-300 font-bold uppercase mb-1">Full Name *</label>
+              <label className="block text-slate-600 font-bold uppercase mb-1">Full Name *</label>
               <input
                 type="text"
                 required
                 placeholder="Technician / Staff name"
                 value={newName}
                 onChange={(e) => setNewName(e.target.value)}
-                className="w-full px-3.5 py-2.5 bg-slate-950 border border-slate-800 rounded-xl text-slate-200 text-sm focus:outline-none focus:border-amber-500/50"
+                className="w-full px-3.5 py-2.5 bg-white border border-slate-200 rounded-lg text-slate-900 text-sm focus:outline-none focus:border-orange-400 focus:ring-2 focus:ring-orange-500/30"
               />
             </div>
             <div>
-              <label className="block text-slate-300 font-bold uppercase mb-1">Email Address *</label>
+              <label className="block text-slate-600 font-bold uppercase mb-1">Email Address *</label>
               <input
                 type="email"
                 required
                 placeholder="name@udayelectrical.com"
                 value={newEmail}
                 onChange={(e) => setNewEmail(e.target.value)}
-                className="w-full px-3.5 py-2.5 bg-slate-950 border border-slate-800 rounded-xl text-slate-200 text-sm focus:outline-none focus:border-amber-500/50"
+                className="w-full px-3.5 py-2.5 bg-white border border-slate-200 rounded-lg text-slate-900 text-sm focus:outline-none focus:border-orange-400 focus:ring-2 focus:ring-orange-500/30"
               />
             </div>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div>
-              <label className="block text-slate-300 font-bold uppercase mb-1">Temporary Password *</label>
+              <label className="block text-slate-600 font-bold uppercase mb-1">Temporary Password *</label>
               <input
                 type="password"
                 required
@@ -305,15 +305,15 @@ export const UserManagementPage = () => {
                 placeholder="At least 6 characters"
                 value={newPassword}
                 onChange={(e) => setNewPassword(e.target.value)}
-                className="w-full px-3.5 py-2.5 bg-slate-950 border border-slate-800 rounded-xl text-slate-200 text-sm focus:outline-none focus:border-amber-500/50"
+                className="w-full px-3.5 py-2.5 bg-white border border-slate-200 rounded-lg text-slate-900 text-sm focus:outline-none focus:border-orange-400 focus:ring-2 focus:ring-orange-500/30"
               />
             </div>
             <div>
-              <label className="block text-slate-300 font-bold uppercase mb-1">System Role *</label>
+              <label className="block text-slate-600 font-bold uppercase mb-1">System Role *</label>
               <select
                 value={newUserRole}
                 onChange={(e) => setNewUserRole(e.target.value)}
-                className="w-full px-3.5 py-2.5 bg-slate-950 border border-slate-800 rounded-xl text-slate-200 text-sm focus:outline-none focus:border-amber-500/50 font-semibold"
+                className="w-full px-3.5 py-2.5 bg-white border border-slate-200 rounded-lg text-slate-900 text-sm focus:outline-none focus:border-orange-400 focus:ring-2 focus:ring-orange-500/30 font-semibold"
               >
                 <option value="Staff">Sales & Operations Staff</option>
                 <option value="Technician">Service Technician</option>
@@ -323,24 +323,24 @@ export const UserManagementPage = () => {
           </div>
 
           <div>
-            <label className="block text-slate-300 font-bold uppercase mb-1">Phone Number</label>
+            <label className="block text-slate-600 font-bold uppercase mb-1">Phone Number</label>
             <input
               type="tel"
               placeholder="+91 98765 00000"
               value={newPhone}
               onChange={(e) => setNewPhone(e.target.value)}
-              className="w-full px-3.5 py-2.5 bg-slate-950 border border-slate-800 rounded-xl text-slate-200 text-sm focus:outline-none focus:border-amber-500/50"
+              className="w-full px-3.5 py-2.5 bg-white border border-slate-200 rounded-lg text-slate-900 text-sm focus:outline-none focus:border-orange-400 focus:ring-2 focus:ring-orange-500/30"
             />
           </div>
 
           <div>
-            <label className="block text-slate-300 font-bold uppercase mb-1">Address</label>
+            <label className="block text-slate-600 font-bold uppercase mb-1">Address</label>
             <textarea
               rows={2}
               placeholder="Work / service area address"
               value={newAddress}
               onChange={(e) => setNewAddress(e.target.value)}
-              className="w-full px-3.5 py-2.5 bg-slate-950 border border-slate-800 rounded-xl text-slate-200 text-sm focus:outline-none focus:border-amber-500/50"
+              className="w-full px-3.5 py-2.5 bg-white border border-slate-200 rounded-lg text-slate-900 text-sm focus:outline-none focus:border-orange-400 focus:ring-2 focus:ring-orange-500/30"
             />
           </div>
 
@@ -348,13 +348,13 @@ export const UserManagementPage = () => {
             <button
               type="button"
               onClick={() => setCreateModalOpen(false)}
-              className="px-4 py-2 rounded-xl bg-slate-800 text-slate-300 font-semibold"
+              className="px-4 py-2 rounded-xl bg-white border border-slate-200 text-slate-600 font-semibold"
             >
               Cancel
             </button>
             <button
               type="submit"
-              className="px-5 py-2 rounded-xl bg-amber-500 hover:bg-amber-400 text-slate-950 font-extrabold shadow-md"
+              className="px-5 py-2 rounded-xl bg-amber-500 hover:bg-amber-600 text-white font-extrabold shadow-md"
             >
               Create Account
             </button>

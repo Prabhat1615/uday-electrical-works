@@ -12,7 +12,9 @@
     "dev": "nodemon server.js",
     "seed:dev": "node scripts/seed-dev.js",
     "seed:catalog": "node scripts/seed-product-catalog.js",
-    "create-admin": "node scripts/create-admin.js"
+    "seed:services": "node scripts/seed-services.js",
+    "create-admin": "node scripts/create-admin.js",
+    "test": "node --test tests/review-security.test.js"
   },
   "dependencies": {
     "bcryptjs": "^2.4.3",

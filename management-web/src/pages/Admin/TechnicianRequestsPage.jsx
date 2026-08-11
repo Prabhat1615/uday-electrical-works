@@ -81,9 +81,9 @@ export const TechnicianRequestsPage = () => {
 
   const HistoryBadge = ({ event }) => {
     const styles = {
-      Submitted: 'bg-amber-500/10 text-amber-400 border-amber-500/30',
-      Approved: 'bg-emerald-500/10 text-emerald-400 border-emerald-500/30',
-      Rejected: 'bg-rose-500/10 text-rose-400 border-rose-500/30'
+      Submitted: 'bg-amber-50 text-amber-600 border-amber-500/30',
+      Approved: 'bg-emerald-500/10 text-emerald-600 border-emerald-500/30',
+      Rejected: 'bg-rose-500/10 text-rose-600 border-rose-500/30'
     };
     return (
       <span className={`inline-block px-2 py-0.5 rounded-full text-[10px] font-extrabold uppercase border ${styles[event]}`}>

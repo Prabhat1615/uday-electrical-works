@@ -63,20 +63,20 @@ export const BackupRestorePage = () => {
     <div className="max-w-4xl mx-auto space-y-6">
       
       {/* Header */}
-      <div className="border-b border-slate-800 pb-4">
-        <h1 className="text-2xl font-extrabold text-white">Database Backup & System Restore</h1>
-        <p className="text-xs text-slate-400">Export database snapshots as JSON backups or import restore files</p>
+      <div className="border-b border-slate-200 pb-4">
+        <h1 className="text-2xl font-extrabold text-slate-900">Database Backup & System Restore</h1>
+        <p className="text-xs text-slate-500">Export database snapshots as JSON backups or import restore files</p>
       </div>
 
       {statusMsg && (
-        <div className="p-4 rounded-2xl bg-emerald-500/10 border border-emerald-500/30 text-emerald-400 text-xs font-bold flex items-center space-x-2">
+        <div className="p-4 rounded-xl bg-emerald-500/10 border border-emerald-500/30 text-emerald-600 text-xs font-bold flex items-center space-x-2">
           <CheckCircle2 className="w-5 h-5 shrink-0" />
           <span>{statusMsg}</span>
         </div>
       )}
 
       {errorMsg && (
-        <div className="p-4 rounded-2xl bg-rose-500/10 border border-rose-500/30 text-rose-400 text-xs font-bold flex items-center space-x-2">
+        <div className="p-4 rounded-xl bg-rose-500/10 border border-rose-500/30 text-rose-600 text-xs font-bold flex items-center space-x-2">
           <AlertTriangle className="w-5 h-5 shrink-0" />
           <span>{errorMsg}</span>
         </div>
@@ -85,13 +85,13 @@ export const BackupRestorePage = () => {
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         
         {/* Export Card */}
-        <div className="bg-slate-900 border border-slate-800 rounded-3xl p-6 space-y-4 shadow-xl flex flex-col justify-between">
+        <div className="bg-white border border-slate-200 rounded-xl p-5 space-y-4 shadow-card flex flex-col justify-between">
           <div className="space-y-3">
-            <div className="p-3 w-fit rounded-2xl bg-amber-500/10 border border-amber-500/20 text-amber-400">
+            <div className="p-3 w-fit rounded-xl bg-amber-500/10 border border-amber-500/20 text-amber-600">
               <Download className="w-6 h-6" />
             </div>
-            <h3 className="text-lg font-bold text-white">Export Database Backup</h3>
-            <p className="text-xs text-slate-400 leading-relaxed">
+            <h3 className="text-lg font-bold text-slate-900">Export Database Backup</h3>
+            <p className="text-xs text-slate-500 leading-relaxed">
               Download a complete JSON snapshot containing users, products, services, sales orders, leads, and procurement history.
             </p>
           </div>
@@ -99,7 +99,7 @@ export const BackupRestorePage = () => {
           <button
             onClick={handleExport}
             disabled={downloading}
-            className="w-full py-3 rounded-xl bg-amber-500 hover:bg-amber-400 text-slate-950 font-extrabold text-xs transition-all shadow-md flex items-center justify-center space-x-2"
+            className="w-full py-3 rounded-xl bg-amber-500 hover:bg-amber-600 text-white font-extrabold text-xs transition-all shadow-md flex items-center justify-center space-x-2"
           >
             <Download className="w-4 h-4" />
             <span>{downloading ? 'Generating Snapshot...' : 'Download JSON Backup'}</span>
@@ -107,19 +107,19 @@ export const BackupRestorePage = () => {
         </div>
 
         {/* Import Card */}
-        <div className="bg-slate-900 border border-slate-800 rounded-3xl p-6 space-y-4 shadow-xl flex flex-col justify-between">
+        <div className="bg-white border border-slate-200 rounded-xl p-5 space-y-4 shadow-card flex flex-col justify-between">
           <div className="space-y-3">
-            <div className="p-3 w-fit rounded-2xl bg-sky-500/10 border border-sky-500/20 text-sky-400">
+            <div className="p-3 w-fit rounded-xl bg-sky-500/10 border border-sky-500/20 text-sky-600">
               <Upload className="w-6 h-6" />
             </div>
-            <h3 className="text-lg font-bold text-white">Restore Database From File</h3>
-            <p className="text-xs text-slate-400 leading-relaxed">
+            <h3 className="text-lg font-bold text-slate-900">Restore Database From File</h3>
+            <p className="text-xs text-slate-500 leading-relaxed">
               Upload a previously downloaded JSON backup snapshot to restore database inventory and master records.
             </p>
           </div>
 
-          <label className="w-full py-3 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 font-extrabold text-xs transition-all border border-slate-700 flex items-center justify-center space-x-2 cursor-pointer text-center">
-            <Upload className="w-4 h-4 text-sky-400" />
+          <label className="w-full py-3 rounded-xl bg-white hover:bg-slate-100 text-slate-600 font-extrabold text-xs transition-all border border-slate-200 flex items-center justify-center space-x-2 cursor-pointer text-center">
+            <Upload className="w-4 h-4 text-sky-600" />
             <span>{restoring ? 'Restoring Database...' : 'Select Backup JSON File'}</span>
             <input type="file" accept=".json" onChange={handleImportFile} disabled={restoring} className="hidden" />
           </label>

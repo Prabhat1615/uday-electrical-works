@@ -1,4 +1,4 @@
-import React from 'react';
+﻿import React from 'react';
 import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { Zap, Home, ArrowLeft } from 'lucide-react';
@@ -37,7 +37,7 @@ export const NotFoundPage = () => {
           </Link>
           <Link
             to="/shop"
-            className="px-6 py-3 rounded-2xl bg-white dark:bg-slate-950 border border-[#E2E8F0] dark:border-slate-800 text-[#0F172A] dark:text-white font-black text-xs flex items-center justify-center space-x-2 hover:border-[#FF6B00] transition-all"
+            className="px-6 py-3 rounded-2xl bg-white dark:bg-slate-950 border border-[#E2E8F0] dark:border-slate-800 text-[#0F172A] dark:text-white font-black text-xs flex items-center justify-center space-x-2 hover:border-[#F97316] transition-all"
           >
             <ArrowLeft className="w-4 h-4" />
             <span>Browse the Shop</span>

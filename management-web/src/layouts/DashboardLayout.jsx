@@ -32,14 +32,16 @@ import {
   Menu,
   X,
   ChevronDown,
-  ArrowLeft
+  ArrowLeft,
+  Star
 } from 'lucide-react';
 import { useAuth } from '../hooks/useAuth';
 import { NotificationBell } from '../components/NotificationBell';
+import { Logo } from '../components/Logo';
 import { useTechnicianRequests } from '../hooks/useErpQueries';
 
 // ---------------------------------------------------------------------------
-// Navigation model — grouped categories. Routes are UNCHANGED; only labels,
+// Navigation model - grouped categories. Routes are UNCHANGED; only labels,
 // grouping and presentation change. Role arrays preserve the previous
 // per-item restrictions (backend remains the authoritative guard).
 // ---------------------------------------------------------------------------
@@ -49,7 +51,7 @@ const buildNavGroups = (pendingTechCount) => [
     label: 'MAIN',
     items: [
       { name: 'Overview', path: '/dashboard', icon: LayoutDashboard, roles: ['Admin', 'Staff', 'Technician', 'Customer'] },
-      { name: 'Insights', path: '/dashboard/insights', icon: TrendingUp, roles: ['Admin'] }
+      { name: 'Insights', path: '/dashboard/insights', icon: TrendingUp, roles: ['Admin', 'Staff'] }
     ]
   },
   {
@@ -75,6 +77,7 @@ const buildNavGroups = (pendingTechCount) => [
       { name: 'Service Bookings', path: '/dashboard/bookings', icon: CalendarCheck, roles: ['Admin', 'Staff', 'Technician', 'Customer'] },
       { name: 'Service Schedule', path: '/dashboard/schedule', icon: CalendarDays, roles: ['Admin', 'Staff', 'Technician'] },
       { name: 'Field Jobs', path: '/dashboard/field-service', icon: Wrench, roles: ['Admin', 'Staff', 'Technician'] },
+      { name: 'Service Feedback', path: '/dashboard/feedback', icon: Star, roles: ['Admin', 'Staff'] },
       { name: 'AMC Contracts', path: '/dashboard/amc', icon: FileCheck, roles: ['Admin', 'Staff', 'Customer'] },
       { name: 'Services', path: '/dashboard/services', icon: Layers, roles: ['Admin', 'Staff'] }
     ]
@@ -125,17 +128,17 @@ const buildNavGroups = (pendingTechCount) => [
 ];
 
 const itemClasses = (active, collapsed) =>
-  `group relative flex items-center rounded-lg text-sm font-medium transition-colors duration-150 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-500 ${
-    collapsed ? 'justify-center px-0 py-2.5' : 'gap-3 px-3 py-2'
+  `group relative flex items-center rounded-xl text-xs font-bold transition-all duration-150 ${
+    collapsed ? 'justify-center px-0 py-2.5' : 'gap-3 px-3.5 py-2.5'
   } ${
     active
-      ? 'bg-brand-50 text-brand-700 font-semibold'
-      : 'text-text-secondary hover:bg-surface-100 hover:text-text-primary'
+      ? 'bg-[#FFF7ED] text-[#EA580C] font-extrabold shadow-xs border border-[#FED7AA]'
+      : 'text-[#64748B] hover:bg-[#F8FAFC] hover:text-[#111827]'
   }`;
 
 const iconClasses = (active) =>
-  `w-5 h-5 shrink-0 ${
-    active ? 'text-brand-600' : 'text-text-muted group-hover:text-text-primary'
+  `w-4 h-4 shrink-0 ${
+    active ? 'text-[#EA580C]' : 'text-[#94A3B8] group-hover:text-[#111827]'
   }`;
 
 export const DashboardLayout = () => {
@@ -338,7 +341,7 @@ export const DashboardLayout = () => {
     return (
       <div key={group.label} className={compact ? 'mt-3' : 'mt-5'}>
         {compact ? (
-          <div className="mx-3 h-px bg-slate-800" aria-hidden="true" />
+          <div className="mx-3 h-px bg-slate-200" aria-hidden="true" />
         ) : (
           <p className="px-3 pb-1.5 text-[10px] font-bold uppercase tracking-wider text-text-muted">
             {group.label}
@@ -376,20 +379,10 @@ export const DashboardLayout = () => {
         >
           <Link
             to="/dashboard"
-            className="flex items-center gap-3"
+            className="flex items-center"
             title={compact ? 'Uday Electrical Works' : undefined}
           >
-            <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-brand-500 text-white shadow-sm">
-              <Zap className="h-5 w-5 fill-current" />
-            </div>
-            <div className={`leading-tight ${compact ? 'hidden md:block' : ''}`}>
-              <h1 className="text-base font-bold tracking-tight text-text-primary">
-                UDAY <span className="text-brand-600">Electrical</span>
-              </h1>
-              <span className="block text-[10px] font-semibold uppercase tracking-wider text-text-muted">
-                Management Portal
-              </span>
-            </div>
+            <Logo portal="management" variant={compact ? 'icon' : 'full'} size="md" />
           </Link>
           <button
             type="button"

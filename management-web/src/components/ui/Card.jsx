@@ -22,19 +22,19 @@ export const Card = ({
 };
 
 export const CardHeader = ({ children, className = '' }) => (
-  <div className={`p-5 border-b border-surface-200 ${className}`}>
+  <div className={`px-4 py-3 border-b border-surface-200 ${className}`}>
     {children}
   </div>
 );
 
 export const CardBody = ({ children, className = '' }) => (
-  <div className={`p-5 ${className}`}>
+  <div className={`p-4 ${className}`}>
     {children}
   </div>
 );
 
 export const CardFooter = ({ children, className = '' }) => (
-  <div className={`p-5 border-t border-surface-200 bg-surface-50 ${className}`}>
+  <div className={`px-4 py-3 border-t border-surface-200 bg-surface-50 ${className}`}>
     {children}
   </div>
 );

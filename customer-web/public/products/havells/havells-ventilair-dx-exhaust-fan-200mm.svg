@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 800" width="800" height="800">
+  <defs>
+    <!-- Background Gradient -->
+    <linearGradient id="bgGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#FFFFFF" />
+      <stop offset="100%" stop-color="#F1F5F9" />
+    </linearGradient>
+    
+    <!-- Metallic Shimmer -->
+    <linearGradient id="metallic" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#FFFFFF" />
+      <stop offset="50%" stop-color="#E2E8F0" />
+      <stop offset="100%" stop-color="#CBD5E1" />
+    </linearGradient>
+
+    <!-- Motor Metallic Gradient -->
+    <radialGradient id="motorGradient" cx="40%" cy="40%" r="60%">
+      <stop offset="0%" stop-color="#475569" />
+      <stop offset="70%" stop-color="#1E293B" />
+      <stop offset="100%" stop-color="#0F172A" />
+    </radialGradient>
+
+    <!-- Blade Aerodynamic Gradient -->
+    <linearGradient id="bladeGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#F8FAFC" />
+      <stop offset="100%" stop-color="#E2E8F0" />
+    </linearGradient>
+
+    <!-- Bulb Glow Light -->
+    <radialGradient id="bulbGlow" cx="50%" cy="40%" r="60%">
+      <stop offset="0%" stop-color="#FFFFFF" />
+      <stop offset="70%" stop-color="#FEF08A" />
+      <stop offset="100%" stop-color="#FDE047" />
+    </radialGradient>
+
+    <!-- Batten Glow Light -->
+    <linearGradient id="battenGlow" x1="0%" y1="50%" x2="100%" y2="50%">
+      <stop offset="0%" stop-color="#E0F2FE" />
+      <stop offset="50%" stop-color="#FFFFFF" />
+      <stop offset="100%" stop-color="#E0F2FE" />
+    </linearGradient>
+
+    <filter id="dropShadow" x="-10%" y="-10%" width="130%" height="130%">
+      <feDropShadow dx="0" dy="16" stdDeviation="20" flood-color="#0F172A" flood-opacity="0.1" />
+    </filter>
+  </defs>
+
+  <!-- Clean Surface Card Canvas -->
+  <rect width="800" height="800" fill="url(#bgGrad)" />
+  <rect x="40" y="40" width="720" height="720" rx="36" fill="#FFFFFF" stroke="#E2E8F0" stroke-width="4" filter="url(#dropShadow)" />
+
+  <!-- Manufacturer Brand Tag Header -->
+  <rect x="70" y="70" width="220" height="54" rx="16" fill="#E31E24" />
+  <text x="180" y="105" font-family="Montserrat, sans-serif" font-weight="900" font-size="22" fill="#FFFFFF" text-anchor="middle" letter-spacing="2">HAVELLS</text>
+
+  <!-- Verified Genuine Electrical Emblem -->
+  <g transform="translate(620, 70)">
+    <rect width="110" height="38" rx="12" fill="#10B981" opacity="0.15" />
+    <text x="55" y="24" font-family="Inter, sans-serif" font-weight="800" font-size="12" fill="#059669" text-anchor="middle">VERIFIED</text>
+  </g>
+
+  <!-- Main Technical Product Artwork -->
+  <g transform="translate(0, 30)">
+    
+      <!-- Outer Square Vent Frame -->
+      <rect x="150" y="150" width="500" height="500" rx="36" fill="#F8FAFC" stroke="#E31E24" stroke-width="12" />
+      <!-- Circular Grill -->
+      <circle cx="400" cy="400" r="210" fill="#0F172A" stroke="#334155" stroke-width="6" />
+      <circle cx="400" cy="400" r="180" fill="none" stroke="#475569" stroke-width="3" stroke-dasharray="8 8" />
+      
+      <!-- Fan Blades -->
+      <g transform="rotate(25 400 400)">
+        <path d="M 400,400 Q 480,260 400,200 Q 320,260 400,400 Z" fill="#E31E24" opacity="0.9" />
+        <path d="M 400,400 Q 540,480 600,400 Q 540,320 400,400 Z" fill="#E31E24" opacity="0.9" />
+        <path d="M 400,400 Q 480,540 400,600 Q 320,540 400,400 Z" fill="#E31E24" opacity="0.9" />
+        <path d="M 400,400 Q 260,480 200,400 Q 260,320 400,400 Z" fill="#E31E24" opacity="0.9" />
+      </g>
+      <circle cx="400" cy="400" r="45" fill="url(#motorGradient)" stroke="#FFFFFF" stroke-width="4" />
+    
+  </g>
+
+  <!-- Footer Product Model Banner -->
+  <rect x="70" y="690" width="660" height="54" rx="16" fill="#0F172A" opacity="0.95" />
+  <text x="400" y="725" font-family="Montserrat, sans-serif" font-weight="800" font-size="18" fill="#FFFFFF" text-anchor="middle">Havells Ventilair DX Exhaust Fan 200mm</text>
+</svg>

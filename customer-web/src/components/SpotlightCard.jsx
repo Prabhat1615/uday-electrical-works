@@ -1,4 +1,4 @@
-import React, { useRef, useState } from 'react';
+﻿import React, { useRef, useState } from 'react';
 import { motion, useMotionValue, useSpring, useTransform } from 'framer-motion';
 
 /* Reusable 3D card with cursor spotlight, tilt and glow border.
@@ -10,7 +10,7 @@ export const SpotlightCard = ({
   scale = 1.02,
   spotlight = 'rgba(255, 107, 0, 0.14)',
   spotlightSize = 360,
-  borderOnHover = 'border-[#FF6B00]/50'
+  borderOnHover = 'border-[#F97316]/50'
 }) => {
   const ref = useRef(null);
   const [hovered, setHovered] = useState(false);
