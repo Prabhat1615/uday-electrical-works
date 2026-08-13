@@ -171,7 +171,7 @@ export const HomePage = () => {
       {/* 3. Product Section: Everything Electrical, Under One Roof (Light Section) */}
       <AnimatedSection direction="up" className="max-w-[1536px] mx-auto px-4 sm:px-6 lg:px-12 xl:px-16 space-y-8">
         <div className="text-center space-y-2 max-w-3xl mx-auto">
-          <span className="text-[11px] font-extrabold text-[#F97316] uppercase tracking-widest font-display">In-Store &amp; Online Catalog</span>
+          <span className="text-[11px] font-extrabold text-[#F97316] uppercase tracking-widest font-display">-- In-Store &amp; Online Catalog --</span>
           <h2 className="text-2xl sm:text-4xl font-black text-[#111827] tracking-tight font-display">Everything Electrical, Under One Roof</h2>
           <p className="text-xs sm:text-sm text-[#64748B]">Genuine items stocked at our Chhota Govindpur shop with manufacturer warranty &amp; GST invoice</p>
         </div>
@@ -202,7 +202,7 @@ export const HomePage = () => {
         <div className="pt-6 border-t border-[#E5E7EB]">
           <div className="flex flex-col sm:flex-row sm:items-end justify-between mb-6 gap-3">
             <div>
-              <span className="text-[10px] font-extrabold text-[#F97316] uppercase tracking-wider block font-display">Featured Inventory</span>
+              <span className="text-[10px] font-extrabold text-[#F97316] uppercase tracking-wider block font-display">-- Featured Inventory --</span>
               <h3 className="text-xl sm:text-2xl font-black text-[#111827] font-display">Top Selling Products</h3>
             </div>
             <Link 
@@ -282,7 +282,7 @@ export const HomePage = () => {
         <AnimatedSection direction="up" className="max-w-[1536px] mx-auto px-4 sm:px-6 lg:px-12 xl:px-16 space-y-8">
           <div className="flex flex-col sm:flex-row sm:items-end justify-between border-b border-[#E5E7EB] pb-4 gap-4">
             <div>
-              <span className="text-[11px] font-extrabold text-[#F97316] uppercase tracking-widest font-display">Doorstep Solutions</span>
+              <span className="text-[11px] font-extrabold text-[#F97316] uppercase tracking-widest font-display">-- Doorstep Solutions --</span>
               <h2 className="text-2xl sm:text-4xl font-black text-[#111827] mt-0.5 font-display">Professional Electrical Services</h2>
             </div>
 
@@ -346,56 +346,103 @@ export const HomePage = () => {
       </section>
 
       {/* 5. Real Store Identity & About Section (Light Section) */}
-      <section className="relative py-12 bg-white overflow-hidden">
+      <section className="relative py-14 bg-white overflow-hidden border-b border-[#E5E7EB]">
         <AnimatedSection direction="up" className="max-w-[1536px] mx-auto px-4 sm:px-6 lg:px-12 xl:px-16 space-y-8 relative">
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
-            {/* Left Store Overview */}
-            <div className="lg:col-span-6 space-y-4">
-              <span className="text-[11px] font-extrabold text-[#F97316] uppercase tracking-widest font-display">Store Identity &amp; Mission</span>
-              <h2 className="text-2xl sm:text-4xl font-black text-[#111827] tracking-tight font-display">
-                Your Trusted Local Electrical Store in Jamshedpur
-              </h2>
-              <p className="text-xs sm:text-sm text-[#64748B] leading-relaxed">
-                Located on Chhota Govindpur Main Road, <strong>Uday Electrical Works</strong> operates both a retail electrical store and a dedicated doorstep electrician service. We supply 100% genuine brand products from Havells, Crompton, Polycab, Philips, Anchor, and Bajaj with official GST billing.
-              </p>
-              <p className="text-xs sm:text-sm text-[#64748B] leading-relaxed">
-                Whether you need a single LED bulb, complete house wiring materials, fan repairs, or emergency fault diagnosis, our in-house wiremen team visits your home across Jamshedpur to deliver reliable electrical work.
-              </p>
+          <div className="text-center space-y-2 max-w-3xl mx-auto mb-2">
+            <span className="text-[11px] font-extrabold text-[#F97316] uppercase tracking-widest font-display">-- Store Identity &amp; Mission --</span>
+            <h2 className="text-2xl sm:text-4xl font-black text-[#111827] tracking-tight font-display">
+              Your Trusted Local Electrical Store in Jamshedpur
+            </h2>
+          </div>
 
-              <div className="pt-2 flex flex-wrap gap-2">
-                {wiremenTeam.map((w) => (
-                  <span key={w} className="px-3 py-1 rounded-xl bg-slate-50 border border-[#E5E7EB] text-xs font-semibold text-[#111827] flex items-center gap-1.5 shadow-xs">
-                    <Check className="w-3.5 h-3.5 text-[#16A34A]" />
-                    {w}
-                  </span>
-                ))}
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-stretch">
+            {/* Left Card: Identity & Mission Overview */}
+            <div className="p-7 sm:p-8 rounded-3xl bg-[#FAFAF8] border border-[#E5E7EB] shadow-xs flex flex-col justify-between space-y-6">
+              <div className="space-y-4">
+                <div className="inline-flex items-center space-x-2 px-3.5 py-1.5 rounded-full bg-[#FFF7ED] border border-[#FED7AA] text-[#EA580C] text-[11px] font-extrabold tracking-wider uppercase font-display">
+                  <Store className="w-3.5 h-3.5 text-[#F97316]" />
+                  <span>Retail Store &amp; Doorstep Electricians</span>
+                </div>
+
+                <h3 className="text-xl sm:text-2xl font-black text-[#111827] font-display leading-snug">
+                  Quality Electrical Products &amp; Reliable Home Repairs
+                </h3>
+
+                <p className="text-xs sm:text-sm text-[#64748B] leading-relaxed">
+                  Located on Chhota Govindpur Main Road, Uday Electrical Works offers genuine electrical products and doorstep electrician services with official GST billing.
+                </p>
+
+                <p className="text-xs sm:text-sm text-[#64748B] leading-relaxed">
+                  Whether you need house wiring materials, fan repairs, appliance servicing, or emergency fault diagnosis, our in-house wiremen visit your home across Jamshedpur to deliver safe, professional electrical work.
+                </p>
+              </div>
+
+              {/* Wiremen Team Pills */}
+              <div className="pt-4 border-t border-[#E5E7EB] space-y-2">
+                <span className="text-[10px] font-extrabold text-[#64748B] uppercase tracking-wider block font-display">Verified In-House Wiremen Team:</span>
+                <div className="flex flex-wrap gap-2">
+                  {wiremenTeam.map((w) => (
+                    <span key={w} className="px-3 py-1 rounded-xl bg-white border border-[#E5E7EB] text-xs font-semibold text-[#111827] flex items-center gap-1.5 shadow-2xs">
+                      <Check className="w-3.5 h-3.5 text-[#16A34A]" />
+                      {w}
+                    </span>
+                  ))}
+                </div>
               </div>
             </div>
 
-            {/* Right Storefront Snapshot Box */}
-            <div className="lg:col-span-6">
-              <div className="p-6 rounded-3xl bg-[#FAFAF8] border border-[#E5E7EB] shadow-xs space-y-4">
-                <div className="flex items-center space-x-3">
-                  <Store className="w-6 h-6 text-[#F97316] shrink-0" />
+            {/* Right Card: Store Location & Contact Snapshot */}
+            <div className="p-7 sm:p-8 rounded-3xl bg-[#FAFAF8] border border-[#E5E7EB] shadow-xs flex flex-col justify-between space-y-6">
+              <div className="space-y-4">
+                <div className="inline-flex items-center space-x-2 px-3.5 py-1.5 rounded-full bg-[#E0F2FE] border border-[#BAE6FD] text-[#0284C7] text-[11px] font-extrabold tracking-wider uppercase font-display">
+                  <MapPin className="w-3.5 h-3.5 text-[#0284C7]" />
+                  <span>Storefront Location &amp; Hours</span>
+                </div>
+
+                <div className="flex items-start space-x-3">
+                  <div className="p-3 rounded-2xl bg-white border border-[#E5E7EB] text-[#F97316] shadow-2xs shrink-0 mt-1">
+                    <Store className="w-6 h-6" />
+                  </div>
                   <div>
-                    <h3 className="text-base font-bold text-[#111827] font-display">Uday Electrical Works Retail Store</h3>
-                    <p className="text-xs text-[#64748B]">Chhota Govindpur Main Road, Jamshedpur, Jharkhand - 831015</p>
+                    <h3 className="text-lg sm:text-xl font-extrabold text-[#111827] font-display">Uday Electrical Works Retail Store</h3>
+                    <p className="text-xs text-[#64748B] mt-0.5 leading-relaxed">Chhota Govindpur Main Road, Jamshedpur, Jharkhand - 831015</p>
                   </div>
                 </div>
 
-                <div className="space-y-2 pt-3 border-t border-[#E5E7EB] text-xs text-[#64748B]">
-                  <p><strong className="text-[#111827]">Store Hours:</strong> Monday - Saturday (8:30 AM - 9:00 PM)</p>
-                  <p><strong className="text-[#111827]">Doorstep Coverage:</strong> Telco, Govindpur, Baridih, Sidhgora, Sakchi, Mango, Adityapur &amp; all Jamshedpur areas</p>
-                  <p><strong className="text-[#111827]">Direct Phone:</strong> 7903789402 / 9934187847</p>
+                <div className="p-4 rounded-2xl bg-white border border-[#E5E7EB] space-y-2.5 text-xs text-[#64748B] shadow-2xs">
+                  <div className="flex items-center justify-between border-b border-[#F1F5F9] pb-2">
+                    <span className="font-bold text-[#111827]">Store Opening Hours:</span>
+                    <span className="text-[#F97316] font-extrabold">Mon - Sat (8:30 AM - 9:00 PM)</span>
+                  </div>
+                  <div className="flex items-start justify-between border-b border-[#F1F5F9] pb-2 gap-2">
+                    <span className="font-bold text-[#111827] shrink-0">Doorstep Coverage:</span>
+                    <span className="text-right text-[#475569]">Telco, Govindpur, Baridih, Sakchi, Mango, Adityapur &amp; all Jamshedpur</span>
+                  </div>
+                  <div className="flex items-center justify-between">
+                    <span className="font-bold text-[#111827]">Direct Phone Support:</span>
+                    <span className="font-mono font-black text-[#111827]">7903789402 / 9934187847</span>
+                  </div>
                 </div>
+              </div>
 
-                <a
-                  href="#store-location-map"
-                  className="inline-flex items-center space-x-2 text-xs font-extrabold px-5 py-2.5 rounded-xl bg-[#F97316] hover:bg-[#EA580C] text-white shadow-xs transition-all font-display"
-                >
-                  <span>View Map &amp; Directions</span>
-                  <ExternalLink className="w-4 h-4" />
-                </a>
+              {/* Action Buttons: Centered, Small, Equal Width */}
+              <div className="pt-4 border-t border-[#E5E7EB] flex justify-center">
+                <div className="grid grid-cols-2 gap-2.5 w-full max-w-md">
+                  <a
+                    href="#store-location-map"
+                    className="inline-flex items-center justify-center space-x-1.5 text-xs font-bold px-3 py-2 rounded-lg bg-[#F97316] hover:bg-[#EA580C] text-white shadow-2xs transition-all font-display whitespace-nowrap"
+                  >
+                    <span>Store Map &amp; Directions</span>
+                    <ExternalLink className="w-3.5 h-3.5 shrink-0" />
+                  </a>
+                  <a
+                    href="tel:7903789402"
+                    className="inline-flex items-center justify-center space-x-1.5 text-xs font-bold px-3 py-2 rounded-lg bg-white border border-[#E5E7EB] hover:border-[#F97316] text-[#111827] shadow-2xs transition-all font-display whitespace-nowrap"
+                  >
+                    <Phone className="w-3.5 h-3.5 text-[#F97316] shrink-0" />
+                    <span>Call Store</span>
+                  </a>
+                </div>
               </div>
             </div>
           </div>
@@ -406,7 +453,7 @@ export const HomePage = () => {
       <section className="py-12 bg-[#111827] text-white overflow-hidden border-y border-slate-800">
         <AnimatedSection direction="up" className="max-w-[1536px] mx-auto px-4 sm:px-6 lg:px-12 xl:px-16 space-y-8">
           <div className="text-center space-y-2 max-w-3xl mx-auto">
-            <span className="text-[11px] font-extrabold text-[#F97316] uppercase tracking-widest font-display">Our Promise</span>
+            <span className="text-[11px] font-extrabold text-[#F97316] uppercase tracking-widest font-display">-- Our Promise --</span>
             <h2 className="text-2xl sm:text-4xl font-black text-white font-display">Why Jamshedpur Trusts Uday Electrical</h2>
           </div>
 
@@ -418,7 +465,7 @@ export const HomePage = () => {
                 </div>
                 <h4 className="text-sm font-bold text-white font-display">100% Genuine Products</h4>
               </div>
-              <p className="text-xs text-slate-400 leading-relaxed pt-0.5">Direct factory sourcing from Havells, Crompton, Polycab with GST invoices.</p>
+              <p className="text-xs text-slate-400 leading-relaxed pt-0.5">Direct sourcing with manufacturer warranty &amp; official GST billing.</p>
             </div>
 
             <div className="p-5 rounded-2xl bg-slate-900/90 border border-slate-800 text-left space-y-3">
@@ -457,7 +504,7 @@ export const HomePage = () => {
       {/* 7. Customer Reviews Section (Light Section) */}
       <AnimatedSection direction="up" className="max-w-[1536px] mx-auto px-4 sm:px-6 lg:px-12 xl:px-16 space-y-8">
         <div className="text-center space-y-2 max-w-3xl mx-auto">
-          <span className="text-[11px] font-extrabold text-[#F97316] uppercase tracking-widest font-display">Customer Feedback</span>
+          <span className="text-[11px] font-extrabold text-[#F97316] uppercase tracking-widest font-display">-- Customer Feedback --</span>
           <h2 className="text-2xl sm:text-4xl font-black text-[#111827] font-display">What Our Customers Say</h2>
         </div>
 
@@ -490,7 +537,7 @@ export const HomePage = () => {
         <div className="p-8 sm:p-10 rounded-3xl bg-white border border-[#E5E7EB] shadow-xs grid grid-cols-1 lg:grid-cols-12 gap-8 items-center relative overflow-hidden">
           {/* Left Column: Heading & Information */}
           <div className="lg:col-span-5 space-y-3">
-            <span className="text-[11px] font-extrabold text-[#F97316] uppercase tracking-widest font-display">Instant Phone Assistance</span>
+            <span className="text-[11px] font-extrabold text-[#F97316] uppercase tracking-widest font-display">-- Instant Phone Assistance --</span>
             <h3 className="text-2xl sm:text-3xl font-black text-[#111827] font-display">Request an Electrician Callback</h3>
             <p className="text-xs sm:text-sm text-[#64748B] leading-relaxed">
               Have an electrical query, wiring project, or need urgent repair? Enter your mobile number and our Chhota Govindpur shop team will call you back during store hours.
@@ -563,7 +610,7 @@ export const HomePage = () => {
       {/* 9. Store Location & Embedded Google Maps */}
       <AnimatedSection direction="up" className="max-w-[1536px] mx-auto px-4 sm:px-6 lg:px-12 xl:px-16 space-y-5" id="store-location-map">
         <div className="text-center space-y-1.5">
-          <span className="text-[11px] font-extrabold text-[#F97316] uppercase tracking-widest font-display">Visit Our Retail Store</span>
+          <span className="text-[11px] font-extrabold text-[#F97316] uppercase tracking-widest font-display">-- Visit Our Retail Store --</span>
           <h2 className="text-2xl sm:text-4xl font-black text-[#111827] tracking-tight font-display">Chhota Govindpur Store Location</h2>
         </div>
 

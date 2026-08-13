@@ -147,24 +147,24 @@ export const HeroSection = () => {
               initial={{ opacity: 0, y: 18 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.45, delay: 0.28 }}
-              className="flex flex-wrap items-center gap-3.5 pt-2"
+              className="flex flex-wrap items-center gap-3 pt-2"
             >
               {/* Primary CTA */}
               <Link
                 to="/shop"
-                className="inline-flex items-center justify-center space-x-3 px-7 py-4 rounded-2xl bg-[#F97316] hover:bg-[#EA580C] text-white font-extrabold text-sm sm:text-base shadow-md shadow-[#F97316]/25 hover:scale-102 transition-all font-display shrink-0 whitespace-nowrap"
+                className="inline-flex items-center justify-center space-x-2 px-5 py-2.5 sm:px-6 sm:py-3 rounded-xl bg-[#F97316] hover:bg-[#EA580C] text-white font-extrabold text-xs sm:text-sm shadow-sm hover:scale-102 transition-all font-display shrink-0 whitespace-nowrap"
               >
-                <Package className="w-5 h-5 shrink-0" />
+                <Package className="w-4 h-4 shrink-0" />
                 <span>Explore Products</span>
-                <ArrowRight className="w-5 h-5 shrink-0" />
+                <ArrowRight className="w-4 h-4 shrink-0" />
               </Link>
 
               {/* Secondary CTA */}
               <button
                 onClick={() => setBookingOpen(true)}
-                className="inline-flex items-center justify-center space-x-3 px-7 py-4 rounded-2xl bg-white border border-[#E5E7EB] hover:border-[#F97316] text-[#111827] font-extrabold text-sm sm:text-base shadow-xs hover:scale-102 transition-all font-display shrink-0 whitespace-nowrap"
+                className="inline-flex items-center justify-center space-x-2 px-5 py-2.5 sm:px-6 sm:py-3 rounded-xl bg-white border border-[#E5E7EB] hover:border-[#F97316] text-[#111827] font-extrabold text-xs sm:text-sm shadow-2xs hover:scale-102 transition-all font-display shrink-0 whitespace-nowrap"
               >
-                <Wrench className="w-5 h-5 text-[#F97316] shrink-0" />
+                <Wrench className="w-4 h-4 text-[#F97316] shrink-0" />
                 <span>Book a Service</span>
               </button>
 
@@ -172,9 +172,9 @@ export const HeroSection = () => {
               <a
                 href="#store-location-map"
                 onClick={scrollToMap}
-                className="inline-flex items-center space-x-2 px-5 py-3.5 rounded-2xl text-xs sm:text-sm font-extrabold text-[#64748B] hover:text-[#EA580C] transition-colors font-display shrink-0 whitespace-nowrap"
+                className="inline-flex items-center space-x-1.5 px-4 py-2.5 rounded-xl text-xs font-bold text-[#64748B] hover:text-[#EA580C] transition-colors font-display shrink-0 whitespace-nowrap"
               >
-                <MapPin className="w-4 h-4 text-[#F97316] shrink-0" />
+                <MapPin className="w-3.5 h-3.5 text-[#F97316] shrink-0" />
                 <span>Visit Store</span>
               </a>
             </motion.div>

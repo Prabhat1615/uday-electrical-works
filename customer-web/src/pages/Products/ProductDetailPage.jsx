@@ -322,11 +322,11 @@ export const ProductDetailPage = () => {
             </p>
 
             {/* Actions */}
-            <div className="flex flex-wrap gap-3 pt-2">
+            <div className="flex flex-wrap gap-2.5 pt-2">
               <button
                 onClick={handleAdd}
                 disabled={!inStock}
-                className={`px-7 py-3.5 rounded-2xl font-bold text-xs flex items-center gap-2 transition-all shadow-md font-display ${
+                className={`px-5 py-2.5 rounded-xl font-bold text-xs flex items-center gap-2 transition-all shadow-xs font-display ${
                   inStock
                     ? 'bg-amber-500 hover:bg-amber-600 text-white shadow-amber-500/20 hover:scale-102'
                     : 'bg-slate-100 dark:bg-slate-800 text-slate-400 cursor-not-allowed'
@@ -339,7 +339,7 @@ export const ProductDetailPage = () => {
               <button
                 onClick={() => { addItem(product, 1); navigate('/cart'); }}
                 disabled={!inStock}
-                className={`px-7 py-3.5 rounded-2xl font-bold text-xs flex items-center gap-2 transition-all shadow-md font-display ${
+                className={`px-5 py-2.5 rounded-xl font-bold text-xs flex items-center gap-2 transition-all shadow-xs font-display ${
                   inStock
                     ? 'bg-blue-600 hover:bg-blue-700 text-white shadow-blue-600/20 hover:scale-102'
                     : 'bg-slate-100 dark:bg-slate-800 text-slate-400 cursor-not-allowed'
@@ -351,7 +351,7 @@ export const ProductDetailPage = () => {
 
               <a
                 href="tel:7903789402"
-                className="px-6 py-3.5 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 text-slate-900 dark:text-white font-bold text-xs flex items-center gap-2 hover:border-amber-500 transition-all font-display"
+                className="px-4 py-2.5 rounded-xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 text-slate-900 dark:text-white font-bold text-xs flex items-center gap-2 hover:border-amber-500 transition-all font-display"
               >
                 <Phone className="w-4 h-4 text-amber-500" />
                 <span>Call Store</span>
