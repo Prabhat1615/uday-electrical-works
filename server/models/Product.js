@@ -70,13 +70,62 @@ const productSchema = new mongoose.Schema({
 productSchema.index({ brand: 1, category: 1 });
 productSchema.index({ name: 'text', description: 'text' });
 
+const calculateStatus = (stock) => {
+  const stockVal = Number(stock);
+  if (isNaN(stockVal) || stockVal <= 0) {
+    return 'Out of Stock';
+  }
+  if (stockVal <= 5) {
+    return 'Low Stock';
+  }
+  return 'In Stock';
+};
+
 productSchema.pre('save', function (next) {
-  if (this.stock === 0) {
-    this.status = 'Out of Stock';
-  } else if (this.stock <= 5) {
-    this.status = 'Low Stock';
-  } else {
-    this.status = 'In Stock';
+  this.status = calculateStatus(this.stock);
+  next();
+});
+
+productSchema.pre('findOneAndUpdate', function (next) {
+  const update = this.getUpdate();
+  if (update) {
+    let stockVal;
+    if (update.stock !== undefined) {
+      stockVal = update.stock;
+    } else if (update.$set && update.$set.stock !== undefined) {
+      stockVal = update.$set.stock;
+    }
+
+    if (stockVal !== undefined) {
+      const newStatus = calculateStatus(stockVal);
+      if (update.$set) {
+        update.$set.status = newStatus;
+      } else {
+        update.status = newStatus;
+      }
+    }
+  }
+  next();
+});
+
+productSchema.pre('updateOne', function (next) {
+  const update = this.getUpdate();
+  if (update) {
+    let stockVal;
+    if (update.stock !== undefined) {
+      stockVal = update.stock;
+    } else if (update.$set && update.$set.stock !== undefined) {
+      stockVal = update.$set.stock;
+    }
+
+    if (stockVal !== undefined) {
+      const newStatus = calculateStatus(stockVal);
+      if (update.$set) {
+        update.$set.status = newStatus;
+      } else {
+        update.status = newStatus;
+      }
+    }
   }
   next();
 });

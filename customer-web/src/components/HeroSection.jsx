@@ -14,6 +14,7 @@ import {
 } from 'lucide-react';
 import { AuroraBackground } from './Backgrounds';
 import { InteractiveBookingFlowModal } from './InteractiveBookingFlowModal';
+import { AnimatedRotatingWord } from './AnimatedRotatingWord';
 
 export const HeroSection = () => {
   const [isMobile, setIsMobile] = useState(false);
@@ -124,7 +125,10 @@ export const HeroSection = () => {
                 transition={{ duration: 0.45, delay: 0.16 }}
                 className="text-3xl sm:text-5xl lg:text-6xl font-black tracking-tight leading-[1.1] text-[#F97316] font-display"
               >
-                Building Your Future.
+                <AnimatedRotatingWord
+                  words={['Building', 'Lighting', 'Securing', 'Energizing', 'Electrifying']}
+                />
+                <span className="whitespace-nowrap"> Your Future.</span>
               </motion.h1>
             </div>
 

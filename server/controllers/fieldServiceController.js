@@ -43,6 +43,10 @@ export const submitFieldReport = async (req, res, next) => {
       return next(new ApiError(404, 'Service booking not found'));
     }
 
+    if (booking.status === 'Completed' || booking.status === 'Cancelled' || booking.status === 'Rejected') {
+      return next(new ApiError(409, 'Completed jobs cannot be modified.'));
+    }
+
     // Ownership: a technician may only report on a job assigned to them,
     // and only for a job already in progress (prevents status jumps).
     if (req.user.role === 'Technician') {

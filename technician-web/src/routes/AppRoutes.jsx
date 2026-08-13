@@ -15,6 +15,8 @@ const FieldServicePage = lazy(() => import('../pages/Dashboard/FieldServicePage'
 const ScheduleCalendarPage = lazy(() => import('../pages/Dashboard/ScheduleCalendarPage').then((m) => ({ default: m.ScheduleCalendarPage })));
 const ProfilePage = lazy(() => import('../pages/Dashboard/ProfilePage').then((m) => ({ default: m.ProfilePage })));
 
+import { ScrollToTop } from '../../../shared/src/components/ScrollToTop';
+
 const withSuspense = (element) => (
   <Suspense fallback={<div className="min-h-screen flex items-center justify-center bg-slate-50"><LoadingSpinner /></div>}>
     {element}
@@ -23,7 +25,9 @@ const withSuspense = (element) => (
 
 export const AppRoutes = () => {
   return (
-    <Routes>
+    <>
+      <ScrollToTop />
+      <Routes>
       {/* Technician Login */}
       <Route path="/login" element={withSuspense(<LoginPage />)} />
 
@@ -45,5 +49,6 @@ export const AppRoutes = () => {
       <Route path="/" element={<Navigate to="/dashboard" replace />} />
       <Route path="*" element={<Navigate to="/dashboard" replace />} />
     </Routes>
+    </>
   );
 };

@@ -45,6 +45,8 @@ const ExecutiveInsightsPage = lazy(() => import('../pages/Dashboard/ExecutiveIns
 // Service Feedback (customer reviews)
 const ServiceFeedbackPage = lazy(() => import('../pages/Dashboard/ServiceFeedbackPage').then((m) => ({ default: m.ServiceFeedbackPage })));
 
+import { ScrollToTop } from '../../../shared/src/components/ScrollToTop';
+
 const withSuspense = (element) => (
   <Suspense fallback={<div className="min-h-screen flex items-center justify-center bg-slate-50"><LoadingSpinner /></div>}>
     {element}
@@ -53,7 +55,9 @@ const withSuspense = (element) => (
 
 export const AppRoutes = () => {
   return (
-    <Routes>
+    <>
+      <ScrollToTop />
+      <Routes>
       {/* Management Login */}
       <Route path="/login" element={withSuspense(<LoginPage />)} />
 
@@ -101,5 +105,6 @@ export const AppRoutes = () => {
       <Route path="/" element={<Navigate to="/dashboard" replace />} />
       <Route path="*" element={<Navigate to="/dashboard" replace />} />
     </Routes>
+    </>
   );
 };

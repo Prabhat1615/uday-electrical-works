@@ -1,31 +1,32 @@
 import React from 'react';
-import { motion } from 'framer-motion';
 
-// Scalable Vector UE Monogram Component
-export const UEMark = ({ size = 'md', light = false, className = '' }) => {
+/**
+ * UEW Mark Emblem (Official UEW logo mark)
+ */
+export const UEMark = ({ size = 'md', className = '' }) => {
   const dimensions = {
-    sm: 'w-7 h-7',
-    md: 'w-9 h-9',
-    lg: 'w-11 h-11',
-    xl: 'w-14 h-14'
+    sm: 'h-7 sm:h-8 w-auto',
+    md: 'h-8 sm:h-9 w-auto',
+    lg: 'h-10 sm:h-11 w-auto',
+    xl: 'h-12 sm:h-14 w-auto'
   };
 
-  const strokeColor = light ? '#FFFFFF' : '#1F2937';
-
   return (
-    <div className={`shrink-0 flex items-center justify-center ${dimensions[size] || dimensions.md} ${className}`}>
-      <svg width="100%" height="100%" viewBox="0 0 120 120" fill="none" xmlns="http://www.w3.org/2000/svg" className="w-full h-full drop-shadow-xs">
-        {/* Outer U Contour */}
-        <path d="M 28 24 V 72 C 28 89.673 42.327 104 60 104 C 77.673 104 92 89.673 92 72 V 24" stroke={strokeColor} strokeWidth="14" strokeLinecap="round" strokeLinejoin="round"/>
-        {/* Inner E Terminal in Primary Uday Orange */}
-        <path d="M 46 38 H 82 M 46 60 H 76 M 46 82 H 82" stroke="#F97316" strokeWidth="12" strokeLinecap="round" strokeLinejoin="round"/>
-        {/* Precision Energy Node */}
-        <circle cx="82" cy="38" r="7" fill="#F97316" />
-      </svg>
-    </div>
+    <img
+      src="/ueworks-mark.png"
+      alt="UEW Logo Mark"
+      className={`object-contain shrink-0 ${dimensions[size] || dimensions.md} ${className}`}
+    />
   );
 };
 
+/**
+ * Custom Styled Logo Component:
+ * - Keeps UEW Logo Emblem Mark visible on left
+ * - Exact typography colors: UDAY (Dark) ELECTRICAL (Bright Orange) WORKS (Dark)
+ * - Subtitle with orange accent bars: — ELECTRICAL STORE & SERVICES —
+ * - Compact & small sizing for clean header integration
+ */
 export const Logo = ({ 
   portal = 'customer', 
   variant = 'full', 
@@ -34,71 +35,76 @@ export const Logo = ({
   iconOnly = false,
   className = '' 
 }) => {
-  const containerSizes = {
-    sm: 'space-x-2',
-    md: 'space-x-2.5',
-    lg: 'space-x-3',
-    xl: 'space-x-3.5'
+  const containerGap = {
+    sm: 'gap-2',
+    md: 'gap-2.5',
+    lg: 'gap-3',
+    xl: 'gap-3.5'
   };
 
+  // Compact, crisp typography font sizes
   const titleSizes = {
-    sm: 'text-xs font-black tracking-tight',
+    sm: 'text-xs sm:text-sm font-black tracking-tight',
     md: 'text-sm sm:text-base font-black tracking-tight',
-    lg: 'text-lg sm:text-xl font-black tracking-tight',
-    xl: 'text-xl sm:text-2xl font-black tracking-tight'
+    lg: 'text-base sm:text-lg font-black tracking-tight',
+    xl: 'text-lg sm:text-xl font-black tracking-tight'
   };
 
   const subtitleSizes = {
-    sm: 'text-[9px] font-extrabold tracking-wider',
-    md: 'text-[10px] font-extrabold tracking-wider',
-    lg: 'text-[11px] font-extrabold tracking-wider',
-    xl: 'text-[12px] font-extrabold tracking-wider'
+    sm: 'text-[8px] font-extrabold tracking-widest',
+    md: 'text-[9px] sm:text-[10px] font-extrabold tracking-widest',
+    lg: 'text-[10px] sm:text-[11px] font-extrabold tracking-widest',
+    xl: 'text-[11px] sm:text-[12px] font-extrabold tracking-widest'
   };
 
-  // Portal subtitle mapping
+  const barWidths = {
+    sm: 'w-2.5 h-[2px]',
+    md: 'w-3 sm:w-3.5 h-[2px]',
+    lg: 'w-4 h-[2px]',
+    xl: 'w-5 h-[2.5px]'
+  };
+
   const getSubTitle = () => {
     switch (portal) {
       case 'management':
         return 'MANAGEMENT PORTAL';
       case 'technician':
-        return 'TECHNICIAN PORTAL';
+        return 'FIELD TECHNICIAN APP';
       case 'customer':
       default:
-        return 'Electrical Store & Services';
+        return 'ELECTRICAL STORE & SERVICES';
     }
-  };
-
-  const getTitlePart = () => {
-    if (portal === 'management' || portal === 'technician') {
-      return (
-        <span className={light ? 'text-white' : 'text-[#111827]'}>
-          UDAY <span className="text-[#F97316]">ELECTRICAL</span>
-        </span>
-      );
-    }
-    return (
-      <span className={light ? 'text-white' : 'text-[#111827]'}>
-        UDAY <span className="text-[#F97316]">ELECTRICAL WORKS</span>
-      </span>
-    );
   };
 
   if (iconOnly || variant === 'icon') {
-    return <UEMark size={size} light={light} className={className} />;
+    return <UEMark size={size} className={className} />;
   }
 
-  return (
-    <div className={`inline-flex items-center select-none ${containerSizes[size] || containerSizes.md} ${className}`}>
-      {/* Official UE Monogram */}
-      <UEMark size={size} light={light} />
+  const textColor = light ? 'text-white' : 'text-[#0F172A]';
+  const subtitleColor = light ? 'text-slate-200' : 'text-[#0F172A]';
 
-      <div className="flex flex-col text-left">
-        <span className={`leading-none font-display ${titleSizes[size] || titleSizes.md}`}>
-          {getTitlePart()}
+  return (
+    <div className={`inline-flex items-center select-none shrink-0 ${containerGap[size] || containerGap.md} ${className}`}>
+      {/* 1. Visible UEW Logo Emblem Mark */}
+      <UEMark size={size} />
+
+      {/* 2. Custom Typography Layout */}
+      <div className="flex flex-col text-left justify-center">
+        {/* Main Title: UDAY (Dark) ELECTRICAL (Orange) WORKS (Dark) */}
+        <span className={`leading-none font-display whitespace-nowrap ${titleSizes[size] || titleSizes.md}`}>
+          <span className={textColor}>UDAY </span>
+          <span className="text-[#F97316]">ELECTRICAL </span>
+          <span className={textColor}>WORKS</span>
         </span>
-        <span className={`uppercase block mt-1 leading-none font-display ${light ? 'text-amber-400' : 'text-[#EA580C]'} ${subtitleSizes[size] || subtitleSizes.md}`}>
-          {getSubTitle()}
-        </span>
+
+        {/* Subtitle with Orange Side Lines: — ELECTRICAL STORE & SERVICES — */}
+        <div className="flex items-center gap-1.5 mt-1">
+          <span className={`rounded-full bg-[#F97316] shrink-0 ${barWidths[size] || barWidths.md}`} />
+          <span className={`uppercase font-display whitespace-nowrap leading-none ${subtitleColor} ${subtitleSizes[size] || subtitleSizes.md}`}>
+            {getSubTitle()}
+          </span>
+          <span className={`rounded-full bg-[#F97316] shrink-0 ${barWidths[size] || barWidths.md}`} />
+        </div>
       </div>
     </div>
   );

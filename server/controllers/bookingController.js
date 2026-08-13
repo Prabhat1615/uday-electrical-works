@@ -559,6 +559,10 @@ export const updateBookingStatus = async (req, res, next) => {
       return next(new ApiError(404, 'Booking not found'));
     }
 
+    if (isTerminal(booking.status)) {
+      return next(new ApiError(409, 'Completed jobs cannot be modified.'));
+    }
+
     const isTechnician = req.user.role === 'Technician';
     if (isTechnician) {
       // Ownership: technicians may only update their own assigned jobs.
@@ -574,9 +578,6 @@ export const updateBookingStatus = async (req, res, next) => {
     } else {
       // Admin/Staff are authoritative, but terminal states are never re-opened
       // through this endpoint, and Assigned requires an actual technician.
-      if (isTerminal(booking.status)) {
-        return next(new ApiError(400, `This booking is ${booking.status} and cannot be reopened`));
-      }
       if (status === 'Assigned' && !booking.assignedTechnician) {
         return next(new ApiError(400, 'Assign a technician first (use the assign action)'));
       }
@@ -698,6 +699,9 @@ export const updateBooking = async (req, res, next) => {
     if (req.user.role === 'Technician') {
       if (booking.assignedTechnician?.toString() !== req.user._id.toString()) {
         return next(new ApiError(403, 'You can only update your assigned service jobs'));
+      }
+      if (isTerminal(booking.status)) {
+        return next(new ApiError(409, 'Completed jobs cannot be modified.'));
       }
       if (status) {
         return next(new ApiError(400, 'Technicians must use the job status endpoint to update job status'));

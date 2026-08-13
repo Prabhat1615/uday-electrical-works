@@ -296,9 +296,13 @@ export const DashboardOverview = () => {
                       <StatusBadge status={b.status} />
                       <Link
                         to="/dashboard/bookings"
-                        className="block px-3 py-1.5 rounded-lg bg-orange-500 hover:bg-orange-600 text-white font-bold transition-colors"
+                        className={`block px-3 py-1.5 rounded-lg text-white font-bold transition-colors ${
+                          b.status === 'Completed' || b.status === 'Cancelled'
+                            ? 'bg-slate-700 hover:bg-slate-800'
+                            : 'bg-orange-500 hover:bg-orange-600'
+                        }`}
                       >
-                        Update Job
+                        {b.status === 'Completed' || b.status === 'Cancelled' ? 'View Job' : 'Update Job'}
                       </Link>
                     </div>
                   </div>

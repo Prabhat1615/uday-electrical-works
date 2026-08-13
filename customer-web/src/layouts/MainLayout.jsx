@@ -102,9 +102,9 @@ export const MainLayout = () => {
             : 'bg-white border-b border-[#E5E7EB] text-[#111827]'
         }`}
       >
-        <div className="max-w-[1536px] mx-auto px-4 sm:px-6 lg:px-12 xl:px-16 h-16 flex items-center justify-between">
+        <div className="max-w-[1536px] mx-auto px-4 sm:px-6 lg:px-12 xl:px-16 h-20 py-2 flex items-center justify-between">
 
-          <Link to="/" className="group flex items-center">
+          <Link to="/" className="group flex items-center shrink-0">
             <Logo portal="customer" size="md" />
           </Link>
 

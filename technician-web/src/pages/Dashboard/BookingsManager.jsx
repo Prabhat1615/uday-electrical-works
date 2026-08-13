@@ -1,5 +1,5 @@
 import React, { useMemo, useState } from 'react';
-import { CalendarCheck, UserCheck, MapPin, Phone, User, CheckCircle2, Hammer, Truck, PartyPopper, CalendarDays, Inbox, XCircle, ClipboardCheck, AlertOctagon, Star } from 'lucide-react';
+import { CalendarCheck, UserCheck, MapPin, Phone, User, CheckCircle2, Hammer, Truck, PartyPopper, CalendarDays, Inbox, XCircle, ClipboardCheck, AlertOctagon, Star, Lock } from 'lucide-react';
 import { useBookings, useAcceptBooking, useDeclineBooking, useUpdateBookingStatus, useCancelBooking, useReviewByBooking } from '../../hooks/useErpQueries';
 import { useAuth } from '../../hooks/useAuth';
 import { StatusBadge } from '../../components/StatusBadge';
@@ -399,10 +399,19 @@ export const BookingsManager = () => {
                 </div>
               )}
 
-              {isMyJob && currentStatus === 'Completed' && (
-                <div className="p-4 rounded-xl bg-emerald-50 border border-emerald-500/30 flex items-center space-x-2.5">
-                  <PartyPopper className="w-5 h-5 text-emerald-600 shrink-0" />
-                  <p className="font-black text-emerald-700 text-sm">Job Completed</p>
+              {currentStatus === 'Completed' && (
+                <div className="p-4 rounded-xl bg-emerald-50 border border-emerald-500/30 flex items-center justify-between gap-3">
+                  <div className="flex items-center space-x-2.5">
+                    <PartyPopper className="w-5 h-5 text-emerald-600 shrink-0" />
+                    <div>
+                      <p className="font-black text-emerald-800 text-sm">Job Completed</p>
+                      <p className="text-[11px] text-emerald-600 font-semibold">This job is complete and locked as read-only.</p>
+                    </div>
+                  </div>
+                  <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-md bg-emerald-100 text-emerald-800 text-[10px] font-extrabold uppercase tracking-wider shrink-0">
+                    <Lock className="w-3 h-3 text-emerald-700" />
+                    Read Only
+                  </span>
                 </div>
               )}
 

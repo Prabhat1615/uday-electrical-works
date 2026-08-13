@@ -28,6 +28,8 @@ const SalesManagementPage = lazy(() => import('../pages/Dashboard/SalesManagemen
 const SupportTicketsPage = lazy(() => import('../pages/Dashboard/SupportTicketsPage').then((m) => ({ default: m.SupportTicketsPage })));
 const ProfilePage = lazy(() => import('../pages/Dashboard/ProfilePage').then((m) => ({ default: m.ProfilePage })));
 
+import { ScrollToTop } from '../../../shared/src/components/ScrollToTop';
+
 const withSuspense = (element) => (
   <Suspense fallback={<div className="min-h-screen bg-white dark:bg-slate-950 flex items-center justify-center"><LoadingSpinner /></div>}>
     {element}
@@ -36,7 +38,9 @@ const withSuspense = (element) => (
 
 export const AppRoutes = () => {
   return (
-    <Routes>
+    <>
+      <ScrollToTop />
+      <Routes>
       {/* Public Storefront */}
       <Route element={<MainLayout />}>
         <Route path="/" element={withSuspense(<HomePage />)} />
@@ -71,5 +75,6 @@ export const AppRoutes = () => {
       {/* Custom 404 */}
       <Route path="*" element={withSuspense(<NotFoundPage />)} />
     </Routes>
+    </>
   );
 };
