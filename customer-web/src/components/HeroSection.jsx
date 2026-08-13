@@ -1,13 +1,13 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { motion, useMotionValue, useTransform, useSpring } from 'framer-motion';
-import { 
-  Zap, 
-  ArrowRight, 
-  MapPin, 
-  Package, 
-  Wrench, 
-  ShieldCheck, 
+import {
+  Zap,
+  ArrowRight,
+  MapPin,
+  Package,
+  Wrench,
+  ShieldCheck,
   CheckCircle2,
   Clock,
   Sparkles
@@ -65,7 +65,7 @@ export const HeroSection = () => {
   };
 
   return (
-    <section 
+    <section
       onMouseMove={handleMouseMove}
       onMouseLeave={handleMouseLeave}
       className="relative min-h-[85vh] flex items-center pt-8 pb-14 bg-gradient-to-b from-white via-[#F8FAFC] to-white text-[#111827] overflow-hidden font-sans border-b border-[#E5E7EB]"
@@ -84,10 +84,10 @@ export const HeroSection = () => {
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-8 items-center">
 
           {/* LEFT HERO CONTENT (50% Desktop Width) */}
-          <div className="lg:col-span-6 space-y-6 text-left">
-            
+          <div className="lg:col-span-6 space-y-6 text-center sm:text-left">
+
             {/* Top Official Badges */}
-            <div className="flex flex-wrap items-center gap-2">
+            <div className="flex flex-wrap items-center justify-center sm:justify-start gap-2">
               <motion.div
                 initial={{ opacity: 0, y: 12 }}
                 animate={{ opacity: 1, y: 0 }}
@@ -109,26 +109,21 @@ export const HeroSection = () => {
               </motion.div>
             </div>
 
-            {/* Staggered Animated Headline */}
+            {/* Staggered Animated Headline - Exactly 2 lines on mobile view */}
             <div className="space-y-1">
               <motion.h1
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.45, delay: 0.08 }}
-                className="text-3xl sm:text-5xl lg:text-6xl font-black tracking-tight leading-[1.1] text-[#111827] font-display"
+                className="text-[22px] sm:text-5xl lg:text-6xl font-black tracking-tight leading-tight sm:leading-[1.1] text-[#111827] font-display"
               >
-                Powering Your Home.
-              </motion.h1>
-              <motion.h1
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.45, delay: 0.16 }}
-                className="text-3xl sm:text-5xl lg:text-6xl font-black tracking-tight leading-[1.1] text-[#F97316] font-display"
-              >
-                <AnimatedRotatingWord
-                  words={['Building', 'Lighting', 'Securing', 'Energizing', 'Electrifying']}
-                />
-                <span className="whitespace-nowrap"> Your Future.</span>
+                <span className="block">Powering Your Home.</span>
+                <span className="block text-[#F97316]">
+                  <AnimatedRotatingWord
+                    words={['Building', 'Lighting', 'Securing', 'Energizing', 'Electrifying']}
+                  />
+                  <span> Your Future.</span>
+                </span>
               </motion.h1>
             </div>
 
@@ -137,42 +132,42 @@ export const HeroSection = () => {
               initial={{ opacity: 0, y: 18 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.45, delay: 0.22 }}
-              className="text-[#64748B] text-sm sm:text-base leading-relaxed max-w-xl"
+              className="text-[#64748B] text-xs sm:text-base leading-relaxed max-w-xl mx-auto sm:mx-0"
             >
               Located on Chhota Govindpur Main Road, Uday Electrical Works offers genuine electrical products and doorstep electrician services with official GST billing.
             </motion.p>
 
-            {/* Action Buttons */}
+            {/* Action Buttons - Centered & Compact 2 Buttons on Mobile View */}
             <motion.div
               initial={{ opacity: 0, y: 18 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.45, delay: 0.28 }}
-              className="flex flex-wrap items-center gap-3 pt-2"
+              className="flex flex-wrap items-center justify-center sm:justify-start gap-2 sm:gap-3 pt-2"
             >
               {/* Primary CTA */}
               <Link
                 to="/shop"
-                className="inline-flex items-center justify-center space-x-2 px-5 py-2.5 sm:px-6 sm:py-3 rounded-xl bg-[#F97316] hover:bg-[#EA580C] text-white font-extrabold text-xs sm:text-sm shadow-sm hover:scale-102 transition-all font-display shrink-0 whitespace-nowrap"
+                className="inline-flex items-center justify-center space-x-1.5 px-3.5 py-2 sm:px-6 sm:py-3 rounded-lg sm:rounded-xl bg-[#F97316] hover:bg-[#EA580C] text-white font-extrabold text-[11px] sm:text-sm shadow-xs hover:scale-102 transition-all font-display shrink-0 whitespace-nowrap"
               >
-                <Package className="w-4 h-4 shrink-0" />
+                <Package className="w-3.5 h-3.5 sm:w-4 sm:h-4 shrink-0" />
                 <span>Explore Products</span>
-                <ArrowRight className="w-4 h-4 shrink-0" />
+                <ArrowRight className="w-3.5 h-3.5 sm:w-4 sm:h-4 shrink-0" />
               </Link>
 
               {/* Secondary CTA */}
               <button
                 onClick={() => setBookingOpen(true)}
-                className="inline-flex items-center justify-center space-x-2 px-5 py-2.5 sm:px-6 sm:py-3 rounded-xl bg-white border border-[#E5E7EB] hover:border-[#F97316] text-[#111827] font-extrabold text-xs sm:text-sm shadow-2xs hover:scale-102 transition-all font-display shrink-0 whitespace-nowrap"
+                className="inline-flex items-center justify-center space-x-1.5 px-3.5 py-2 sm:px-6 sm:py-3 rounded-lg sm:rounded-xl bg-white border border-[#E5E7EB] hover:border-[#F97316] text-[#111827] font-extrabold text-[11px] sm:text-sm shadow-2xs hover:scale-102 transition-all font-display shrink-0 whitespace-nowrap"
               >
-                <Wrench className="w-4 h-4 text-[#F97316] shrink-0" />
+                <Wrench className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-[#F97316] shrink-0" />
                 <span>Book a Service</span>
               </button>
 
-              {/* Additional Action */}
+              {/* Visit Store Action (Desktop / Tablet Only) */}
               <a
                 href="#store-location-map"
                 onClick={scrollToMap}
-                className="inline-flex items-center space-x-1.5 px-4 py-2.5 rounded-xl text-xs font-bold text-[#64748B] hover:text-[#EA580C] transition-colors font-display shrink-0 whitespace-nowrap"
+                className="hidden sm:inline-flex items-center space-x-1.5 px-4 py-2.5 rounded-xl text-xs font-bold text-[#64748B] hover:text-[#EA580C] transition-colors font-display shrink-0 whitespace-nowrap"
               >
                 <MapPin className="w-3.5 h-3.5 text-[#F97316] shrink-0" />
                 <span>Visit Store</span>
@@ -204,7 +199,7 @@ export const HeroSection = () => {
 
           {/* RIGHT HERO 3D ARCHITECTURAL VISUALIZATION (50% Desktop Width) */}
           <div className="lg:col-span-6 relative flex items-center justify-center pt-4 lg:pt-0">
-            
+
             {/* Ambient Backlight Halo */}
             <div className="absolute inset-0 bg-gradient-to-t from-[#F97316]/15 via-orange-500/5 to-transparent rounded-full blur-3xl opacity-80"></div>
 

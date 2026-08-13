@@ -369,11 +369,11 @@ export const DashboardLayout = () => {
       <aside
         className={`fixed inset-y-0 left-0 z-50 flex flex-col border-r border-surface-200 bg-white transition-[width,transform] duration-300 ease-in-out md:static md:translate-x-0 ${
           compact ? 'md:w-[76px]' : 'md:w-64'
-        } w-64 ${mobileOpen ? 'translate-x-0' : '-translate-x-full md:translate-x-0'}`}
+        } w-[85vw] max-w-[280px] sm:w-64 ${mobileOpen ? 'translate-x-0' : '-translate-x-full md:translate-x-0'}`}
       >
         {/* Logo */}
         <div
-          className={`flex items-center border-b border-surface-200 px-4 py-5 ${
+          className={`flex items-center border-b border-surface-200 px-4 py-4 ${
             compact ? 'justify-between md:justify-center' : 'justify-between'
           }`}
         >
@@ -387,7 +387,7 @@ export const DashboardLayout = () => {
           <button
             type="button"
             onClick={() => setMobileOpen(false)}
-            className="text-text-muted hover:text-text-primary md:hidden"
+            className="w-10 h-10 min-h-[44px] min-w-[44px] sm:min-h-0 sm:min-w-0 flex items-center justify-center rounded-xl text-text-muted hover:text-text-primary md:hidden"
             aria-label="Close navigation"
           >
             <X className="h-5 w-5" />
@@ -457,7 +457,7 @@ export const DashboardLayout = () => {
             <button
               type="button"
               onClick={() => setMobileOpen(true)}
-              className="rounded-lg p-2 text-text-secondary hover:bg-surface-100 hover:text-text-primary focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-500 md:hidden"
+              className="w-10 h-10 min-h-[44px] min-w-[44px] sm:min-h-0 sm:min-w-0 flex items-center justify-center rounded-xl p-2 text-text-secondary hover:bg-surface-100 hover:text-text-primary focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-500 md:hidden"
               aria-label="Open navigation"
             >
               <Menu className="h-5 w-5" />

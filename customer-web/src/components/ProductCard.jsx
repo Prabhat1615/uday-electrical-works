@@ -68,7 +68,7 @@ export const ProductCard = ({ product, index = 0 }) => {
     >
       <Link to={`/shop/product/${product._id}`} className="flex flex-col flex-1">
         {/* Product Image Container */}
-        <div className="relative h-40 sm:h-44 w-full p-3 bg-slate-50/80 dark:bg-slate-950/60 flex items-center justify-center overflow-hidden border-b border-slate-100 dark:border-slate-800/80">
+        <div className="relative h-32 sm:h-44 w-full p-2.5 sm:p-3 bg-white dark:bg-white flex items-center justify-center overflow-hidden border-b border-slate-100">
           {currentImg && !imgErrors[activeImgIndex] ? (
             <AnimatePresence mode="wait">
               <motion.img
@@ -113,11 +113,10 @@ export const ProductCard = ({ product, index = 0 }) => {
             )}
             <button
               onClick={handleWishlist}
-              className={`p-1.5 rounded-lg backdrop-blur-md transition-all ${
-                isWishlisted
+              className={`p-1.5 rounded-lg backdrop-blur-md transition-all ${isWishlisted
                   ? 'bg-rose-500 text-white shadow-sm'
                   : 'bg-white/90 dark:bg-slate-900/80 text-slate-400 hover:text-rose-500 hover:scale-110'
-              }`}
+                }`}
               title="Wishlist product"
             >
               <Heart className={`w-3.5 h-3.5 ${isWishlisted ? 'fill-current' : ''}`} />
@@ -158,9 +157,8 @@ export const ProductCard = ({ product, index = 0 }) => {
                     e.stopPropagation();
                     setActiveImgIndex(idx);
                   }}
-                  className={`h-1.5 rounded-full transition-all ${
-                    activeImgIndex === idx ? 'w-3.5 bg-[#F97316]' : 'w-1.5 bg-white/60 hover:bg-white'
-                  }`}
+                  className={`h-1.5 rounded-full transition-all ${activeImgIndex === idx ? 'w-3.5 bg-[#F97316]' : 'w-1.5 bg-white/60 hover:bg-white'
+                    }`}
                   title={`View image ${idx + 1}`}
                 />
               ))}
@@ -221,13 +219,12 @@ export const ProductCard = ({ product, index = 0 }) => {
             <button
               onClick={handleAdd}
               disabled={!inStock}
-              className={`px-3.5 py-2 rounded-xl text-[11px] font-extrabold transition-all flex items-center gap-1.5 shadow-sm font-display ${
-                added
+              className={`px-3 py-2 rounded-xl text-[11px] font-extrabold transition-all flex items-center gap-1.5 shadow-sm font-display min-h-[44px] sm:min-h-0 shrink-0 ${added
                   ? 'bg-emerald-500 text-white'
                   : inStock
-                  ? 'bg-[#F97316] hover:bg-[#EA580C] text-white shadow-md shadow-[#F97316]/20 hover:scale-102'
-                  : 'bg-slate-100 dark:bg-slate-800 text-slate-400 cursor-not-allowed'
-              }`}
+                    ? 'bg-[#F97316] hover:bg-[#EA580C] text-white shadow-md shadow-[#F97316]/20 hover:scale-102'
+                    : 'bg-slate-100 dark:bg-slate-800 text-slate-400 cursor-not-allowed'
+                }`}
               title={inStock ? 'Add to cart' : 'Out of stock'}
             >
               {added ? <Check className="w-3.5 h-3.5" /> : <ShoppingCart className="w-3.5 h-3.5" />}

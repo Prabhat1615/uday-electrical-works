@@ -138,64 +138,103 @@ export const InvoicesManager = () => {
           <h3 className="text-base font-bold text-slate-900">No invoices found</h3>
         </div>
       ) : (
-        <div className="bg-white border border-slate-200 rounded-xl overflow-hidden shadow-card">
-          <div className="overflow-x-auto">
-            <table className="w-full text-left text-xs text-slate-600">
-              <thead className="bg-slate-50 text-slate-500 uppercase text-[10px] font-bold tracking-wider border-b border-slate-200">
-                <tr>
-                  <th className="px-4 py-2.5">Invoice #</th>
-                  <th className="px-4 py-2.5">Customer</th>
-                  <th className="px-4 py-2.5">Taxable Subtotal</th>
-                  <th className="px-4 py-2.5">Tax (GST)</th>
-                  <th className="px-4 py-2.5">Grand Total</th>
-                  <th className="px-4 py-2.5">Status</th>
-                  <th className="px-4 py-2.5 text-right">Actions</th>
-                </tr>
-              </thead>
-              <tbody className="divide-y divide-slate-100">
-                {invoices.map((inv) => (
-                  <tr key={inv._id} className="hover:bg-slate-50 transition-colors">
-                    <td className="px-4 py-2.5 font-mono font-bold text-sky-600">
-                      {inv.invoiceNumber}
-                    </td>
-                    <td className="px-4 py-2.5">
-                      <p className="font-bold text-slate-900">{inv.customer?.name}</p>
-                      <p className="text-[10px] text-slate-500">{inv.customer?.phone || inv.customer?.email}</p>
-                    </td>
-                    <td className="px-4 py-2.5 text-slate-600 font-semibold">
-                      {formatCurrency(inv.subtotal || inv.totalAmount * 0.82)}
-                    </td>
-                    <td className="px-4 py-2.5 font-semibold text-amber-600">
-                      {formatCurrency(inv.taxAmount || 0)}
-                    </td>
-                    <td className="px-4 py-2.5 font-extrabold text-slate-900 text-sm">
-                      {formatCurrency(inv.totalAmount)}
-                    </td>
-                    <td className="px-4 py-2.5">
-                      <StatusBadge status={inv.paymentStatus} />
-                    </td>
-                    <td className="px-4 py-2.5 text-right space-x-2">
-                      <button
-                        onClick={() => setPrintInvoice(inv)}
-                        className="px-3 py-1.5 rounded-lg bg-amber-50 hover:bg-amber-500 border border-amber-500/30 text-amber-600 hover:text-white font-bold transition-all"
-                      >
-                        Print GST Invoice
-                      </button>
-                      {(role === 'Admin' || role === 'Staff') && (
-                        <button
-                          onClick={() => handleOpenStatusModal(inv)}
-                          className="px-3 py-1.5 rounded-lg bg-white border border-slate-200 hover:bg-slate-100 text-slate-600 font-semibold transition-colors"
-                        >
-                          Update Payment
-                        </button>
-                      )}
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
+        <>
+          {/* Mobile Responsive Cards (<768px) */}
+          <div className="block md:hidden space-y-3">
+            {invoices.map((inv) => (
+              <div key={inv._id} className="p-4 rounded-xl bg-white border border-slate-200 shadow-sm space-y-2.5">
+                <div className="flex items-center justify-between">
+                  <span className="font-mono font-bold text-sky-600 text-xs">{inv.invoiceNumber}</span>
+                  <StatusBadge status={inv.paymentStatus} />
+                </div>
+                <div>
+                  <p className="font-bold text-slate-900 text-sm">{inv.customer?.name}</p>
+                  <p className="text-xs text-slate-500">{inv.customer?.phone || inv.customer?.email}</p>
+                </div>
+                <div className="pt-2 border-t border-slate-100 flex items-center justify-between text-xs">
+                  <span className="text-slate-500 font-medium">Grand Total</span>
+                  <span className="text-base font-extrabold text-slate-900 font-mono">{formatCurrency(inv.totalAmount)}</span>
+                </div>
+                <div className="pt-2 flex items-center gap-2">
+                  <button
+                    onClick={() => setPrintInvoice(inv)}
+                    className="flex-1 min-h-[44px] py-2 rounded-xl bg-[#F97316] text-white font-extrabold text-xs shadow-xs"
+                  >
+                    Print GST Invoice
+                  </button>
+                  {(role === 'Admin' || role === 'Staff') && (
+                    <button
+                      onClick={() => handleOpenStatusModal(inv)}
+                      className="flex-1 min-h-[44px] py-2 rounded-xl bg-slate-100 border border-slate-200 text-slate-700 font-bold text-xs"
+                    >
+                      Update
+                    </button>
+                  )}
+                </div>
+              </div>
+            ))}
           </div>
-        </div>
+
+          {/* Desktop Table View (>=768px) */}
+          <div className="hidden md:block bg-white border border-slate-200 rounded-xl overflow-hidden shadow-card">
+            <div className="overflow-x-auto">
+              <table className="w-full text-left text-xs text-slate-600">
+                <thead className="bg-slate-50 text-slate-500 uppercase text-[10px] font-bold tracking-wider border-b border-slate-200">
+                  <tr>
+                    <th className="px-4 py-2.5">Invoice #</th>
+                    <th className="px-4 py-2.5">Customer</th>
+                    <th className="px-4 py-2.5">Taxable Subtotal</th>
+                    <th className="px-4 py-2.5">Tax (GST)</th>
+                    <th className="px-4 py-2.5">Grand Total</th>
+                    <th className="px-4 py-2.5">Status</th>
+                    <th className="px-4 py-2.5 text-right">Actions</th>
+                  </tr>
+                </thead>
+                <tbody className="divide-y divide-slate-100">
+                  {invoices.map((inv) => (
+                    <tr key={inv._id} className="hover:bg-slate-50 transition-colors">
+                      <td className="px-4 py-2.5 font-mono font-bold text-sky-600">
+                        {inv.invoiceNumber}
+                      </td>
+                      <td className="px-4 py-2.5">
+                        <p className="font-bold text-slate-900">{inv.customer?.name}</p>
+                        <p className="text-[10px] text-slate-500">{inv.customer?.phone || inv.customer?.email}</p>
+                      </td>
+                      <td className="px-4 py-2.5 text-slate-600 font-semibold">
+                        {formatCurrency(inv.subtotal || inv.totalAmount * 0.82)}
+                      </td>
+                      <td className="px-4 py-2.5 font-semibold text-amber-600">
+                        {formatCurrency(inv.taxAmount || 0)}
+                      </td>
+                      <td className="px-4 py-2.5 font-extrabold text-slate-900 text-sm">
+                        {formatCurrency(inv.totalAmount)}
+                      </td>
+                      <td className="px-4 py-2.5">
+                        <StatusBadge status={inv.paymentStatus} />
+                      </td>
+                      <td className="px-4 py-2.5 text-right space-x-2">
+                        <button
+                          onClick={() => setPrintInvoice(inv)}
+                          className="px-3 py-1.5 rounded-lg bg-amber-50 hover:bg-amber-500 border border-amber-500/30 text-amber-600 hover:text-white font-bold transition-all"
+                        >
+                          Print GST Invoice
+                        </button>
+                        {(role === 'Admin' || role === 'Staff') && (
+                          <button
+                            onClick={() => handleOpenStatusModal(inv)}
+                            className="px-3 py-1.5 rounded-lg bg-white border border-slate-200 hover:bg-slate-100 text-slate-600 font-semibold transition-colors"
+                          >
+                            Update Payment
+                          </button>
+                        )}
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </>
       )}
 
       {/* Printable GST Invoice Modal */}

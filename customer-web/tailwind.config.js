@@ -85,6 +85,23 @@ export default {
       },
       borderRadius: {
         '4xl': '2rem'
+      },
+      colors: {
+        brand: {
+          primary: '#FF5722',
+          primaryHover: '#E64A19',
+          teal: '#76ABAE',
+          tealHover: '#5B8C90',
+          dark: '#303841',
+          darkCanvas: '#1E242B',
+          darkSurface: '#252C34',
+          slate: '#303841',
+          navy: '#303841',
+          midnight: '#1E242B',
+          amber: '#FF5722',
+          surface: '#252C34',
+          border: 'rgba(118, 171, 174, 0.25)'
+        }
       }
     },
   },
@@ -93,14 +110,14 @@ export default {
     themes: [
       {
         uday: {
-          "primary": "#F97316",
-          "secondary": "#334155",
-          "accent": "#F59E0B",
-          "neutral": "#0F172A",
-          "base-100": "#FFFFFF",
-          "base-200": "#F8FAFC",
-          "base-300": "#F1F5F9",
-          "info": "#3B82F6",
+          "primary": "#FF5722",
+          "secondary": "#76ABAE",
+          "accent": "#FF5722",
+          "neutral": "#303841",
+          "base-100": "#252C34",
+          "base-200": "#1E242B",
+          "base-300": "#303841",
+          "info": "#76ABAE",
           "success": "#10B981",
           "warning": "#F59E0B",
           "error": "#EF4444",
@@ -111,3 +128,4 @@ export default {
     logs: false,
   },
 }
+

@@ -91,11 +91,11 @@ export const ShopPage = () => {
       </div>
 
       <div className="max-w-[1536px] mx-auto px-4 sm:px-6 lg:px-12 xl:px-16 py-10">
-        {/* Category Chips */}
-        <div className="flex flex-wrap gap-2 justify-center mb-5">
+        {/* Category Chips Scroll Strip */}
+        <div className="flex overflow-x-auto gap-2 pb-2 mb-4 scrollbar-none snap-x">
           <button
             onClick={() => setParam('category', '')}
-            className={`px-3.5 py-1.5 rounded-full text-xs font-bold border transition-all ${
+            className={`px-3.5 py-1.5 rounded-full text-xs font-bold border transition-all shrink-0 snap-start ${
               !category
                 ? 'bg-[#F97316] text-white border-[#F97316] shadow-md shadow-[#F97316]/25'
                 : 'bg-white dark:bg-slate-900 border-[#E2E8F0] dark:border-slate-800 text-[#475569] dark:text-slate-300 hover:border-[#F97316] hover:text-[#F97316]'
@@ -107,7 +107,7 @@ export const ShopPage = () => {
             <button
               key={cat}
               onClick={() => setParam('category', cat)}
-              className={`px-3.5 py-1.5 rounded-full text-xs font-bold border transition-all ${
+              className={`px-3.5 py-1.5 rounded-full text-xs font-bold border transition-all shrink-0 snap-start ${
                 category === cat
                   ? 'bg-[#F97316] text-white border-[#F97316] shadow-md shadow-[#F97316]/25'
                   : 'bg-white dark:bg-slate-900 border-[#E2E8F0] dark:border-slate-800 text-[#475569] dark:text-slate-300 hover:border-[#F97316] hover:text-[#F97316]'
@@ -119,34 +119,36 @@ export const ShopPage = () => {
         </div>
 
         {/* Filter Bar */}
-        <div className="flex flex-wrap items-center gap-3 mb-5 p-3 rounded-xl bg-[#F8FAFC] dark:bg-slate-900 border border-[#E2E8F0] dark:border-slate-800">
-          <div className="flex items-center space-x-2 text-xs font-bold text-[#475569] dark:text-slate-400">
-            <SlidersHorizontal className="w-4 h-4" />
+        <div className="flex flex-wrap items-center gap-2.5 mb-5 p-3 rounded-xl bg-[#F8FAFC] dark:bg-slate-900 border border-[#E2E8F0] dark:border-slate-800 text-xs">
+          <div className="flex items-center space-x-1.5 font-bold text-[#475569] dark:text-slate-400 shrink-0">
+            <SlidersHorizontal className="w-4 h-4 text-[#F97316]" />
             <span>Filters:</span>
           </div>
 
-          <select
-            value={brand}
-            onChange={(e) => setParam('brand', e.target.value)}
-            className="px-3 py-2 rounded-xl bg-white dark:bg-slate-950 border border-[#E2E8F0] dark:border-slate-800 text-xs font-bold text-[#0F172A] dark:text-white focus:outline-none focus:border-[#F97316]"
-          >
-            <option value="">All Brands</option>
-            {brands.map((b) => (
-              <option key={b} value={b}>{b}</option>
-            ))}
-          </select>
+          <div className="grid grid-cols-2 sm:flex sm:items-center gap-2 flex-1 min-w-[240px]">
+            <select
+              value={brand}
+              onChange={(e) => setParam('brand', e.target.value)}
+              className="px-2.5 py-2 rounded-xl bg-white dark:bg-slate-950 border border-[#E2E8F0] dark:border-slate-800 text-xs font-bold text-[#0F172A] dark:text-white focus:outline-none focus:border-[#F97316]"
+            >
+              <option value="">All Brands</option>
+              {brands.map((b) => (
+                <option key={b} value={b}>{b}</option>
+              ))}
+            </select>
 
-          <select
-            value={sortBy}
-            onChange={(e) => setSortBy(e.target.value)}
-            className="px-3 py-2 rounded-xl bg-white dark:bg-slate-950 border border-[#E2E8F0] dark:border-slate-800 text-xs font-bold text-[#0F172A] dark:text-white focus:outline-none focus:border-[#F97316]"
-          >
-            <option value="featured">Newest First</option>
-            <option value="price-asc">Price: Low to High</option>
-            <option value="price-desc">Price: High to Low</option>
-          </select>
+            <select
+              value={sortBy}
+              onChange={(e) => setSortBy(e.target.value)}
+              className="px-2.5 py-2 rounded-xl bg-white dark:bg-slate-950 border border-[#E2E8F0] dark:border-slate-800 text-xs font-bold text-[#0F172A] dark:text-white focus:outline-none focus:border-[#F97316]"
+            >
+              <option value="featured">Newest First</option>
+              <option value="price-asc">Price: Low to High</option>
+              <option value="price-desc">Price: High to Low</option>
+            </select>
+          </div>
 
-          <label className="flex items-center space-x-2 text-xs font-bold text-[#475569] dark:text-slate-300 cursor-pointer">
+          <label className="flex items-center space-x-2 text-xs font-bold text-[#475569] dark:text-slate-300 cursor-pointer shrink-0">
             <input
               type="checkbox"
               checked={inStockOnly}
@@ -156,7 +158,7 @@ export const ShopPage = () => {
             <span>In Stock Only</span>
           </label>
 
-          <span className="ml-auto text-xs font-bold text-[#475569] dark:text-slate-400">
+          <span className="ml-auto text-xs font-bold text-[#475569] dark:text-slate-400 shrink-0">
             {filtered.length} product{filtered.length !== 1 ? 's' : ''}
           </span>
         </div>
@@ -165,7 +167,7 @@ export const ShopPage = () => {
         {isLoading ? (
           <SkeletonLoader count={6} />
         ) : filtered.length === 0 ? (
-          <div className="text-center py-20 space-y-4">
+          <div className="text-center py-16 space-y-4">
             <Package className="w-14 h-14 text-slate-300 dark:text-slate-700 mx-auto" />
             <h3 className="text-lg font-black text-[#0F172A] dark:text-white">No products match your filters</h3>
             <p className="text-sm text-[#475569] dark:text-slate-400">
@@ -173,14 +175,14 @@ export const ShopPage = () => {
             </p>
             <a
               href="tel:7903789402"
-              className="inline-flex items-center space-x-2 px-6 py-3 rounded-xl bg-[#F97316] hover:bg-[#E55A00] text-white font-black text-xs transition-all shadow-card hover:shadow-card-hover"
+              className="inline-flex items-center space-x-2 px-6 py-3 rounded-xl bg-[#F97316] hover:bg-[#E55A00] text-white font-black text-xs transition-all shadow-card hover:shadow-card-hover min-h-[44px]"
             >
               <Phone className="w-4 h-4" />
               <span>Call Shop: 7903789402</span>
             </a>
           </div>
         ) : (
-          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-3">
+          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-2.5 sm:gap-4">
             {filtered.map((product, idx) => (
               <ProductCard key={product._id} product={product} index={idx} />
             ))}

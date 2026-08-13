@@ -23,7 +23,7 @@ export const Modal = ({ isOpen, onClose, title, children, size = 'md' }) => {
   return (
     <AnimatePresence>
       {isOpen && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-6 overflow-y-auto">
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-2.5 sm:p-6 overflow-y-auto">
           {/* Backdrop */}
           <motion.div
             variants={modalBackdrop}
@@ -40,24 +40,24 @@ export const Modal = ({ isOpen, onClose, title, children, size = 'md' }) => {
             initial="hidden"
             animate="visible"
             exit="exit"
-            className={`relative z-10 w-full ${sizeClasses[size] || sizeClasses.md} bg-white border border-slate-200 rounded-xl shadow-xl overflow-hidden flex flex-col max-h-[90vh] my-auto`}
+            className={`relative z-10 w-[calc(100%-20px)] sm:w-full ${sizeClasses[size] || sizeClasses.md} bg-white border border-slate-200 rounded-2xl sm:rounded-xl shadow-xl overflow-hidden flex flex-col max-h-[88vh] my-auto`}
           >
             {/* Header */}
-            <div className="flex items-center justify-between px-5 py-3 border-b border-slate-100 bg-white">
-              <h3 className="text-base font-semibold text-slate-900">
+            <div className="flex items-center justify-between px-4 sm:px-5 py-3 border-b border-slate-100 bg-white">
+              <h3 className="text-sm sm:text-base font-bold text-slate-900 truncate font-display">
                 {title}
               </h3>
               <button
                 onClick={onClose}
-                className="p-1.5 rounded-lg text-slate-400 hover:text-slate-700 hover:bg-slate-100 transition-colors"
+                className="w-9 h-9 min-h-[44px] min-w-[44px] sm:min-h-0 sm:min-w-0 sm:w-8 sm:h-8 flex items-center justify-center rounded-xl text-slate-400 hover:text-slate-700 hover:bg-slate-100 transition-colors"
                 aria-label="Close modal"
               >
-                <X className="w-4 h-4" />
+                <X className="w-5 h-5 sm:w-4 sm:h-4" />
               </button>
             </div>
 
             {/* Body */}
-            <div className="p-5 overflow-y-auto flex-1 text-slate-700">
+            <div className="p-4 sm:p-5 overflow-y-auto flex-1 text-slate-700">
               {children}
             </div>
           </motion.div>

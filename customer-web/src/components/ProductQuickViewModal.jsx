@@ -67,7 +67,7 @@ export const ProductQuickViewModal = ({ product, isOpen, onClose }) => {
 
             <div className="grid grid-cols-1 md:grid-cols-12 gap-6 p-6 sm:p-8">
               {/* Product Photo Showcase (Left 5 cols) */}
-              <div className="md:col-span-5 flex flex-col justify-center items-center bg-slate-950/60 p-4 rounded-2xl relative min-h-[260px] overflow-hidden">
+              <div className="md:col-span-5 flex flex-col justify-center items-center bg-white border border-[#E5E7EB] p-4 rounded-2xl relative min-h-[260px] overflow-hidden">
                 <img
                   src={product.imageUrl}
                   alt={product.name}

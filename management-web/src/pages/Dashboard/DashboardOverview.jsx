@@ -1,4 +1,4 @@
-﻿import React from 'react';
+import React from 'react';
 import { Link } from 'react-router-dom';
 import { 
   AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, BarChart, Bar 
@@ -201,7 +201,7 @@ export const DashboardOverview = () => {
                   </div>
                 </CardHeader>
                 <CardBody>
-                  <div className="h-72 w-full">
+                  <div className="h-56 sm:h-72 w-full">
                     <ResponsiveContainer width="100%" height="100%">
                       <AreaChart data={charts.revenueTrend || []}>
                         <defs>
@@ -230,7 +230,7 @@ export const DashboardOverview = () => {
                   </div>
                 </CardHeader>
                 <CardBody>
-                  <div className="h-72 w-full">
+                  <div className="h-56 sm:h-72 w-full">
                     <ResponsiveContainer width="100%" height="100%">
                       <BarChart data={charts.bookingTrend || []}>
                         <CartesianGrid strokeDasharray="3 3" stroke="#E2E8F0" />

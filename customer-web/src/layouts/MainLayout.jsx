@@ -42,6 +42,15 @@ export const MainLayout = () => {
   }, []);
 
   useEffect(() => {
+    if (mobileOpen) {
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = '';
+    }
+    return () => { document.body.style.overflow = ''; };
+  }, [mobileOpen]);
+
+  useEffect(() => {
     setMobileOpen(false);
   }, [location.pathname]);
 
@@ -59,7 +68,7 @@ export const MainLayout = () => {
   ];
 
   return (
-    <div className="min-h-screen bg-white text-slate-900 flex flex-col font-sans relative">
+    <div className="min-h-screen bg-white text-slate-900 flex flex-col font-sans relative w-full max-w-full overflow-x-hidden">
 
       {/* Top Viewport Scroll Progress Hairline */}
       <motion.div
@@ -71,11 +80,11 @@ export const MainLayout = () => {
       <CustomCursor />
 
       {/* Top Contact Bar */}
-      <div className="relative bg-[#111827] text-slate-300 border-b border-slate-800 text-[11px] py-2 px-4 sm:px-8 flex flex-col sm:flex-row justify-between items-center gap-2 z-50">
-        <div className="relative flex items-center space-x-4">
+      <div className="relative bg-[#111827] text-slate-300 border-b border-slate-800 text-[11px] py-1.5 px-3 sm:px-8 flex flex-col sm:flex-row justify-between items-center gap-1.5 z-50">
+        <div className="relative flex items-center space-x-3 text-[10px] sm:text-[11px]">
           <a href="tel:7903789402" className="flex items-center space-x-1.5 hover:text-[#F97316] transition-colors">
             <span className="w-1.5 h-1.5 rounded-full bg-[#16A34A] animate-pulse"></span>
-            <Phone className="w-3.5 h-3.5 text-[#F97316]" />
+            <Phone className="w-3 h-3 sm:w-3.5 sm:h-3.5 text-[#F97316]" />
             <span className="font-bold text-white">7903789402 / 9934187847</span>
           </a>
           <span className="hidden md:flex items-center space-x-1.5 text-slate-400">
@@ -87,28 +96,24 @@ export const MainLayout = () => {
             <span>Chhota Govindpur Main Road, Jamshedpur</span>
           </span>
         </div>
-        <div className="relative flex items-center space-x-3 font-semibold text-[11px]">
+        <div className="relative hidden sm:flex items-center space-x-3 font-semibold text-[11px]">
           <span className="text-[#F97316] font-bold">Uday Electrical Works</span>
           <span className="text-slate-700">|</span>
           <span className="text-[#16A34A] font-bold">Doorstep Service across Jamshedpur</span>
         </div>
       </div>
 
-      {/* Main Navbar */}
+      {/* Main Navbar - Sticky pinned to top on all viewports */}
       <header
-        className={`sticky top-0 z-40 transition-all duration-300 ${
-          scrolled
-            ? 'bg-white/95 backdrop-blur-md border-b border-[#E5E7EB] shadow-xs text-[#111827]'
-            : 'bg-white border-b border-[#E5E7EB] text-[#111827]'
-        }`}
+        className="sticky top-0 z-50 bg-white border-b border-[#E5E7EB] text-[#111827] shadow-xs backdrop-blur-md"
       >
-        <div className="max-w-[1536px] mx-auto px-4 sm:px-6 lg:px-12 xl:px-16 h-20 py-2 flex items-center justify-between">
+        <div className="max-w-[1536px] mx-auto px-3.5 sm:px-6 lg:px-12 xl:px-16 h-16 sm:h-20 py-2 flex items-center justify-between">
 
           <Link to="/" className="group flex items-center shrink-0">
             <Logo portal="customer" size="md" />
           </Link>
 
-          {/* Navigation Links */}
+          {/* Navigation Links (Desktop) */}
           <nav className="hidden md:flex items-center space-x-8 text-xs font-extrabold uppercase tracking-wider font-display">
             {navLinks.map((link) => {
               const active = location.pathname === link.path;
@@ -116,11 +121,10 @@ export const MainLayout = () => {
                 <Link
                   key={link.path}
                   to={link.path}
-                  className={`relative py-1.5 transition-colors whitespace-nowrap ${
-                    active
+                  className={`relative py-1.5 transition-colors whitespace-nowrap ${active
                       ? 'text-[#F97316] font-black'
                       : 'text-[#111827] hover:text-[#F97316]'
-                  }`}
+                    }`}
                 >
                   {link.name}
                   {active && (
@@ -134,76 +138,87 @@ export const MainLayout = () => {
             })}
           </nav>
 
-          {/* Controls & Auth */}
-          <div className="flex items-center space-x-3">
+          {/* Clean Controls & Auth */}
+          <div className="flex items-center space-x-2 sm:space-x-3">
             {/* Cart Button */}
             <Link
               to="/cart"
-              className="relative px-3.5 py-2.5 rounded-xl border bg-slate-50 border-[#E5E7EB] text-[#111827] hover:text-[#F97316] hover:border-[#F97316]/40 transition-all flex items-center justify-center shrink-0"
+              className="relative w-9 h-9 sm:w-auto sm:h-auto sm:px-3.5 sm:py-2.5 rounded-lg sm:rounded-xl border bg-slate-50 border-[#E5E7EB] text-[#111827] hover:text-[#F97316] hover:border-[#F97316]/40 transition-all flex items-center justify-center shrink-0"
               title="View Cart"
             >
               <ShoppingCart className="w-4 h-4" />
               {itemCount > 0 && (
-                <span className="absolute -top-1.5 -right-1.5 min-w-4 h-4 px-1 rounded-full bg-[#F97316] text-white text-[9px] font-black flex items-center justify-center">
+                <span className="absolute -top-1 -right-1 min-w-3.5 h-3.5 px-1 rounded-full bg-[#F97316] text-white text-[8px] font-black flex items-center justify-center">
                   {itemCount}
                 </span>
               )}
             </Link>
 
-            {/* Right Action: Book a Service */}
-            <button
-              onClick={() => setBookingModalOpen(true)}
-              className="inline-flex items-center space-x-2 px-5 py-2.5 rounded-xl bg-[#F97316] hover:bg-[#EA580C] text-white font-extrabold text-xs sm:text-sm shadow-xs hover:scale-102 transition-all font-display shrink-0 whitespace-nowrap"
-            >
-              <Zap className="w-4 h-4 fill-current shrink-0" />
-              <span>Book a Service</span>
-            </button>
-
-            {isAuthenticated ? (
-              <div className="flex items-center space-x-2">
-                <NotificationBell />
-                <Link
-                  to="/dashboard"
-                  className="px-4 py-2.5 rounded-xl bg-[#111827] text-white text-xs font-bold hover:bg-slate-800 transition-colors font-display hidden sm:inline-flex whitespace-nowrap"
-                >
-                  Dashboard
-                </Link>
-                <button
-                  onClick={handleLogout}
-                  className="p-2.5 rounded-xl bg-rose-50 text-rose-600 hover:bg-rose-100 transition-colors"
-                  title="Logout"
-                >
-                  <LogOut className="w-4 h-4" />
-                </button>
-              </div>
-            ) : (
-              <Link
-                to="/login"
-                className="hidden sm:inline-flex px-4 py-2.5 rounded-xl text-xs font-bold text-[#111827] hover:text-[#F97316] transition-colors font-display whitespace-nowrap"
+            {/* Desktop / Tablet Extra Actions */}
+            <div className="hidden sm:flex items-center space-x-2.5">
+              <button
+                onClick={() => setBookingModalOpen(true)}
+                className="inline-flex items-center space-x-2 px-5 py-2.5 rounded-xl bg-[#F97316] hover:bg-[#EA580C] text-white font-extrabold text-xs sm:text-sm shadow-xs hover:scale-102 transition-all font-display shrink-0 whitespace-nowrap"
               >
-                Sign In
-              </Link>
-            )}
+                <Zap className="w-4 h-4 fill-current shrink-0" />
+                <span>Book a Service</span>
+              </button>
 
-            {/* Mobile Menu Toggle */}
+              {isAuthenticated ? (
+                <div className="flex items-center space-x-2">
+                  <NotificationBell />
+                  <Link
+                    to="/dashboard"
+                    className="px-4 py-2.5 rounded-xl bg-[#111827] text-white text-xs font-bold hover:bg-slate-800 transition-colors font-display whitespace-nowrap"
+                  >
+                    Dashboard
+                  </Link>
+                  <button
+                    onClick={handleLogout}
+                    className="p-2.5 rounded-xl bg-rose-50 text-rose-600 hover:bg-rose-100 transition-colors"
+                    title="Logout"
+                  >
+                    <LogOut className="w-4 h-4" />
+                  </button>
+                </div>
+              ) : (
+                <Link
+                  to="/login"
+                  className="px-4 py-2.5 rounded-xl text-xs font-bold text-[#111827] hover:text-[#F97316] transition-colors font-display whitespace-nowrap"
+                >
+                  Sign In
+                </Link>
+              )}
+            </div>
+
+            {/* Simple Minimal Mobile Menu Toggle Button */}
             <button
               onClick={() => setMobileOpen(!mobileOpen)}
-              className="md:hidden p-2.5 rounded-xl border bg-slate-100 border-[#E5E7EB] text-[#111827]"
+              className="md:hidden w-9 h-9 flex items-center justify-center rounded-lg border bg-slate-100 border-[#E5E7EB] text-[#111827] hover:bg-slate-200 transition-colors"
               title="Menu"
+              aria-label="Toggle navigation menu"
             >
-              {mobileOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
+              {mobileOpen ? <X className="w-4.5 h-4.5" /> : <Menu className="w-4.5 h-4.5" />}
             </button>
           </div>
         </div>
 
-        {/* Mobile Menu */}
+        {/* Mobile Menu Backdrop */}
+        {mobileOpen && (
+          <div
+            className="fixed inset-0 z-30 bg-slate-950/50 backdrop-blur-xs md:hidden"
+            onClick={() => setMobileOpen(false)}
+          />
+        )}
+
+        {/* Mobile Drawer Menu */}
         <AnimatePresence>
           {mobileOpen && (
             <motion.div
               initial={{ opacity: 0, height: 0 }}
               animate={{ opacity: 1, height: 'auto' }}
               exit={{ opacity: 0, height: 0 }}
-              className="md:hidden bg-white border-b border-[#E5E7EB] overflow-hidden"
+              className="md:hidden bg-white border-b border-[#E5E7EB] overflow-hidden relative z-40"
             >
               <nav className="px-4 py-4 space-y-2">
                 <button
@@ -211,7 +226,7 @@ export const MainLayout = () => {
                     setMobileOpen(false);
                     setBookingModalOpen(true);
                   }}
-                  className="w-full flex items-center justify-center space-x-2 px-4 py-3 rounded-xl bg-[#F97316] text-white text-xs font-extrabold shadow-xs font-display"
+                  className="w-full min-h-[44px] flex items-center justify-center space-x-2 px-4 py-3 rounded-xl bg-[#F97316] text-white text-xs font-extrabold shadow-xs font-display"
                 >
                   <Zap className="w-4 h-4 fill-current" />
                   <span>Book Doorstep Service</span>
@@ -222,23 +237,39 @@ export const MainLayout = () => {
                     <Link
                       key={link.path}
                       to={link.path}
-                      className={`flex items-center justify-between px-4 py-3 rounded-xl text-xs font-bold ${
-                        active
+                      className={`min-h-[44px] flex items-center justify-between px-4 py-3 rounded-xl text-xs font-bold ${active
                           ? 'bg-[#FFF7ED] text-[#EA580C] border border-[#FED7AA]'
                           : 'text-[#111827] hover:bg-slate-50'
-                      }`}
+                        }`}
                     >
                       {link.name}
                       <ChevronRight className="w-4 h-4 text-slate-400" />
                     </Link>
                   );
                 })}
-                {!isAuthenticated && (
+                {isAuthenticated ? (
+                  <div className="pt-2 space-y-2 border-t border-slate-100">
+                    <Link
+                      to="/dashboard"
+                      className="min-h-[44px] flex items-center justify-between px-4 py-3 rounded-xl text-xs font-bold bg-slate-900 text-white font-display"
+                    >
+                      <span>My Account Dashboard</span>
+                      <ChevronRight className="w-4 h-4 text-white/60" />
+                    </Link>
+                    <button
+                      onClick={handleLogout}
+                      className="w-full min-h-[44px] flex items-center justify-center space-x-2 px-4 py-3 rounded-xl bg-rose-50 border border-rose-200 text-rose-600 text-xs font-bold font-display"
+                    >
+                      <LogOut className="w-4 h-4" />
+                      <span>Sign Out</span>
+                    </button>
+                  </div>
+                ) : (
                   <div className="pt-2 grid grid-cols-2 gap-2">
-                    <Link to="/login" className="flex items-center justify-center px-4 py-2.5 rounded-xl bg-slate-100 text-[#111827] text-xs font-bold">
+                    <Link to="/login" className="min-h-[44px] flex items-center justify-center px-4 py-2.5 rounded-xl bg-slate-100 text-[#111827] text-xs font-bold">
                       Sign In
                     </Link>
-                    <Link to="/register" className="flex items-center justify-center px-4 py-2.5 rounded-xl bg-[#F97316] text-white text-xs font-extrabold">
+                    <Link to="/register" className="min-h-[44px] flex items-center justify-center px-4 py-2.5 rounded-xl bg-[#F97316] text-white text-xs font-extrabold">
                       Register
                     </Link>
                   </div>
@@ -271,8 +302,8 @@ export const MainLayout = () => {
       <MobileConversionBar />
 
       {/* Footer */}
-      <footer className="relative bg-[#111827] text-white border-t border-slate-800 pt-12 pb-6">
-        <div className="max-w-[1536px] mx-auto px-4 sm:px-6 lg:px-12 xl:px-16 grid grid-cols-1 md:grid-cols-12 gap-8">
+      <footer className="relative bg-[#111827] text-white border-t border-slate-800 pt-8 sm:pt-12 pb-20 sm:pb-6">
+        <div className="max-w-[1536px] mx-auto px-4 sm:px-6 lg:px-12 xl:px-16 grid grid-cols-1 md:grid-cols-12 gap-6 sm:gap-8">
           <div className="md:col-span-4 space-y-3">
             <Logo portal="customer" size="lg" light={true} />
             <p className="text-xs leading-relaxed text-slate-400 max-w-sm">

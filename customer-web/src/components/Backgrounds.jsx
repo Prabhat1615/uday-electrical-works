@@ -1,4 +1,4 @@
-﻿import React, { useMemo } from 'react';
+import React, { useMemo } from 'react';
 
 /* 1. MeshGradient — soft multi-color radial gradient base. */
 export const MeshGradient = ({ variant = 'light', className = '', opacity = 1 }) => {

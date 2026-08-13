@@ -290,7 +290,7 @@ export const ProductsManager = () => {
               <StaggerItem key={p._id}>
                 <Card hover>
                   <CardBody className="p-4">
-                    <div className="relative aspect-square rounded-lg bg-surface-100 p-2 mb-4 overflow-hidden flex items-center justify-center border border-surface-200">
+                    <div className="relative aspect-square rounded-lg bg-white p-2 mb-4 overflow-hidden flex items-center justify-center border border-surface-200">
                       <img
                         src={primaryImg}
                         alt={p.name}

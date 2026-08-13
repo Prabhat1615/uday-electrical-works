@@ -125,7 +125,7 @@ export const ProductDetailPage = () => {
               transition={{ duration: 0.4 }}
               onMouseEnter={() => setIsHovered(true)}
               onMouseLeave={() => setIsHovered(false)}
-              className="group relative rounded-3xl overflow-hidden border border-slate-200/80 dark:border-slate-800 bg-slate-50/70 dark:bg-slate-950/60 p-6 sm:p-8 flex items-center justify-center min-h-[360px] sm:min-h-[440px] shadow-card cursor-pointer"
+              className="group relative rounded-3xl overflow-hidden border border-slate-200 bg-white dark:bg-white p-4 sm:p-8 flex items-center justify-center min-h-[260px] sm:min-h-[440px] shadow-card cursor-pointer"
             >
               {currentImg && !failedImgs[activeImgIndex] ? (
                 <motion.img
@@ -137,7 +137,7 @@ export const ProductDetailPage = () => {
                   alt={`${product.brand} ${product.name} view ${activeImgIndex + 1}`}
                   onError={() => setFailedImgs((prev) => ({ ...prev, [activeImgIndex]: true }))}
                   onClick={() => setLightboxOpen(true)}
-                  className="max-h-[380px] max-w-full object-contain filter drop-shadow-md group-hover:scale-102 transition-transform duration-300"
+                  className="max-h-[240px] sm:max-h-[380px] max-w-full object-contain filter drop-shadow-md group-hover:scale-102 transition-transform duration-300"
                 />
               ) : (
                 <div className="flex flex-col items-center text-slate-400 dark:text-slate-600 space-y-2">
