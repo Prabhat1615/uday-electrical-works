@@ -58,9 +58,7 @@ export const AboutPage = () => {
             transition={{ delay: 0.2 }}
             className="text-slate-600 dark:text-slate-300 text-base sm:text-lg max-w-3xl mx-auto leading-relaxed"
           >
-            Uday Electrical Works is a walk-in electrical retail shop and workshop on Chhota Govindpur
-            Main Road. We sell genuine fans, lights, wires, switches, MCBs and geysers, and our own
-            wiremen do doorstep repairs, installations and house wiring across Jamshedpur.
+            Located on Chhota Govindpur Main Road, Uday Electrical Works offers genuine electrical products and doorstep electrician services with official GST billing.
           </motion.p>
         </AnimatedSection>
       </div>

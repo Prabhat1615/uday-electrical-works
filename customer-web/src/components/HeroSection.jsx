@@ -139,7 +139,7 @@ export const HeroSection = () => {
               transition={{ duration: 0.45, delay: 0.22 }}
               className="text-[#64748B] text-sm sm:text-base leading-relaxed max-w-xl"
             >
-              Electrical products, house wiring, repair services and professional electrical solutions — all from your trusted local electrical store in Chhota Govindpur, Jamshedpur.
+              Located on Chhota Govindpur Main Road, Uday Electrical Works offers genuine electrical products and doorstep electrician services with official GST billing.
             </motion.p>
 
             {/* Action Buttons */}

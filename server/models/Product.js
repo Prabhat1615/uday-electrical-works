@@ -55,6 +55,16 @@ const productSchema = new mongoose.Schema({
     type: String,
     default: 'https://images.unsplash.com/photo-1558494949-ef010cbdcc31?w=800&auto=format&fit=crop&q=60'
   },
+  images: {
+    type: [String],
+    default: [],
+    validate: [
+      function (val) {
+        return !val || val.length <= 3;
+      },
+      'A product can have a maximum of 3 image URLs.'
+    ]
+  },
   status: {
     type: String,
     enum: ['In Stock', 'Out of Stock', 'Low Stock'],
@@ -81,8 +91,25 @@ const calculateStatus = (stock) => {
   return 'In Stock';
 };
 
+const processProductImages = (target) => {
+  if (!target) return;
+  if (Array.isArray(target.images)) {
+    const validImgs = target.images
+      .filter((img) => typeof img === 'string' && img.trim().length > 0)
+      .map((img) => img.trim())
+      .slice(0, 3);
+    target.images = validImgs;
+    if (validImgs.length > 0) {
+      target.imageUrl = validImgs[0];
+    }
+  } else if (target.imageUrl && typeof target.imageUrl === 'string' && target.imageUrl.trim().length > 0) {
+    target.images = [target.imageUrl.trim()];
+  }
+};
+
 productSchema.pre('save', function (next) {
   this.status = calculateStatus(this.stock);
+  processProductImages(this);
   next();
 });
 
@@ -103,6 +130,14 @@ productSchema.pre('findOneAndUpdate', function (next) {
       } else {
         update.status = newStatus;
       }
+    }
+
+    if (update.images !== undefined || (update.$set && update.$set.images !== undefined)) {
+      const targetObj = update.$set ? update.$set : update;
+      processProductImages(targetObj);
+    } else if (update.imageUrl || (update.$set && update.$set.imageUrl)) {
+      const targetObj = update.$set ? update.$set : update;
+      processProductImages(targetObj);
     }
   }
   next();
@@ -125,6 +160,14 @@ productSchema.pre('updateOne', function (next) {
       } else {
         update.status = newStatus;
       }
+    }
+
+    if (update.images !== undefined || (update.$set && update.$set.images !== undefined)) {
+      const targetObj = update.$set ? update.$set : update;
+      processProductImages(targetObj);
+    } else if (update.imageUrl || (update.$set && update.$set.imageUrl)) {
+      const targetObj = update.$set ? update.$set : update;
+      processProductImages(targetObj);
     }
   }
   next();

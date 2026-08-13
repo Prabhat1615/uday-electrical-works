@@ -9,6 +9,58 @@ const computeStockStatus = (stockVal) => {
   return 'In Stock';
 };
 
+const SAMPLE_GALLERY = {
+  'Ceiling Fans': [
+    'https://images.unsplash.com/photo-1615873968403-89e068629265?w=800&auto=format&fit=crop&q=60',
+    'https://images.unsplash.com/photo-1558494949-ef010cbdcc31?w=800&auto=format&fit=crop&q=60',
+    'https://images.unsplash.com/photo-1540518614846-7ede433c517a?w=800&auto=format&fit=crop&q=60'
+  ],
+  'Exhaust Fans': [
+    'https://images.unsplash.com/photo-1615873968403-89e068629265?w=800&auto=format&fit=crop&q=60',
+    'https://images.unsplash.com/photo-1558494949-ef010cbdcc31?w=800&auto=format&fit=crop&q=60'
+  ],
+  'LED Bulbs': [
+    'https://images.unsplash.com/photo-1565814636199-ae8133055c1c?w=800&auto=format&fit=crop&q=60',
+    'https://images.unsplash.com/photo-1513506003901-1e6a229e2d15?w=800&auto=format&fit=crop&q=60',
+    'https://images.unsplash.com/photo-1524484485831-a92ffc0de03f?w=800&auto=format&fit=crop&q=60'
+  ],
+  'LED Battens': [
+    'https://images.unsplash.com/photo-1565814636199-ae8133055c1c?w=800&auto=format&fit=crop&q=60',
+    'https://images.unsplash.com/photo-1513506003901-1e6a229e2d15?w=800&auto=format&fit=crop&q=60'
+  ],
+  'Modular Switches': [
+    'https://images.unsplash.com/photo-1581092160607-ee22621dd758?w=800&auto=format&fit=crop&q=60',
+    'https://images.unsplash.com/photo-1581092335397-9583fe92d232?w=800&auto=format&fit=crop&q=60',
+    'https://images.unsplash.com/photo-1558494949-ef010cbdcc31?w=800&auto=format&fit=crop&q=60'
+  ],
+  'default': [
+    'https://images.unsplash.com/photo-1558494949-ef010cbdcc31?w=800&auto=format&fit=crop&q=60',
+    'https://images.unsplash.com/photo-1581092160607-ee22621dd758?w=800&auto=format&fit=crop&q=60',
+    'https://images.unsplash.com/photo-1565814636199-ae8133055c1c?w=800&auto=format&fit=crop&q=60'
+  ]
+};
+
+// Helper: Ensures products in DB have multi-image gallery arrays
+const populateProductGallery = async (products) => {
+  if (!Array.isArray(products)) return;
+  for (const product of products) {
+    let imgs = Array.isArray(product.images) ? product.images.filter((x) => typeof x === 'string' && x.trim().length > 0) : [];
+    if (imgs.length === 0 && product.imageUrl) {
+      imgs = [product.imageUrl];
+    }
+    if (imgs.length < 2) {
+      const sample = SAMPLE_GALLERY[product.category] || SAMPLE_GALLERY.default;
+      for (const sampleUrl of sample) {
+        if (imgs.length < 3 && !imgs.includes(sampleUrl)) {
+          imgs.push(sampleUrl);
+        }
+      }
+      product.images = imgs;
+      await Product.updateOne({ _id: product._id }, { $set: { images: imgs, imageUrl: imgs[0] } });
+    }
+  }
+};
+
 // @desc    Get all products
 // @route   GET /api/products
 // @access  Public
@@ -35,6 +87,10 @@ export const getProducts = async (req, res, next) => {
     }
 
     const products = await Product.find(query).sort({ createdAt: -1 });
+    
+    // Automatic backfill: ensure products have multi-image gallery arrays
+    await populateProductGallery(products);
+
     res.status(200).json(new ApiResponse(200, products, 'Products retrieved successfully'));
   } catch (error) {
     next(error);
@@ -50,6 +106,7 @@ export const getProductById = async (req, res, next) => {
     if (!product) {
       return next(new ApiError(404, 'Product not found'));
     }
+    await populateProductGallery([product]);
     res.status(200).json(new ApiResponse(200, product, 'Product fetched successfully'));
   } catch (error) {
     next(error);
@@ -61,8 +118,20 @@ export const getProductById = async (req, res, next) => {
 // @access  Private/Admin/Staff
 export const createProduct = async (req, res, next) => {
   try {
-    const { name, brand, category, description, mrp, price, stock, sku, specifications, imageUrl } = req.body;
+    const { name, brand, category, description, mrp, price, stock, sku, specifications, imageUrl, images: rawImages } = req.body;
     const initialStock = Number(stock || 0);
+
+    let images = [];
+    if (Array.isArray(rawImages)) {
+      images = rawImages
+        .filter((img) => typeof img === 'string' && img.trim().length > 0)
+        .map((img) => img.trim())
+        .slice(0, 3);
+    } else if (imageUrl && typeof imageUrl === 'string' && imageUrl.trim().length > 0) {
+      images = [imageUrl.trim()];
+    }
+
+    const primaryImage = images.length > 0 ? images[0] : (imageUrl ? imageUrl.trim() : undefined);
 
     const product = await Product.create({
       name,
@@ -75,7 +144,8 @@ export const createProduct = async (req, res, next) => {
       status: computeStockStatus(initialStock),
       sku: sku || `SKU-${Date.now().toString().slice(-6)}`,
       specifications: specifications || {},
-      imageUrl: imageUrl || undefined
+      imageUrl: primaryImage,
+      images
     });
 
     res.status(201).json(new ApiResponse(201, product, 'Product created successfully'));
@@ -98,6 +168,18 @@ export const bulkImportProducts = async (req, res, next) => {
     for (const item of products) {
       const sku = item.sku || `SKU-${Math.floor(100000 + Math.random() * 900000)}`;
       const itemStock = Number(item.stock || 0);
+
+      let itemImages = [];
+      if (Array.isArray(item.images)) {
+        itemImages = item.images
+          .filter((img) => typeof img === 'string' && img.trim().length > 0)
+          .map((img) => img.trim())
+          .slice(0, 3);
+      } else if (item.imageUrl || item.image) {
+        const single = (item.imageUrl || item.image).toString().trim();
+        if (single) itemImages = [single];
+      }
+
       await Product.findOneAndUpdate(
         { sku },
         {
@@ -110,7 +192,9 @@ export const bulkImportProducts = async (req, res, next) => {
           stock: itemStock,
           sku,
           warranty: item.warranty || '1 Year Warranty',
-          status: computeStockStatus(itemStock)
+          status: computeStockStatus(itemStock),
+          imageUrl: itemImages.length > 0 ? itemImages[0] : (item.imageUrl || item.image || undefined),
+          images: itemImages
         },
         { upsert: true, new: true, runValidators: true }
       );
@@ -136,6 +220,18 @@ export const updateProduct = async (req, res, next) => {
     // Automatically recalculate status if stock is being updated
     if (req.body.stock !== undefined) {
       req.body.status = computeStockStatus(req.body.stock);
+    }
+
+    // Normalize images array if provided
+    if (Array.isArray(req.body.images)) {
+      const validImgs = req.body.images
+        .filter((img) => typeof img === 'string' && img.trim().length > 0)
+        .map((img) => img.trim())
+        .slice(0, 3);
+      req.body.images = validImgs;
+      if (validImgs.length > 0) {
+        req.body.imageUrl = validImgs[0];
+      }
     }
 
     product = await Product.findByIdAndUpdate(req.params.id, req.body, {

@@ -276,7 +276,7 @@ export const MainLayout = () => {
           <div className="md:col-span-4 space-y-3">
             <Logo portal="customer" size="lg" light={true} />
             <p className="text-xs leading-relaxed text-slate-400 max-w-sm">
-              Authorized electrical retail shop &amp; doorstep service center in Chhota Govindpur, Jamshedpur. Stocking Havells, Crompton, Polycab, Philips &amp; Anchor.
+              Located on Chhota Govindpur Main Road, Uday Electrical Works offers genuine electrical products and doorstep electrician services with official GST billing.
             </p>
           </div>
 
